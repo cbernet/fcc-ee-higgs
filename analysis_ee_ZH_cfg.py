@@ -50,12 +50,28 @@ from heppy.configuration import Collider
 Collider.BEAMS = 'ee'
 Collider.SQRTS = 240.
 
-# definition of an input sample (also called a component)
-comp = cfg.Component(
-    'ee_ZH_Zmumu_Hbb',
-    files = absglob.glob('ee_ZH_Zmumu_*.root')
-)
+# definition of input samples 
+ZH_Zmumu = cfg.MCComponent(
+    'ZH_Zmumu',
+    files = absglob.glob('samples/mumu/ZH/ee_ZH_Zmumu_*.root'),
+    xSection = 6.53, # fb-1
+    nGenEvents = 4e4)
+
+ZZ = cfg.MCComponent(
+    'ZZ',
+    files = absglob.glob('samples/ZZ/ee_ZZ_*.root'),
+    xSection = 1360, # fb-1
+    nGenEvents = 4e4)
+
+WW = cfg.MCComponent(
+    'WW',
+    files = absglob.glob('samples/WW/ee_WW_*.root'),
+    xSection = 16330, # fb-1
+    nGenEvents = 4e4)
+
+comp = WW
 comp.splitFactor = len(comp.files)
+# comp.splitfactor = 1 
 
 # selecting the list of components to be processed. Here only one. 
 selectedComponents = [comp]
