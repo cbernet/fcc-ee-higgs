@@ -87,6 +87,26 @@ source = cfg.Analyzer(
     gen_vertices = 'GenVertex'
 )
 
+# gen level filtering
+lepton_id = 13
+from heppy.analyzers.Selector import Selector
+gen_leptons = cfg.Analyzer(
+    Selector,
+    'gen_leptons',
+    output = 'gen_leptons',
+    input_objects = 'gen_particles',
+    filter_func = lambda ptc: ptc.e() > 5. and abs(ptc.pdgid()) == lepton_id
+)
+
+from heppy.analyzers.EventFilter   import EventFilter  
+gen_counter = cfg.Analyzer(
+    EventFilter  ,
+    'gen_counter',
+    input_objects = 'gen_leptons',
+    min_number = 2,
+    veto = False
+)
+
 # importing the papas simulation and reconstruction sequence,
 # as well as the detector used in papas
 # check papas_cfg.py for more information
@@ -99,7 +119,6 @@ from heppy.test.papas_cfg import papasdisplaycompare as display
 # we could use two different instances for the Selector module
 # to get separate collections of electrons and muons
 # help(Selector) for more information
-from heppy.analyzers.Selector import Selector
 leptons_true = cfg.Analyzer(
     Selector,
     'sel_leptons',
@@ -241,6 +260,8 @@ debug_filename = os.getcwd()+'/python_physics_debug.log' #optional argument
 sequence = cfg.Sequence(
     source,
     #pdebug,
+    gen_leptons,
+    gen_counter, 
     papas_sequence,
     leptons_true,
     iso_leptons,
