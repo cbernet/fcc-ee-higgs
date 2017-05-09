@@ -7,7 +7,6 @@ ipython
 from analysis_ee_ZH_cfg import * 
 '''
 
-import heppy.utils.absglob as absglob
 import os
 import copy
 import heppy.framework.config as cfg
@@ -51,27 +50,9 @@ Collider.BEAMS = 'ee'
 Collider.SQRTS = 240.
 
 # definition of input samples 
-ZH_Zmumu = cfg.MCComponent(
-    'ZH_Zmumu',
-    # files = absglob.glob('samples/mumu/ZH/ee_ZH_Zmumu_*.root'),
-    files = absglob.glob('ZH/Job_*/ee_ZH_Zmumu.root'),
-    xSection = 6.53, # fb-1
-    nGenEvents = 4e4)
+from components.ZH_Zmumu import components
 
-ZZ = cfg.MCComponent(
-    'ZZ',
-    files = absglob.glob('samples/ZZ/ee_ZZ_*.root'),
-    xSection = 1360, # fb-1
-    nGenEvents = 4e4)
-
-WW = cfg.MCComponent(
-    'WW',
-    # files = absglob.glob('samples/WW/ee_WW_*.root'),
-    files = absglob.glob('WW/Job_*/ee_WW.root'),
-    xSection = 16330, # fb-1
-    nGenEvents = 4e4)
-
-comp = WW
+comp = components['WW']
 comp.splitFactor = len(comp.files)
 # comp.splitfactor = 1 
 
