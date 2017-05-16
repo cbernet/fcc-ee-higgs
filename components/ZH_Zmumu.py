@@ -1,8 +1,12 @@
+import os 
 import heppy.framework.config as cfg
 import heppy.utils.absglob as absglob
 import compfiles
 
-basedir = '/Users/cbernet/Code/FCC/fcc_ee_higgs/samples/pythia'
+   
+basedir = '/afs/cern.ch/user/c/cbern/FCC/fcc_ee_higgs/pythia'
+if os.getcwd().startswith('/Users'):
+    basedir = '/Users/cbernet/Code/FCC/fcc_ee_higgs/samples/pythia'
 
 # definition of input samples 
 ZH = cfg.MCComponent(

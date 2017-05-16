@@ -24,7 +24,8 @@ def get(dirname):
     rootfiles = glob.glob('{}/Job*/*.root'.format(dirname)) 
     if len(rootfiles):
         return rootfiles
-    raise ValueError('no rootfile found in component ' + dirname)
+    print 'no rootfile found in component ' + dirname
+    return []
 
 if __name__ == '__main__':
     import sys
