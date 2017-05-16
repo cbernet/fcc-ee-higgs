@@ -53,7 +53,9 @@ Collider.SQRTS = 240.
 from components.ZH_Zmumu import components
 
 comp = components['WW']
+
 # comp.files = comp.files[:1]
+
 comp.splitFactor = len(comp.files)
 # comp.splitfactor = 1 
 
@@ -185,7 +187,8 @@ jets = cfg.Analyzer(
     JetClusterizer,
     output = 'jets',
     particles = 'particles_not_zed',
-    fastjet_args = dict( njets = 2)  
+    fastjet_args = dict( njets = 2 ),
+    njets_required=False
 )
 
 #TODO add b tagging, gen jets, gen jet matching
