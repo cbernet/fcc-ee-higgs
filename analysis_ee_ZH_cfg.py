@@ -53,7 +53,7 @@ Collider.SQRTS = 240.
 from components.ZH_Zmumu import components
 
 comp = components['WW']
-# comp.files = ['ee_ZH.root']
+comp.files = ['ee_WW.root']
 comp.splitFactor = len(comp.files)
 # comp.splitfactor = 1 
 
