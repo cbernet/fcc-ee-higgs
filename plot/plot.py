@@ -2,6 +2,10 @@ from cpyroot import *
 from cpyroot.tools.style import * 
 from cpyroot.tools.DataMC.DataMCPlot import DataMCPlot
 
+from tdrstyle import tdrstyle
+from fcc_ee_higgs.components.ZH_Zmumu import WW, ZZ, ZH
+
+from fitter import Fitter
 
 plot = None
 
@@ -29,9 +33,6 @@ def project(comp, var, cut, *bins):
     return hist
 
 def prepare_plot(var, cut, lumi):
-    from tdrstyle import tdrstyle
-    from fcc_ee_higgs.components.ZH_Zmumu import WW, ZZ, ZH
-
     comps = [WW, ZZ, ZH]
     basedir = '/Users/cbernet/Code/FCC/fcc_ee_higgs/samples/ana/May16'
 
@@ -57,17 +58,23 @@ def draw(var, cut, lumi, title=''):
 
 if __name__ == '__main__':
         
+    from ROOT import RooRealVar, RooDataHist, RooHistPdf, RooArgList, RooArgSet, TH1
     var = 'recoil_m'
-    cut = 'abs(zed_m-91)<5. && zed_pt>10 && zed_pz<50 && zed_acol>100 && zed_acop>10 && (jet1_e<0 || jet1_22_e/jet1_e<0.8) && (jet2_e<0 || jet2_22_e/jet2_e<0.8)'
+    cut = 'abs(zed_m-91)<5. && zed_pt>10 && zed_pz<50 && zed_acol>100 && zed_acop>10 \
+    && (jet1_e<0 || jet1_22_e/jet1_e<0.8) && (jet2_e<0 || jet2_22_e/jet2_e<0.8)'
     # cut = 'zed_m>50'
     bins = 100, 50, 150
     
     lumi = 5e6  # 5ab-1
     lumi = 1e6
 
+    # import pdb; pdb.set_trace()
     draw(var, cut, lumi)
-    
-    gPad.Modified()
-    gPad.Update()
-    
-    
+
+#    fitter = Fitter(plot)
+#    for name, pdf in fitter.pdfs.iteritems():
+#        print name, pdf
+#        print pdf.Print()
+#    sys.exit(1)
+##    fitter.draw_pdfs()
+
