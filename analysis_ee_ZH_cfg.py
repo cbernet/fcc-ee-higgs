@@ -41,7 +41,7 @@ from EventStore import EventStore as Events
 from heppy.framework.event import Event
 # comment the following line to see all the collections stored in the event 
 # if collection is listed then print loop.event.papasevent will include the collections
-Event.print_patterns=['zeds*', 'higgs*', 'rec_particles', 'gen_particles_stable', 'recoil*', 'collections']
+Event.print_patterns=['zeds*', 'higgs*', 'jets', 'bquarks', 'recoil*', 'collections']
 
 # definition of the collider
 # help(Collider) for more information
@@ -52,10 +52,10 @@ Collider.SQRTS = 240.
 # definition of input samples 
 from components.ZH_Zmumu import components
 
-comp = components['WW']
-comp.files = ['ee_WW.root']
-comp.splitFactor = len(comp.files)
-# comp.splitfactor = 1 
+comp = components['ZH']
+comp.files = ['ee_ZH_Z_Hbb.root']
+# comp.splitFactor = len(comp.files)
+comp.splitfactor = 1 
 
 # selecting the list of components to be processed. Here only one. 
 selectedComponents = [comp]
@@ -146,6 +146,14 @@ zeds = cfg.Analyzer(
     pdgid = 23
 )
 
+zed_counter = cfg.Analyzer(
+    EventFilter  ,
+    'zed_counter',
+    input_objects = 'zeds',
+    min_number = 1,
+    veto = False
+)
+
 # Computing the recoil p4 (here, p_initial - p_zed)
 # help(RecoilBuilder) for more information
 sqrts = Collider.SQRTS 
@@ -190,6 +198,40 @@ jets = cfg.Analyzer(
 )
 
 #TODO add b tagging, gen jets, gen jet matching
+
+# select b quarks for jet to parton matching
+def is_bquark(ptc):
+    '''returns True if the particle is an outgoing b quark,
+    see
+    http://home.thep.lu.se/~torbjorn/pythia81html/ParticleProperties.html
+    '''
+    return abs(ptc.pdgid()) == 5 and ptc.status() == 23
+    
+bquarks = cfg.Analyzer(
+    Selector,
+    'bquarks',
+    output = 'bquarks',
+    input_objects = 'gen_particles',
+    filter_func =is_bquark
+)
+
+# match jets to genjets (so jets are matched to b quarks through gen jets)
+from heppy.analyzers.Matcher import Matcher
+jet_to_bquark_match = cfg.Analyzer(
+    Matcher,
+    match_particles='bquarks',
+    particles='jets',
+    delta_r=0.5
+)
+
+from heppy.analyzers.ParametrizedBTagger import ParametrizedBTagger
+from heppy.analyzers.roc import cms_roc
+cms_roc.set_working_point(0.7)
+btag = cfg.Analyzer(
+    ParametrizedBTagger,
+    input_jets='jets',
+    roc=cms_roc
+)
 
 # Build Higgs candidates from pairs of jets.
 higgses = cfg.Analyzer(
@@ -250,10 +292,14 @@ sequence = cfg.Sequence(
     iso_leptons,
     sel_iso_leptons,
     zeds,
+    zed_counter, 
     recoil,
     missing_energy,
     particles_not_zed,
     jets,
+    bquarks,
+    jet_to_bquark_match,     
+    btag, 
     higgses,
     selection, 
     tree,
