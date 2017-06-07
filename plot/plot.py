@@ -71,10 +71,11 @@ if __name__ == '__main__':
     # import pdb; pdb.set_trace()
     draw(var, cut, lumi)
 
-#    fitter = Fitter(plot)
-#    for name, pdf in fitter.pdfs.iteritems():
-#        print name, pdf
-#        print pdf.Print()
+    fitter = Fitter(plot)
+    for name, pdf in fitter.pdfs.iteritems():
+        print name, pdf
+        print pdf.Print()
+    fitter.draw_data()
 #    sys.exit(1)
 ##    fitter.draw_pdfs()
 
