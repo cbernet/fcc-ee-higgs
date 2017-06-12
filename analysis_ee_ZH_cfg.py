@@ -52,14 +52,15 @@ Collider.SQRTS = 240.
 # definition of input samples 
 from components.ZH_Zmumu import components
 
-comp = components['WW']
 
-# comp.files = comp.files[:1]
+selectedComponents = components.values()
+for comp in selectedComponents:
+    comp.splitFactor = len(comp.files)
 
-comp.splitFactor = len(comp.files)
 # comp.splitfactor = 1 
-
-# selecting the list of components to be processed. Here only one. 
+comp = components['ZH']
+comp.splitFactor = len(comp.files)
+# comp.splitFactor = 1 
 selectedComponents = [comp]
 
 # read FCC EDM events from the input root file(s)
