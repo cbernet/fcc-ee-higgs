@@ -41,8 +41,8 @@ tbgd.plotOn(tframe)
 
 data = model.generate(RooArgSet(x), 1000)
 
-result = model.fitTo(data, RooFit.Extended())
-tresult = tmodel.fitTo(data, RooFit.Extended())
+result = model.fitTo(data, RooFit.Save(True))
+tresult = tmodel.fitTo(data, RooFit.Save(True))
 
 c1 = TCanvas()
 pframe.Draw()

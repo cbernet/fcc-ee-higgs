@@ -1,16 +1,17 @@
 from cpyroot.tools.DataMC import DataMCPlot, Histogram
-from ROOT import RooRealVar, RooConstVar, RooDataSet, RooDataHist, RooHistPdf, RooGaussian, RooArgSet, RooAddPdf, RooArgList, RooFit, SetOwnership, RooAbsArg
+from ROOT import RooRealVar, RooPolynomial, RooConstVar, RooDataSet, RooDataHist, RooHistPdf, RooGaussian, RooArgSet, RooAddPdf, RooArgList, RooFit, SetOwnership, RooAbsArg
 
-class Fitter(object):
+class BaseFitter(object):
 
     def __init__(self, plot):
         assert(isinstance(plot, DataMCPlot))
         self.plot = plot
-        self._make_model()
+        self._make_underlying_model()
         self._make_dataset()
+        self._make_fit_model()
         self._fit()
 
-    def _make_model(self):
+    def _make_underlying_model(self):
         self.pdfs = {}
         self.yields = {}  # yields are plain floats
         self.ryields = {}  # keep track of roofit objects for memory management
@@ -44,17 +45,19 @@ class Fitter(object):
             self.yields[compname] = nevts
             yields.add(theyield)
             
-        self.model = RooAddPdf('model', 'model',
-                               pdfs, yields)
+        self.underlying_model = RooAddPdf('model', 'model',
+                                          pdfs, yields)
+    def _make_fit_model(self):
         pass
-            
+    
     def _make_dataset(self):
         nevents = sum(self.yields.values())
-        self.data = self.model.generate(RooArgSet(self.xvar), nevents)
+        self.data = self.underlying_model.generate(RooArgSet(self.xvar), nevents)
 
     def _fit(self):
-        tresult = self.model.fitTo(self.data,
-                                   RooFit.Extended())
+        self.tresult = self.underlying_model.fitTo(self.data,
+                                            RooFit.Extended(), RooFit.Save())
+        self.tresult.Print()
 
     def draw_pdfs(self):
         self.pframe = self.xvar.frame()
@@ -65,10 +68,27 @@ class Fitter(object):
     def draw_data(self):
         self.mframe = self.xvar.frame()
         self.data.plotOn(self.mframe)
-        self.model.plotOn(self.mframe)
+        self.underlying_model.plotOn(self.mframe)
         for icomp, compname in enumerate(self.pdfs):
-            self.model.plotOn(self.mframe,
+            self.underlying_model.plotOn(self.mframe,
                               RooFit.Components(compname),
                               RooFit.LineColor(icomp+1))
         self.mframe.Draw()
+ 
+        
+class TemplateFitter(BaseFitter):
+    
+    def _make_fit_model(self):
+        self.fit_model = self.underlying_model
+
+
+class BallFitter(BaseFitter):
+    
+    def _make_fit_model(self):
+        p0 = RooRealVar("p0","p0", 100, -10000, 10000);
+        p1 = RooRealVar("p1","p1", 100, -10000, 10000);
+        p2 = RooRealVar("p2","p2", 100, -10000, 10000);
+        p3 = RooRealVar("p3","p3", 100, -10000, 10000);
+        bgd = RooPolynomial("bgd", "bgd", self.xvar, RooArgList(p0, p1, p2, p3))               
+        
         
