@@ -41,7 +41,7 @@ from EventStore import EventStore as Events
 from heppy.framework.event import Event
 # comment the following line to see all the collections stored in the event 
 # if collection is listed then print loop.event.papasevent will include the collections
-Event.print_patterns=['zeds*', 'higgs*', 'rec_particles', 'gen_particles_stable', 'recoil*', 'collections']
+Event.print_patterns=['zeds*', 'higgs*', 'jets', 'bquarks', 'recoil*', 'collections']
 
 # definition of the collider
 # help(Collider) for more information
@@ -52,16 +52,15 @@ Collider.SQRTS = 240.
 # definition of input samples 
 from components.ZH_Zmumu import components
 
-
 selectedComponents = components.values()
 for comp in selectedComponents:
     comp.splitFactor = len(comp.files)
 
 # comp.splitfactor = 1 
-comp = components['ZH']
-comp.splitFactor = len(comp.files)
+# comp = components['ZH']
+# comp.splitFactor = len(comp.files)
 # comp.splitFactor = 1 
-selectedComponents = [comp]
+# selectedComponents = [comp]
 
 # read FCC EDM events from the input root file(s)
 # do help(Reader) for more information
@@ -149,6 +148,14 @@ zeds = cfg.Analyzer(
     pdgid = 23
 )
 
+zed_counter = cfg.Analyzer(
+    EventFilter  ,
+    'zed_counter',
+    input_objects = 'zeds',
+    min_number = 1,
+    veto = False
+)
+
 # Computing the recoil p4 (here, p_initial - p_zed)
 # help(RecoilBuilder) for more information
 sqrts = Collider.SQRTS 
@@ -192,7 +199,10 @@ jets = cfg.Analyzer(
     njets_required=False
 )
 
-#TODO add b tagging, gen jets, gen jet matching
+# b tagging 
+from heppy.test.btag_parametrized_cfg import btag_parametrized, btag
+from heppy.analyzers.roc import cms_roc
+btag.roc = cms_roc
 
 # Build Higgs candidates from pairs of jets.
 higgses = cfg.Analyzer(
@@ -253,10 +263,12 @@ sequence = cfg.Sequence(
     iso_leptons,
     sel_iso_leptons,
     zeds,
+    zed_counter, 
     recoil,
     missing_energy,
     particles_not_zed,
     jets,
+    btag_parametrized, 
     higgses,
     selection, 
     tree,
