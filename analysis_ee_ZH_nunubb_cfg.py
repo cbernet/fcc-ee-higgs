@@ -52,9 +52,9 @@ Collider.SQRTS = 240.
 # definition of input samples 
 from components.ZH_Zmumu import components
 
-comp = components['ZZ']
+comp = components['ZH']
 # comp.splitFactor = len(comp.files)
-comp.files = ['/Users/cbernet/Code/FCC/fcc_ee_higgs/samples/pythia/ZZ/ee_ZZ_3.root']
+comp.files = ['samples/pythia/examples/ee_ZZ_nunu.root']
 comp.splitFactor = 1
 
 # selecting the list of components to be processed. Here only one. 
@@ -252,8 +252,8 @@ debug_filename = os.getcwd()+'/python_physics_debug.log' #optional argument
 sequence = cfg.Sequence(
     source,
     #pdebug,
-    gen_leptons,
-    gen_counter, 
+    # gen_leptons,
+    # gen_counter, 
     papas_sequence,
     # leptons_true,
     # iso_leptons,
