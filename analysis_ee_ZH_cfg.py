@@ -49,16 +49,23 @@ from heppy.configuration import Collider
 Collider.BEAMS = 'ee'
 Collider.SQRTS = 240.
 
+debug = True
+
 # definition of input samples 
 from components.ZH_Zmumu import components
 
-selectedComponents = components.values()
+# selectedComponents = components.values()
+selectedComponents = [components['ZZ']]
 for comp in selectedComponents:
     comp.splitFactor = len(comp.files)
 
 # comp.splitfactor = 1 
-# comp = components['ZH']
-# comp.splitFactor = len(comp.files)
+
+if debug:
+    comp = components['ZZ']
+    comp.files = comp.files[:1]
+    comp.splitFactor = 1
+    selectedComponents = [comp]
 # comp.splitFactor = 1 
 # selectedComponents = [comp]
 
