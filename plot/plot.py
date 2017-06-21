@@ -34,7 +34,7 @@ def project(comp, var, cut, *bins):
 
 def prepare_plot(var, cut, lumi):
     comps = [WW, ZZ, ZH]
-    basedir = '/Users/cbernet/Code/FCC/fcc_ee_higgs/samples/ana/May16'
+    basedir = '/Users/cbernet/Code/FCC/fcc_ee_higgs/samples/ana/June12'
 
     plot = DataMCPlot('recoil', histPref)
 
@@ -61,7 +61,18 @@ if __name__ == '__main__':
     from ROOT import RooRealVar, RooDataHist, RooHistPdf, RooArgList, RooArgSet, TH1
     var = 'recoil_m'
     cut = 'abs(zed_m-91)<5. && zed_pt>10 && zed_pz<50 && zed_acol>100 && zed_acop>10 \
-    && (jet1_e<0 || jet1_22_e/jet1_e<0.8) && (jet2_e<0 || jet2_22_e/jet2_e<0.8)'
+    && (jet1_e<0 || jet1_22_e/jet1_e<0.8) && (jet2_e<0 || jet2_22_e/jet2_e<0.8) && (jet1_b==1 || jet2_b==1)'
+
+    cut_z = '(abs(zed_m-91)<5. && zed_pt>10 && zed_pz<50 && zed_acol>100 && zed_acop>10 \
+    && (jet1_e<0 || jet1_22_e/jet1_e<0.8) && (jet2_e<0 || jet2_22_e/jet2_e<0.8))'
+    cut_hbb = '(jet1_b==1 || jet2_b==1)'
+    cut_hinv = '(jet1_e<0 && jet2_e<0)'
+    cut_hvis = 'jet1_e>0 && jet2_e>0'
+
+    # cut = '&&'.join([cut_z, cut_hbb])
+    # cut = '&&'.join([cut_z, cut_hinv])
+    cut = '&&'.join([cut_z, cut_hvis])
+    # cut = cut_z
     # cut = 'zed_m>50'
     bins = 50, 50, 150
     
@@ -71,7 +82,7 @@ if __name__ == '__main__':
     # import pdb; pdb.set_trace()
     draw(var, cut, lumi)
 
-    tfitter = BallFitter(plot)
+    tfitter = TemplateFitter(plot)
     for name, pdf in tfitter.pdfs.iteritems():
         print name, pdf
         print pdf.Print()
