@@ -8,7 +8,6 @@ import heppy.framework.context as context
 
 if context.name == 'fcc':
 
-    from analysis_ee_ZH_cfg import config
     from heppy.test.plot_ee_ZH import plot
     from heppy.framework.looper import Looper
     from ROOT import TFile
@@ -33,13 +32,6 @@ if context.name == 'fcc':
         def setUp(self):
             random.seed(0xdeadbeef)
             self.outdir = tempfile.mkdtemp()
-            fname = 'ee_ZH_Z_Hbb.root'
-            # fname = '/Users/cbernet/Code/FCC/fcc_ee_higgs/samples/pythia/ZZ/ee_ZZ_3.root'
-            config.components[0].files = [fname]
-            self.looper = Looper( self.outdir, config,
-                                  nEvents=50,
-                                  nPrint=0,
-                                  timeReport=True)
             import logging
             logging.disable(logging.CRITICAL)
 
@@ -47,15 +39,31 @@ if context.name == 'fcc':
             shutil.rmtree(self.outdir)
             logging.disable(logging.NOTSET)
 
-        def test_analysis(self):
-            '''Check for an almost perfect match with reference.
-            Will fail if physics algorithms are modified,
-            so should probably be removed from test suite,
-            or better: be made optional. 
-            '''        
-            self.looper.loop()
-            self.looper.write()
+        def test_ZH_mumubb(self):
+            '''Check that the ZH mumubb analysis runs
+            '''
+            from analysis_ee_ZH_cfg import config
+            fname = '/Users/cbernet/Code/FCC/fcc_ee_higgs/samples/pythia/ZH/ee_ZH_Zmumu_1.root'
+            config.components[0].files = [fname]
+            looper = Looper( self.outdir, config,
+                             nEvents=50,
+                             nPrint=0,
+                             timeReport=True)            
+            looper.loop()
+            looper.write()
             
+        def test_ZH_nunubb(self):
+            '''Check that the ZH nunubb analysis runs
+            '''
+            from analysis_ee_ZH_nunubb_cfg import config
+            fname = '/Users/cbernet/Code/FCC/fcc_ee_higgs/samples/pythia/ZH/ee_ZH_Zmumu_1.root'
+            config.components[0].files = [fname]
+            looper = Looper( self.outdir, config,
+                             nEvents=50,
+                             nPrint=0,
+                             timeReport=True)            
+            looper.loop()
+            looper.write()
 
 
 if __name__ == '__main__':
