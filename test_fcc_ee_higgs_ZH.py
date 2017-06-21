@@ -34,6 +34,7 @@ if context.name == 'fcc':
             random.seed(0xdeadbeef)
             self.outdir = tempfile.mkdtemp()
             fname = 'ee_ZH_Z_Hbb.root'
+            # fname = '/Users/cbernet/Code/FCC/fcc_ee_higgs/samples/pythia/ZZ/ee_ZZ_3.root'
             config.components[0].files = [fname]
             self.looper = Looper( self.outdir, config,
                                   nEvents=50,
@@ -54,17 +55,7 @@ if context.name == 'fcc':
             '''        
             self.looper.loop()
             self.looper.write()
-##            rootfile = '/'.join([self.outdir,
-##                                'heppy.analyzers.examples.zh.ZHTreeProducer.ZHTreeProducer_1/tree.root'])
-##            mean, sigma = plot(rootfile)
-##            self.assertAlmostEqual(mean, 113.3, 1)
-##            self.assertAlmostEqual(sigma, 21.23, 1)
-
-##        def test_analysis_sorting(self):
-##            self.looper.process(0)
-##            self.assertTrue(test_sorted(self.looper.event.rec_particles))
-
-        
+            
 
 
 if __name__ == '__main__':

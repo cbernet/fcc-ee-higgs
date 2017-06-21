@@ -15,7 +15,7 @@ ZZ = cfg.MCComponent(
     'ZZ',
     files = compfiles.get('{}/ZZ'.format(basedir)),
     xSection = 1.360, # pb-1
-    nGenEvents = 2.05e6)
+    nGenEvents = 16.2e6)
 
 WW = cfg.MCComponent(
     'WW',

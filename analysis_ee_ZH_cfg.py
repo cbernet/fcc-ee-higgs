@@ -53,9 +53,9 @@ Collider.SQRTS = 240.
 from components.ZH_Zmumu import components
 
 comp = components['ZH']
-comp.files = ['ee_ZH_Z_Hbb.root']
 # comp.splitFactor = len(comp.files)
-comp.splitfactor = 1 
+comp.files = ['/Users/cbernet/Code/FCC/fcc_ee_higgs/samples/pythia/ZH/ee_ZH_Zmumu_1.root']
+comp.splitFactor = 1
 
 # selecting the list of components to be processed. Here only one. 
 selectedComponents = [comp]
