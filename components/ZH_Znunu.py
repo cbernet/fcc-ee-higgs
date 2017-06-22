@@ -8,20 +8,20 @@ import compfiles
 basedir = '/afs/cern.ch/user/c/cbern/work/FCC/fcc_ee_higgs/pythia'
 
 if os.getcwd().startswith('/Users'):
-    basedir = '/Users/cbernet/Code/FCC/fcc_ee_higgs/samples/pythia'
+    basedir = '/Users/cbernet/Code/FCC/fcc_ee_higgs/samples/analysis'
 
 # definition of input samples 
 ZH = cfg.MCComponent(
     'ZH',
     files = compfiles.get('{}/ZHnunu/June21'.format(basedir)),
-    xSection = 2e-1, # pb-1
-    nGenEvents = 840e3)
+    xSection = 0.13, # pb-1
+    nGenEvents = 200000)
 
 ZZ = cfg.MCComponent(
     'ZZ',
     files = compfiles.get('{}/ZZnunu/June21'.format(basedir)),
     xSection = 1.360, # pb-1
-    nGenEvents = 16.2e6)
+    nGenEvents = 200000*34870/5000.)
 
 WW = cfg.MCComponent(
     'WW',

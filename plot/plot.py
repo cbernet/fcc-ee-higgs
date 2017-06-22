@@ -3,7 +3,7 @@ from cpyroot.tools.style import *
 from cpyroot.tools.DataMC.DataMCPlot import DataMCPlot
 
 from tdrstyle import tdrstyle
-from fcc_ee_higgs.components.ZH_Zmumu import WW, ZZ, ZH
+from fcc_ee_higgs.components.ZH_Znunu import WW, ZZ, ZH
 
 from fitter import TemplateFitter, BaseFitter, BallFitter
 
@@ -12,7 +12,7 @@ plot = None
 histPref = {
     'ZZ*': {'style':sBlue, 'layer':10, 'legend':'ZZ'},
     'WW*': {'style':sRed, 'layer':5, 'legend':'WW'},
-    'ZH*': {'style':sGreen, 'layer':1001, 'legend':'ZH'},
+    'ZH*': {'style':sGreen, 'layer':11, 'legend':'ZH'},
 }
 
 def load(comp, basedir):
@@ -23,18 +23,22 @@ def load(comp, basedir):
         'heppy.analyzers.examples.zh.ZHTreeProducer.ZHTreeProducer_1/tree.root'
     ))
     comp.tree = comp.rootfile.Get('events')
+    print comp
+    print '-'
+    
     
 def project(comp, var, cut, *bins):
     # hist_name = '{} : {} | {}'.format(comp.name, var, cut)
     hist_name = comp.name
     hist = TH1F(hist_name, '', *bins)
-    comp.tree.Project(hist.GetName(), var, cut)
+    if comp.tree != None:
+        comp.tree.Project(hist.GetName(), var, cut)
     print hist_name
     return hist
 
 def prepare_plot(var, cut, lumi):
-    comps = [WW, ZZ, ZH]
-    basedir = '/Users/cbernet/Code/FCC/fcc_ee_higgs/samples/ana/June12'
+    comps = [WW, ZZ, ZH] 
+    basedir = '/Users/cbernet/Code/FCC/fcc_ee_higgs/samples/analysis/ZH_nunubb/June22'
 
     plot = DataMCPlot('recoil', histPref)
 
@@ -59,19 +63,21 @@ def draw(var, cut, lumi, title=''):
 if __name__ == '__main__':
         
     from ROOT import RooRealVar, RooDataHist, RooHistPdf, RooArgList, RooArgSet, TH1
-    var = 'recoil_m'
+
     cut = 'abs(zed_m-91)<5. && zed_pt>10 && zed_pz<50 && zed_acol>100 && zed_acop>10 \
     && (jet1_e<0 || jet1_22_e/jet1_e<0.8) && (jet2_e<0 || jet2_22_e/jet2_e<0.8) && (jet1_b==1 || jet2_b==1)'
 
     cut_z = '(abs(zed_m-91)<5. && zed_pt>10 && zed_pz<50 && zed_acol>100 && zed_acop>10 \
     && (jet1_e<0 || jet1_22_e/jet1_e<0.8) && (jet2_e<0 || jet2_22_e/jet2_e<0.8))'
-    cut_hbb = '(jet1_b==1 || jet2_b==1)'
+    cut_hbb = '(jet1_b==1 && jet2_b==1)'
     cut_hinv = '(jet1_e<0 && jet2_e<0)'
     cut_hvis = 'jet1_e>0 && jet2_e>0'
+    cut_missingzmass = 'abs(misenergy_m-91)<30'
 
     # cut = '&&'.join([cut_z, cut_hbb])
     # cut = '&&'.join([cut_z, cut_hinv])
-    cut = '&&'.join([cut_z, cut_hvis])
+    cut_ZH = '&&'.join([cut_z, cut_hvis])
+    cut_ZHnunubb = '&&'.join([cut_missingzmass, cut_hbb])
     # cut = cut_z
     # cut = 'zed_m>50'
     bins = 50, 50, 150
@@ -79,14 +85,17 @@ if __name__ == '__main__':
     lumi = 5e6  # 5ab-1
     lumi = 1e6
 
+    var = 'higgs_m'
+    cut = cut_ZHnunubb
+
     # import pdb; pdb.set_trace()
     draw(var, cut, lumi)
 
-    tfitter = TemplateFitter(plot)
-    for name, pdf in tfitter.pdfs.iteritems():
-        print name, pdf
-        print pdf.Print()
-    tfitter.draw_data()
+##    tfitter = TemplateFitter(plot)
+##    for name, pdf in tfitter.pdfs.iteritems():
+##        print name, pdf
+##        print pdf.Print()
+##    tfitter.draw_data()
 #    sys.exit(1)
 ##    fitter.draw_pdfs()
 
