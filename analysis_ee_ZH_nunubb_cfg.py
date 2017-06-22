@@ -49,17 +49,23 @@ from heppy.configuration import Collider
 Collider.BEAMS = 'ee'
 Collider.SQRTS = 240.
 
-# definition of input samples 
-from components.ZH_Zmumu import components
+debug = False
 
-comp = components['ZH']
-# comp.splitFactor = len(comp.files)
-comp.files = ['samples/pythia/examples/ee_ZZ_nunu.root']
-comp.splitFactor = 1
+# definition of input samples                                                                                                   
+from components.ZH_Znunu import components
 
-# selecting the list of components to be processed. Here only one. 
-selectedComponents = [comp]
+selectedComponents = components.values()                                                                                      
+# selectedComponents = [components['ZZ']]
+for comp in selectedComponents:
+    comp.splitFactor = len(comp.files)
 
+# comp.splitfactor = 1                                                                                                          
+if debug:
+    comp = components['ZZ']
+    comp.files = comp.files[:1]
+    comp.splitFactor = 1
+    selectedComponents = [comp]
+# comp.splitFactor = 1                                                                                                          
 # read FCC EDM events from the input root file(s)
 # do help(Reader) for more information
 from heppy.analyzers.fcc.Reader import Reader
