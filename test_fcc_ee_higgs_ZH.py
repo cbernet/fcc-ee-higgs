@@ -43,7 +43,7 @@ if context.name == 'fcc':
             '''Check that the ZH mumubb analysis runs
             '''
             from analysis_ee_ZH_cfg import config
-            fname = '/Users/cbernet/Code/FCC/fcc_ee_higgs/samples/pythia/ZH/ee_ZH_Zmumu_1.root'
+            fname = 'samples/test/ee_ZH_Zmumu_1.root'
             config.components[0].files = [fname]
             looper = Looper( self.outdir, config,
                              nEvents=50,
@@ -56,7 +56,7 @@ if context.name == 'fcc':
             '''Check that the ZH nunubb analysis runs
             '''
             from analysis_ee_ZH_nunubb_cfg import config
-            fname = 'samples/pythia/examples/ee_ZH_Znunu.root'
+            fname = 'samples/test/ee_ZH_Znunu.root'
             config.components[0].files = [fname]
             looper = Looper( self.outdir, config,
                              nEvents=50,

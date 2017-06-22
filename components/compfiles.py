@@ -17,7 +17,8 @@ def get(dirname):
     dirname/Job_*/*.root
     '''
     if not os.path.isdir(dirname):
-        raise ValueError('{} is not a directory'.format(dirname))
+        print '{} is not a directory'.format(dirname)
+        return []
     rootfiles = glob.glob('{}/*_*.root'.format(dirname))
     if len(rootfiles):
         return rootfiles
