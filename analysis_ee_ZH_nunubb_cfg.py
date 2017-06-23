@@ -215,6 +215,21 @@ from heppy.test.btag_parametrized_cfg import btag_parametrized, btag
 from heppy.analyzers.roc import cms_roc
 btag.roc = cms_roc
 
+bjets = cfg.Analyzer(
+    Selector,
+    'bjets',
+    output = 'bjets',
+    input_objects = 'jets',
+    filter_func = lambda jet: jet.tags['b'] == 1)
+
+onebjet = cfg.Analyzer(
+    EventFilter  ,
+    'onebjet',
+    input_objects = 'bjets',
+    min_number = 1,
+    veto = False
+)
+
 # Build Higgs candidates from pairs of jets.
 higgses = cfg.Analyzer(
     ResonanceBuilder,
@@ -278,7 +293,9 @@ sequence = cfg.Sequence(
     # particles_not_zed,
     jets,
     # jet_rescaling, 
-    btag_parametrized, 
+    btag_parametrized,
+    bjets, 
+    onebjet, 
     higgses,
     # selection, 
     tree,
