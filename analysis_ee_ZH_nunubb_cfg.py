@@ -203,6 +203,13 @@ jets = cfg.Analyzer(
     njets_required=False
 )
 
+from fcc_ee_higgs.analyzers.ZHnunubbJetRescaler import ZHnunubbJetRescaler
+jet_rescaling = cfg.Analyzer(
+    ZHnunubbJetRescaler,
+    # output='rescaled_jets', 
+    jets='jets',
+)
+
 # b tagging 
 from heppy.test.btag_parametrized_cfg import btag_parametrized, btag
 from heppy.analyzers.roc import cms_roc
@@ -270,6 +277,7 @@ sequence = cfg.Sequence(
     missing_energy,
     # particles_not_zed,
     jets,
+    # jet_rescaling, 
     btag_parametrized, 
     higgses,
     # selection, 
