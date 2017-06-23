@@ -47,8 +47,7 @@ if context.name == 'fcc':
             config.components[0].files = [fname]
             looper = Looper( self.outdir, config,
                              nEvents=50,
-                             nPrint=0,
-                             timeReport=True)            
+                             nPrint=0 )            
             looper.loop()
             looper.write()
             
@@ -60,8 +59,7 @@ if context.name == 'fcc':
             config.components[0].files = [fname]
             looper = Looper( self.outdir, config,
                              nEvents=50,
-                             nPrint=0,
-                             timeReport=True)            
+                             nPrint=0 )            
             looper.loop()
             looper.write()
 
