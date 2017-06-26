@@ -16,7 +16,7 @@ class ZHnunubbJetRescaler(Analyzer):
         sump4 = TLorentzVector()
         for jet in jets:
             sump4 += jet.p4()
-            print jet
+            # print jet
         a = sump4.Mag2()
         b = -pi * sump4 * 2.
         c = pi.Mag2() - mZ ** 2
