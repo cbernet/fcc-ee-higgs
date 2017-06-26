@@ -16,7 +16,7 @@ class ZHnunubbJetRescaler(Analyzer):
         sump4 = TLorentzVector()
         for jet in jets:
             sump4 += jet.p4()
-            print jet
+            # print jet
         a = sump4.Mag2()
         b = -pi * sump4 * 2.
         c = pi.Mag2() - mZ ** 2
@@ -26,10 +26,10 @@ class ZHnunubbJetRescaler(Analyzer):
         scaling_factor = xmin
         if abs(xmax-1) < abs(xmin-1):
             scaling_factor = xmax
-        print xmin, xmax
-        print scaling_factor
+        # print xmin, xmax
+        # print scaling_factor
         for jet in jets:
             jet._tlv *= scaling_factor
-            print jet
-        print
+            # print jet
+        # print
         

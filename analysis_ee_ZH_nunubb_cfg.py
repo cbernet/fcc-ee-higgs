@@ -49,7 +49,7 @@ from heppy.configuration import Collider
 Collider.BEAMS = 'ee'
 Collider.SQRTS = 240.
 
-debug = True
+debug = False
 
 # definition of input samples                                                                                                   
 from components.ZH_Znunu import components
@@ -292,7 +292,7 @@ sequence = cfg.Sequence(
     missing_energy,
     # particles_not_zed,
     jets,
-    # jet_rescaling, 
+    jet_rescaling, 
     btag_parametrized,
     bjets, 
     onebjet, 
