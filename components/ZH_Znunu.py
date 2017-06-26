@@ -14,14 +14,14 @@ if os.getcwd().startswith('/Users'):
 ZH = cfg.MCComponent(
     'ZH',
     files = compfiles.get('{}/ZHnunu/June21'.format(basedir)),
-    xSection = 0.13, # pb-1
-    nGenEvents = 200000)
+    xSection = 0.013, # pb-1
+    nGenEvents = 100*5000)
 
 ZZ = cfg.MCComponent(
     'ZZ',
     files = compfiles.get('{}/ZZnunu/June21'.format(basedir)),
     xSection = 1.360, # pb-1
-    nGenEvents = 200000*34870/5000.)
+    nGenEvents = 200*5000*34870/5000.)
 
 WW = cfg.MCComponent(
     'WW',

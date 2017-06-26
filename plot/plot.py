@@ -38,7 +38,7 @@ def project(comp, var, cut, *bins):
 
 def prepare_plot(var, cut, lumi):
     comps = [WW, ZZ, ZH] 
-    basedir = '/Users/cbernet/Code/FCC/fcc_ee_higgs/samples/analysis/ZH_nunubb/June22'
+    basedir = '/Users/cbernet/Code/FCC/fcc_ee_higgs/samples/analysis/ZH_nunubb/June26'
 
     plot = DataMCPlot('recoil', histPref)
 
@@ -59,6 +59,8 @@ def draw(var, cut, lumi, title=''):
     plot.supportHist.GetYaxis().SetNdivisions(5)
     plot.supportHist.GetXaxis().SetNdivisions(5)
     plot.supportHist.GetXaxis().SetTitle(title)
+    print var, cut 
+    
 
 if __name__ == '__main__':
         
@@ -69,15 +71,17 @@ if __name__ == '__main__':
 
     cut_z = '(abs(zed_m-91)<5. && zed_pt>10 && zed_pz<50 && zed_acol>100 && zed_acop>10 \
     && (jet1_e<0 || jet1_22_e/jet1_e<0.8) && (jet2_e<0 || jet2_22_e/jet2_e<0.8))'
-    cut_hbb = '(jet1_b==1 && jet2_b==1)'
+    cut_hbb = '(jet1_b==1 || jet2_b==1)'
     cut_hinv = '(jet1_e<0 && jet2_e<0)'
     cut_hvis = 'jet1_e>0 && jet2_e>0'
-    cut_missingzmass = 'abs(misenergy_m-91)<30'
+    cut_missingzmass = 'misenergy_m>65 && misenergy_m<125'
+    cut_haco = 'higgs_pt>10 && higgs_pz<50 && higgs_acol>100 && higgs_acop>10'
 
     # cut = '&&'.join([cut_z, cut_hbb])
     # cut = '&&'.join([cut_z, cut_hinv])
     cut_ZH = '&&'.join([cut_z, cut_hvis])
-    cut_ZHnunubb = '&&'.join([cut_missingzmass, cut_hbb])
+    cut_ZHnunubb = '&&'.join([cut_missingzmass, cut_hbb, cut_haco])
+    # cut_ZHnunubb = '&&'.join([cut_missingzmass, cut_hbb])
     # cut = cut_z
     # cut = 'zed_m>50'
     bins = 50, 50, 150
