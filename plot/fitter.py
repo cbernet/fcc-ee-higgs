@@ -1,5 +1,6 @@
 from cpyroot.tools.DataMC import DataMCPlot, Histogram
 from ROOT import RooRealVar, RooPolynomial, RooConstVar, RooDataSet, RooDataHist, RooHistPdf, RooGaussian, RooArgSet, RooAddPdf, RooArgList, RooFit, SetOwnership, RooAbsArg
+from ROOT import TCanvas
 
 class BaseFitter(object):
 
@@ -66,6 +67,7 @@ class BaseFitter(object):
         self.pframe.Draw()
         
     def draw_data(self):
+        self.canvas_data = TCanvas()
         self.mframe = self.xvar.frame()
         self.data.plotOn(self.mframe)
         self.underlying_model.plotOn(self.mframe)

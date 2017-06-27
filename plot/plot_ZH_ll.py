@@ -24,7 +24,7 @@ if __name__ == '__main__':
     cut_z = '(abs(zed_m-91)<5. && zed_pt>10 && zed_pz<50 && zed_acol>100 && zed_acop>10'
     
     cut_rad = '(jet1_e<0 || jet1_22_e/jet1_e<0.8) && (jet2_e<0 || jet2_22_e/jet2_e<0.8))'
-    cut_hbb = '(jet1_b==1 && jet2_b==1)'
+    cut_hbb = '(jet1_b==1 || jet2_b==1)'
     cut_hinv = '(jet1_e<0 && jet2_e<0)'
     cut_hvis = 'jet1_e>0 && jet2_e>0'
 
