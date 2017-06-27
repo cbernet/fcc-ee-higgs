@@ -58,7 +58,19 @@ if context.name == 'fcc':
             fname = 'samples/test/ee_ZH_Znunu.root'
             config.components[0].files = [fname]
             looper = Looper( self.outdir, config,
-                             nEvents=50,
+                             nEvents=100,
+                             nPrint=0 )            
+            looper.loop()
+            looper.write()
+
+        def test_ZZ_nunubb(self):
+            '''Check that the ZH nunubb analysis runs
+            '''
+            from analysis_ee_ZH_nunubb_cfg import config
+            fname = 'samples/test/ee_ZZ_nunu.root'
+            config.components[0].files = [fname]
+            looper = Looper( self.outdir, config,
+                             nEvents=100,
                              nPrint=0 )            
             looper.loop()
             looper.write()
