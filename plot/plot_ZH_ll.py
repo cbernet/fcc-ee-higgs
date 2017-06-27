@@ -14,6 +14,7 @@ if __name__ == '__main__':
     basedir = '/Users/cbernet/Code/FCC/fcc_ee_higgs/samples/analysis/ZH_ll/June12'
     comps = [WW, ZZ, ZH] 
     lumi = 1e6
+    # lumi = 5e6  # 5ab-1
 
     plotter = Plotter(basedir, comps, lumi)
 
@@ -29,19 +30,18 @@ if __name__ == '__main__':
 
     cut_ZH = ' && '.join([cut_z, cut_rad])
 
-    
-    # lumi = 5e6  # 5ab-1
-
     var = 'recoil_m'
     cut = cut_ZH
     bins = 50, 50, 150
 
     plotter.draw(var, cut, bins)
-##    tfitter = TemplateFitter(plot)
+    tfitter = TemplateFitter(plotter.plot)
+    tfitter.draw_data()
+    
 ##    for name, pdf in tfitter.pdfs.iteritems():
 ##        print name, pdf
 ##        print pdf.Print()
 ##    tfitter.draw_data()
-#    sys.exit(1)
+##    sys.exit(1)
 ##    fitter.draw_pdfs()
 
