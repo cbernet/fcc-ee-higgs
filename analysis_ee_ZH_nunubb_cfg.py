@@ -49,7 +49,7 @@ from heppy.configuration import Collider
 Collider.BEAMS = 'ee'
 Collider.SQRTS = 240.
 
-debug = False
+debug = True
 
 # definition of input samples                                                                                                   
 from components.ZH_Znunu import components
@@ -61,8 +61,8 @@ for comp in selectedComponents:
 
 # comp.splitfactor = 1                                                                                                          
 if debug:
-    comp = components['ZH']
-    comp.files = ['samples/test/ee_ZH_Znunu.root']
+    comp = components['ZZ']
+    comp.files = ['samples/test/ee_ZZ_nunu.root']
     comp.splitFactor = 1
     selectedComponents = [comp]
 # comp.splitFactor = 1                                                                                                          
