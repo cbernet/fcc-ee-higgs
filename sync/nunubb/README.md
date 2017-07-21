@@ -11,7 +11,7 @@ And the value of the acoplanarity computed by Colin:
 
 - higgs_acop
 
-The macro `acoplanarity.py` recomputes the acoplanarity and checks that for all events in the tree, the recomputed acoplanarity is equal to the one computed earlier. 
+The macro [acoplanarity.py](acoplanarity.py) recomputes the acoplanarity and checks that for all events in the tree, the recomputed acoplanarity is equal to the one computed earlier. 
 
 To run this script, just do:
 
