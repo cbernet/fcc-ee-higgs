@@ -19,6 +19,6 @@ To run this script, just do:
 python acoplanarity.py
 ```
 
-You may now simply insert your acoplanarity code to make sure why it matches.
+You may now simply insert your acoplanarity code to make sure that it matches.
 If not, you may use `pdb` for interactive debugging.
 
