@@ -49,15 +49,18 @@ from heppy.configuration import Collider
 Collider.BEAMS = 'ee'
 Collider.SQRTS = 240.
 
-debug = True
+debug = False
 
 # definition of input samples                                                                                                   
-from components.ZH_Znunu import components
+from components.ZH_Znunu import components as cps
 
-selectedComponents = components.values()                                                                                      
-# selectedComponents = [components['ZZ']]
+selectedComponents = cps.values()                                                                                      
+comp = cps['ZHnunu']
+selectedComponents = [comp]
+
 for comp in selectedComponents:
     comp.splitFactor = len(comp.files)
+# comp.splitFactor = 1
 
 # comp.splitfactor = 1                                                                                                          
 if debug:
@@ -65,7 +68,7 @@ if debug:
     comp.files = ['samples/test/ee_ZZ_nunu.root']
     comp.splitFactor = 1
     selectedComponents = [comp]
-# comp.splitFactor = 1                                                                                                          
+
 # read FCC EDM events from the input root file(s)
 # do help(Reader) for more information
 from heppy.analyzers.fcc.Reader import Reader

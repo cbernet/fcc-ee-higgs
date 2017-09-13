@@ -11,15 +11,21 @@ if os.getcwd().startswith('/Users'):
     basedir = '/Users/cbernet/Code/FCC/fcc_ee_higgs/samples/analysis'
 
 # definition of input samples 
-ZH = cfg.MCComponent(
-    'ZH',
+ZHnunu = cfg.MCComponent(
+    'ZHnunu',
     files = compfiles.get('{}/ZHnunu/June21'.format(basedir)),
     xSection = 0.013, # pb-1
     nGenEvents = 100*5000)
 
+ZZnunu = cfg.MCComponent(
+    'ZZnunu',
+    files = compfiles.get('{}/ZZnunu/June21'.format(basedir)),
+    xSection = 1.360, # pb-1
+    nGenEvents = 200*5000*34870/5000.)
+
 ZZ = cfg.MCComponent(
     'ZZ',
-    files = compfiles.get('{}/ZZnunu/June21'.format(basedir)),
+    files = compfiles.get('{}/ZZ/Sep12_2M'.format(basedir)),
     xSection = 1.360, # pb-1
     nGenEvents = 200*5000*34870/5000.)
 
@@ -32,7 +38,7 @@ WW = cfg.MCComponent(
     nGenEvents = 8.5e6)
 
 components = dict(
-        ( (comp.name, comp) for comp in [ZH, ZZ] )
+        ( (comp.name, comp) for comp in [ZHnunu, ZZ] )
 )
 
 if __name__ == '__main__':
