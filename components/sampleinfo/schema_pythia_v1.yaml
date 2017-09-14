@@ -1,0 +1,15 @@
+---
+
+sample: 
+  id            : int
+  nevents       : int
+  njobs         : int
+  njobs_ok      : int
+  user          : str
+  timestamp     : time_stamp
+  xsection      : float, # mb
+
+software: 
+  id            : int
+  fccstack      : version_number
+  fcc-physics   : git_commit_id
