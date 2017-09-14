@@ -1,0 +1,22 @@
+---
+
+sample:
+  id            : 1
+  nevents       : 5e5
+  njobs         : 100
+  njobs_ok      : 100
+  user          : cbern
+  timestamp     : 2017-06-21T15:00:00.1Z
+  xsection      : 1.3e-11 # mb
+
+detector: # only needed for papas samples
+  id            : 1
+  name          : CMS
+  module        : heppy.papas.detectors.CMS
+
+software:
+  id            : 1
+  fccstack      : 0.8
+  fcc-physics   : b2c5703
+  heppy         : 476b286 # not necessary for pythia samples
+  fcc_ee_higgs  : e59820f
