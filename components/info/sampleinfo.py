@@ -1,5 +1,6 @@
 
 import os
+import fnmatch
 import glob
 import yaml
 import networkx as nx
@@ -42,15 +43,29 @@ class SampleInfo(dict):
         lines.append(pprint.pformat(self))
         return '\n'.join(lines)
 
+def find_samples(dirname):
+    '''Find all samples with a yaml files in dirname'''
+    matches = []
+    for root, dirnames, filenames in os.walk(dirname):
+        if len(fnmatch.filter(filenames, '*.yaml')):
+            matches.append(root)
+    return matches
+
 
 ########################################################################
-class SampleInfoGraph(dict):
+class SampleBase(dict):
     
-    def __init__(self, sample_infos):
+    def __init__(self, basedirname):
         self.parent_graph = nx.DiGraph()
         self.child_graph = nx.DiGraph()
         self.nodes = dict()
-        map(self._add_node, sample_infos)
+        sampledirs = find_samples(basedirname)
+        for sampledir in sampledirs:
+            info = SampleInfo(sampledir)
+            # adding the sample directory to the sample info
+            info['sample']['directory'] = sampledir
+            self._add_node(info)
+            self[info.name] = info
 
     def _add_node(self, sample_info):
         self[sample_info.name] = sample_info
