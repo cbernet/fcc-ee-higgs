@@ -1,0 +1,29 @@
+# heppy, ZH->nunubb final state, with at least 1 b jet 
+---
+
+sample:
+  id            : 5
+  mothers       : [2]
+  nevents       : 471856
+  njobs         : 100
+  njobs_ok      : 99
+  user          : cbern
+  timestamp     : 2017-09-13T19:00:00.1Z
+  xsection      : 1.4e-09 # mb
+
+detector: # only needed for papas samples
+  id            : 1
+  name          : CMS
+  module        : heppy.papas.detectors.CMS
+
+analysis:
+  id            : 1
+  name          : ZHnunubb_1b
+  module        : fcc_ee_higgs.analysis_ee_ZH_nunubb_cfg
+
+software:
+  id            : 1
+  fccstack      : 0.8
+  fcc-physics   : b2c5703
+  heppy         : 476b286 # not necessary for pythia samples
+  fcc_ee_higgs  : e59820f
