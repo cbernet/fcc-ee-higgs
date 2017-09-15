@@ -47,7 +47,8 @@ class SampleInfo(dict):
 class SampleInfoGraph(dict):
     
     def __init__(self, sample_infos):
-        self.graph = nx.DiGraph()
+        self.parent_graph = nx.DiGraph()
+        self.child_graph = nx.DiGraph()
         self.nodes = dict()
         map(self._add_node, sample_infos)
 
@@ -55,15 +56,19 @@ class SampleInfoGraph(dict):
         self[sample_info.name] = sample_info
         self.nodes[sample_info.id] = sample_info
         for mid in sample_info.mothers():
-            self.graph.add_edge(sample_info.id, mid)
+            self.parent_graph.add_edge(sample_info.id, mid)
+            self.child_graph.add_edge(mid, sample_info.id)
             
     def oldest_ancestor(self, sample_info):
-        ancestors = list(nx.dfs_preorder_nodes(self.graph, sample_info.id))
+        ancestors = list(nx.dfs_preorder_nodes(self.parent_graph, sample_info.id))
         print ancestors
         return self.nodes[ancestors[-1]]
     
     def ancestors(self, sample_info):
-        ancestors = list(nx.dfs_preorder_nodes(self.graph, sample_info.id))
+        ancestors = list(nx.dfs_preorder_nodes(self.parent_graph, sample_info.id))
         return [self.nodes[i] for i in ancestors]
-        
+    
+    def descendants(self, sample_info):
+        descendants = list(nx.dfs_preorder_nodes(self.child_graph, sample_info.id)) 
+        return [self.nodes[i] for i in descendants]
         

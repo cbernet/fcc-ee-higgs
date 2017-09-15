@@ -15,14 +15,16 @@ def find_samples(dirname):
 
 
 ########################################################################
-class SampleBase(object):
+class SampleBase(dict):
     """"""
 
     #----------------------------------------------------------------------
     def __init__(self, basedirname):
         """Constructor"""
-        yamls = find_samples(basedirname)
-        self.infos = map(SampleInfo, yamls)
-        self.graph = SampleInfoGraph(self.infos)
+        sampledirs = find_samples(basedirname)
+        for sampledir in sampledirs:
+            info = SampleInfo(sampledir)
+            self[info.name] = info
+        self.graph = SampleInfoGraph(self.values())
     
     
