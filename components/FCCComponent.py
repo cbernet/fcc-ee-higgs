@@ -21,6 +21,8 @@ class FCCComponent(MCComponent):
             raise ValueError('no yaml file in '+sample_fname)                    
         tmp = open(info_fnames[0])
         self.info = yaml.load(tmp)['sample']
+        # get n gen events and cross section from mother
+        
             
     def __str__(self):
         return pprint.pformat(self.info)

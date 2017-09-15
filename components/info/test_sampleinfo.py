@@ -31,6 +31,12 @@ class TestSampleInfo(unittest.TestCase):
         samples = SampleInfoGraph([heppy_info, pythia_info])
         self.assertEqual(samples.oldest_ancestor(heppy_info), pythia_info)
         
+    def test_ancestors(self):
+        heppy_info = SampleInfo(sheppy_1)
+        pythia_info = SampleInfo(spythia_1)
+        samples = SampleInfoGraph([heppy_info, pythia_info])
+        self.assertEqual(samples.ancestors(heppy_info), [heppy_info, pythia_info])
+        
         
 if __name__ == '__main__':
     unittest.main()

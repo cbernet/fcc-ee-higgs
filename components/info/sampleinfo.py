@@ -5,6 +5,7 @@ import yaml
 import networkx as nx
 import pprint
 
+########################################################################
 class SampleInfo(dict):
     
     def __init__(self, dirname):
@@ -41,6 +42,8 @@ class SampleInfo(dict):
         lines.append(pprint.pformat(self))
         return '\n'.join(lines)
 
+
+########################################################################
 class SampleInfoGraph(dict):
     
     def __init__(self, sample_infos):
@@ -58,4 +61,9 @@ class SampleInfoGraph(dict):
         ancestors = list(nx.dfs_preorder_nodes(self.graph, sample_info.id))
         print ancestors
         return self.nodes[ancestors[-1]]
+    
+    def ancestors(self, sample_info):
+        ancestors = list(nx.dfs_preorder_nodes(self.graph, sample_info.id))
+        return [self.nodes[i] for i in ancestors]
+        
         
