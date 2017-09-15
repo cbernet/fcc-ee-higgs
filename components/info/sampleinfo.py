@@ -76,7 +76,6 @@ class SampleBase(dict):
             
     def oldest_ancestor(self, sample_info):
         ancestors = list(nx.dfs_preorder_nodes(self.parent_graph, sample_info.id))
-        print ancestors
         return self.nodes[ancestors[-1]]
     
     def ancestors(self, sample_info):
