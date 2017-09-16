@@ -3,8 +3,23 @@ import os
 import fnmatch
 import glob
 import yaml
+import re
 import networkx as nx
 import pprint
+
+# fix bug in yaml 
+# https://stackoverflow.com/questions/30458977/yaml-loads-5e-6-as-string-and-not-a-number
+loader = yaml.SafeLoader
+loader.add_implicit_resolver(
+    u'tag:yaml.org,2002:float',
+    re.compile(u'''^(?:
+     [-+]?(?:[0-9][0-9_]*)\\.[0-9_]*(?:[eE][-+]?[0-9]+)?
+    |[-+]?(?:[0-9][0-9_]*)(?:[eE][-+]?[0-9]+)
+    |\\.[0-9_]+(?:[eE][-+][0-9]+)?
+    |[-+]?[0-9][0-9_]*(?::[0-5]?[0-9])+\\.[0-9_]*
+    |[-+]?\\.(?:inf|Inf|INF)
+    |\\.(?:nan|NaN|NAN))$''', re.X),
+    list(u'-+0123456789.'))
 
 ########################################################################
 class SampleInfo(dict):
@@ -29,7 +44,7 @@ class SampleInfo(dict):
             raise ValueError('no yaml file in '+dirname)                    
         info_fname = info_fnames[0]
         with open(info_fname) as tmp:
-            info = yaml.load(tmp) 
+            info = yaml.load(tmp, Loader=loader) 
         tmp.close()
         return info, info_fname
     

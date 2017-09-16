@@ -11,24 +11,31 @@ histPref = {
 
 class Plotter(object):
     
-    def __init__(self, basedir, comps, lumi):
-        self.basedir = basedir
+    def __init__(self, comps, lumi):
         self.comps = comps
         self.lumi = lumi
         for comp in self.comps:
-            self._load(comp, self.basedir)
+            self._load(comp)
            
-    def _load(self, comp, basedir):
-        comp.directory = '/'.join([basedir, comp.name])
-        print comp.directory
-        comp.rootfile = TFile('{}/{}'.format(
-            comp.directory,
-            'heppy.analyzers.examples.zh.ZHTreeProducer.ZHTreeProducer_1/tree.root'
-        ))
+##    def _load(self, comp, basedir):
+##        comp.directory = '/'.join([basedir, comp.name])
+##        print comp.directory
+##        comp.rootfile = TFile('{}/{}'.format(
+##            comp.directory,
+##            'heppy.analyzers.examples.zh.ZHTreeProducer.ZHTreeProducer_1/tree.root'
+##        ))
+##        comp.tree = comp.rootfile.Get('events')
+##        print comp
+##        print '-'
+    
+    def _load(self, comp):
+        print 'warning convert to Chain!'
+        comp.rootfile = TFile(comp.files[0])
         comp.tree = comp.rootfile.Get('events')
         print comp
         print '-'
-    
+
+
     def _project(self, comp, var, cut, *bins):
         hist_name = comp.name
         hist = TH1F(hist_name, '', *bins)

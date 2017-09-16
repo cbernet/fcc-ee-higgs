@@ -22,7 +22,7 @@ for name in sorted(base.keys()):
     elif len(heppys):
         files = ['/'.join([sampledir,treename])]
     oldest_ancestor = base.oldest_ancestor(info)
-    xSection = oldest_ancestor['sample']['xsection']
+    xSection = oldest_ancestor['sample']['xsection'] * 1e9  # now in pb
     nGenEvents = oldest_ancestor['sample']['nevents']
     global_eff = 1.
     for ancestor in base.ancestors(info):
