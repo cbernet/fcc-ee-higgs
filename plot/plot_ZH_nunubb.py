@@ -42,7 +42,7 @@ if __name__ == '__main__':
         tfitter = TemplateFitter(plotter.plot)
         tfitter.draw_data()
     
-    marginal_efficiency(ZZ.tree, all_cuts)
+    # marginal_efficiency(ZZ.tree, all_cuts)
 ##    for name, pdf in tfitter.pdfs.iteritems():
 ##        print name, pdf
 ##        print pdf.Print()

@@ -14,8 +14,8 @@ class Plotter(object):
     def __init__(self, comps, lumi):
         self.comps = comps
         self.lumi = lumi
-        for comp in self.comps:
-            self._load(comp)
+##        for comp in self.comps:
+##            self._load(comp)
            
 ##    def _load(self, comp, basedir):
 ##        comp.directory = '/'.join([basedir, comp.name])
@@ -28,12 +28,12 @@ class Plotter(object):
 ##        print comp
 ##        print '-'
     
-    def _load(self, comp):
-        print 'warning convert to Chain!'
-        comp.rootfile = TFile(comp.files[0])
-        comp.tree = comp.rootfile.Get('events')
-        print comp
-        print '-'
+##    def _load(self, comp):
+##        print 'warning convert to Chain!'
+##        comp.rootfile = TFile(comp.files[0])
+##        comp.tree = comp.rootfile.Get('events')
+##        print comp
+##        print '-'
 
 
     def _project(self, comp, var, cut, *bins):
