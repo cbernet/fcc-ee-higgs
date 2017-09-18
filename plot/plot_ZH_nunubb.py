@@ -4,6 +4,7 @@ from tdrstyle import tdrstyle
 from fcc_ee_higgs.components.all import components
 from fitter import TemplateFitter, BaseFitter, BallFitter
 from plotter import Plotter
+from marginal_efficiency import marginal_efficiency
 
 plot = None
 
@@ -22,20 +23,26 @@ if __name__ == '__main__':
 
     plotter = Plotter(comps, lumi)
     
-    cut_missingzmass = 'misenergy_m>65 && misenergy_m<125'
-    cut_hbb = '(jet1_b==1 && jet2_b==1)'
-    cut_haco = 'higgs_pt>10 && higgs_pz<50 && higgs_acol>100 && higgs_cross>10'
-
-    cut_ZHnunubb = '&&'.join([cut_missingzmass, cut_hbb, cut_haco])
+    cut_missmass= 'misenergy_m>65 && misenergy_m<125'
+    cut_h_bb = '(jet1_b==1 && jet2_b==1)'
+    cut_h_pz = 'higgs_pz<50'
+    cut_h_pt = 'higgs_pt>15'
+    cut_h_acol = 'higgs_acol>100.'
+    cut_h_cross = 'higgs_cross>10'
+    all_cuts = [cut_missmass, cut_h_bb, cut_h_pz, cut_h_pt, cut_h_acol, cut_h_cross]
+    str_all_cuts = '&&'.join(all_cuts)
 
     var = 'higgs_m'
-    cut = cut_ZHnunubb
+    cut = str_all_cuts
     bins = 50, 50, 150
-
-    plotter.draw(var, cut, bins)
-    tfitter = TemplateFitter(plotter.plot)
-    tfitter.draw_data()
     
+    do_fit = False
+    plotter.draw(var, cut, bins)
+    if do_fit:
+        tfitter = TemplateFitter(plotter.plot)
+        tfitter.draw_data()
+    
+    marginal_efficiency(ZZ.tree, all_cuts)
 ##    for name, pdf in tfitter.pdfs.iteritems():
 ##        print name, pdf
 ##        print pdf.Print()
