@@ -303,7 +303,7 @@ sequence = cfg.Sequence(
     jet_rescaling, 
     btag_parametrized,
     bjets, 
-    onebjet, 
+    # onebjet, 
     higgses,
     # selection, 
     tree,
