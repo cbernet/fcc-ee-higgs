@@ -49,10 +49,11 @@ from heppy.configuration import Collider
 Collider.BEAMS = 'ee'
 Collider.SQRTS = 240.
 
-mode = 'ffbar'
+mode = 'ee_to_ZZ_Sep12_A_2'
 
 # definition of input samples                                                                                                   
-from components.ZH_Znunu import components as cps
+# from components.ZH_Znunu import components as cps
+from fcc_ee_higgs.components.all import components as cps
 
 selectedComponents = cps.values()                                                                                      
 
