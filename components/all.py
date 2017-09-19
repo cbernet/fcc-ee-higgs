@@ -19,6 +19,8 @@ for name in sorted(base.keys()):
     sampledir = info['sample']['directory']
     jobs = glob.glob('/'.join([sampledir, 'Job_*']))
     heppys = glob.glob('/'.join([sampledir, 'heppy.*']))
+    rootfile = None
+    tree = None
     if len(jobs):
         files = glob.glob('/'.join([sampledir, 'Job_*/*.root']))
     elif len(heppys):
@@ -28,6 +30,8 @@ for name in sorted(base.keys()):
             if not os.path.isfile(abstreename):
                 raise ValueError('cannot find tree root file in '+sampledir)
         files = [abstreename]
+        rootfile = TFile(comp.files[0])
+        tree = rootfile.Get('events')        
     oldest_ancestor = base.oldest_ancestor(info)
     xSection = oldest_ancestor['sample']['xsection'] * 1e9  # now in pb
     nGenEvents = oldest_ancestor['sample']['nevents']
@@ -44,8 +48,11 @@ for name in sorted(base.keys()):
     print comp.files
     if comp is None:
         print 'comp is none'
-    comp.rootfile = TFile(comp.files[0])
-    comp.tree = comp.rootfile.Get('events')        
+    if len(comp.files) == 0:
+        raise ValueError('no file in '+sampledir)
+    if rootfile and tree:
+        comp.rootfile = rootfile
+        comp.tree = tree        
     components[name] = comp
     print name 
     
