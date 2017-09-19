@@ -25,7 +25,7 @@ def read_heppy(sampledir, treename, treename_janik):
             if not os.path.isfile(abstreename):
                 raise ValueError('cannot find tree root file in '+sampledir)        
         files = [abstreename]
-        rootfile = TFile(comp.files[0])
+        rootfile = TFile(files[0])
         tree = rootfile.Get('events')
     return files, rootfile, tree
 

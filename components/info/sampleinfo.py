@@ -91,18 +91,20 @@ class SampleBase(dict):
             self.child_graph.add_edge(mid, sample_info.id)
             
     def oldest_ancestor(self, sample_info):
+        if not sample_info.id in self.parent_graph:
+            return sample_info
         ancestors = list(nx.dfs_preorder_nodes(self.parent_graph, sample_info.id))
         return self.nodes[ancestors[-1]]
     
     def ancestors(self, sample_info):
         if not sample_info.id in self.parent_graph:
-            return []
+            return [sample_info]
         ancestors = list(nx.dfs_preorder_nodes(self.parent_graph, sample_info.id))
         return [self.nodes[i] for i in ancestors]
     
     def descendants(self, sample_info):
         if not sample_info.id in self.child_graph:
-            return []
+            return [sample_info]
         descendants = list(nx.dfs_preorder_nodes(self.child_graph, sample_info.id)) 
         return [self.nodes[i] for i in descendants]
         
