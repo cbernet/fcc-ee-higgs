@@ -41,7 +41,7 @@ from EventStore import EventStore as Events
 from heppy.framework.event import Event
 # comment the following line to see all the collections stored in the event 
 # if collection is listed then print loop.event.papasevent will include the collections
-Event.print_patterns=['zeds*', 'higgs*', 'jets', 'bquarks', 'recoil*', 'collections']
+Event.print_patterns=['zeds*', 'higgs*', 'jets*', 'bquarks', 'recoil*', 'collections']
 
 # definition of the collider
 # help(Collider) for more information
@@ -49,7 +49,8 @@ from heppy.configuration import Collider
 Collider.BEAMS = 'ee'
 Collider.SQRTS = 240.
 
-mode = 'ee_to_ZZ_Sep12_A_2'
+# mode = 'ee_to_ZZ_Sep12_A_2'
+mode = 'test'
 
 # definition of input samples                                                                                                   
 # from components.ZH_Znunu import components as cps
@@ -60,9 +61,10 @@ selectedComponents = cps.values()
 for comp in selectedComponents:
     comp.splitFactor = len(comp.files)
 
+test_filename = 'samples/test/ee_ZZ_nunu.root'
 if mode == 'test':
-    comp = components['ZZ']
-    comp.files = ['samples/test/ee_ZZ_nunu.root']
+    comp = cps['ee_to_ZZ_Sep12_A_2']
+    comp.files = [test_filename]
     comp.splitFactor = 1
     selectedComponents = [comp]
 elif mode == 'debug':
@@ -73,6 +75,7 @@ elif mode == 'debug':
     selectedComponents = [comp]
 else:
     selectedComponents = [cps[mode]]
+    # cps[mode].files = cps[mode].files[:1]
     
 # read FCC EDM events from the input root file(s)
 # do help(Reader) for more information
@@ -214,7 +217,7 @@ jets = cfg.Analyzer(
 from fcc_ee_higgs.analyzers.ZHnunubbJetRescaler import ZHnunubbJetRescaler
 jet_rescaling = cfg.Analyzer(
     ZHnunubbJetRescaler,
-    # output='rescaled_jets', 
+    output='jets_rescaled', 
     jets='jets',
 )
 
@@ -239,12 +242,20 @@ onebjet = cfg.Analyzer(
 )
 
 # Build Higgs candidates from pairs of jets.
+higgses_rescaled = cfg.Analyzer(
+    ResonanceBuilder,
+    output = 'higgses_rescaled',
+    leg_collection = 'jets_rescaled',
+    pdgid = 25
+)
+
 higgses = cfg.Analyzer(
     ResonanceBuilder,
     output = 'higgses',
     leg_collection = 'jets',
     pdgid = 25
 )
+
 
 
 # Just a basic analysis-specific event Selection module.
@@ -305,6 +316,7 @@ sequence = cfg.Sequence(
     bjets, 
     # onebjet, 
     higgses,
+    higgses_rescaled, 
     # selection, 
     tree,
     display
