@@ -1,5 +1,7 @@
 
-from fcc_ee_higgs.components.all import components
+from fcc_ee_higgs.components.all import load_components
+all_components = load_components()
+
 from varmap_janik import varmap
 from cpyroot.tools.treecomparator import TreeComparator
 
@@ -12,8 +14,8 @@ def print_vars(tree):
     pprint.pprint(names)
 
 comps = dict(
-    janik=components['ee_to_ZZ_Janik_Sep18_ZHnunubb_A_10'],
-    colin=components['ee_to_ZZ_Sep12_ZHnunubb_A_9']
+    janik=all_components['ee_to_ZZ_Janik_Sep18_ZHnunubb_A_10'],
+    colin=all_components['ee_to_ZZ_Sep12_ZHnunubb_A_9']
     )
 
 for vcolin, vjanik in varmap.iteritems():

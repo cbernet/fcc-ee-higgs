@@ -54,7 +54,8 @@ mode = 'ee_to_ZZ_Sep12_A_2'
 
 # definition of input samples                                                                                                   
 # from components.ZH_Znunu import components as cps
-from fcc_ee_higgs.components.all import components as cps
+from fcc_ee_higgs.components.all import load_components
+cps = load_components(mode='pythia')
 
 selectedComponents = cps.values()                                                                                      
 

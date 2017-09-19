@@ -58,23 +58,24 @@ class SampleInfo(dict):
         lines.append(pprint.pformat(self))
         return '\n'.join(lines)
 
-def find_samples(dirname):
+def find_samples(dirname, pattern):
     '''Find all samples with a yaml files in dirname'''
     matches = []
     for root, dirnames, filenames in os.walk(dirname):
         if len(fnmatch.filter(filenames, '*.yaml')):
-            matches.append(root)
+            if pattern is None or fnmatch.fnmatch(root, pattern):
+                matches.append(root)
     return matches
 
 
 ########################################################################
 class SampleBase(dict):
     
-    def __init__(self, basedirname):
+    def __init__(self, basedirname, pattern=None):
         self.parent_graph = nx.DiGraph()
         self.child_graph = nx.DiGraph()
         self.nodes = dict()
-        sampledirs = find_samples(basedirname)
+        sampledirs = find_samples(basedirname, pattern)
         for sampledir in sampledirs:
             info = SampleInfo(sampledir)
             # adding the sample directory to the sample info
@@ -94,10 +95,14 @@ class SampleBase(dict):
         return self.nodes[ancestors[-1]]
     
     def ancestors(self, sample_info):
+        if not sample_info.id in self.parent_graph:
+            return []
         ancestors = list(nx.dfs_preorder_nodes(self.parent_graph, sample_info.id))
         return [self.nodes[i] for i in ancestors]
     
     def descendants(self, sample_info):
+        if not sample_info.id in self.child_graph:
+            return []
         descendants = list(nx.dfs_preorder_nodes(self.child_graph, sample_info.id)) 
         return [self.nodes[i] for i in descendants]
         
