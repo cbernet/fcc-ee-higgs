@@ -50,6 +50,7 @@ Collider.BEAMS = 'ee'
 Collider.SQRTS = 240.
 
 mode = 'ee_to_ZZ_Sep12_A_2'
+nfiles = 20
 #mode = 'test'
 
 # definition of input samples                                                                                                   
@@ -58,7 +59,6 @@ from fcc_ee_higgs.components.all import load_components
 cps = load_components(mode='pythia')
 
 selectedComponents = cps.values()                                                                                      
-
 for comp in selectedComponents:
     comp.splitFactor = len(comp.files)
 
@@ -76,7 +76,8 @@ elif mode == 'debug':
     selectedComponents = [comp]
 else:
     selectedComponents = [cps[mode]]
-    # cps[mode].files = cps[mode].files[:1]
+    if nfiles: 
+        cps[mode].files = cps[mode].files[:nfiles]
     
 # read FCC EDM events from the input root file(s)
 # do help(Reader) for more information

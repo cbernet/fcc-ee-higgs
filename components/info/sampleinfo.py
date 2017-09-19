@@ -58,7 +58,7 @@ class SampleInfo(dict):
         lines.append(pprint.pformat(self))
         return '\n'.join(lines)
 
-def find_samples(dirname, pattern):
+def find_samples(dirname, pattern=None):
     '''Find all samples with a yaml files in dirname'''
     matches = []
     for root, dirnames, filenames in os.walk(dirname):
