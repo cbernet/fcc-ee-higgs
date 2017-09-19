@@ -24,9 +24,10 @@ if __name__ == '__main__':
     plotter = Plotter(comps, lumi)
     
     cut_missmass= 'misenergy_m>65 && misenergy_m<125'
+#     cut_missmass= 'misenergy_m>75 && misenergy_m<150'
     cut_h_bb = '(jet1_b==1 && jet2_b==1)'
-    cut_h_pz = 'higgs_pz<50'
-    cut_h_pt = 'higgs_pt>15'
+    cut_h_pz = 'abs(misenergy_pz)<50'
+    cut_h_pt = 'misenergy_pt>15'
     cut_h_acol = 'higgs_acol>100.'
     cut_h_cross = 'higgs_cross>10'
     all_cuts = [cut_missmass, cut_h_bb, cut_h_pz, cut_h_pt, cut_h_acol, cut_h_cross]
