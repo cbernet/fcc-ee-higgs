@@ -49,8 +49,8 @@ from heppy.configuration import Collider
 Collider.BEAMS = 'ee'
 Collider.SQRTS = 240.
 
-# mode = 'ee_to_ZZ_Sep12_A_2'
-mode = 'test'
+mode = 'ee_to_ZZ_Sep12_A_2'
+#mode = 'test'
 
 # definition of input samples                                                                                                   
 # from components.ZH_Znunu import components as cps
@@ -279,11 +279,13 @@ selection = cfg.Analyzer(
 # Analysis-specific ntuple producer
 # please have a look at the code of the ZHTreeProducer class,
 # in heppy/analyzers/examples/zh/ZHTreeProducer.py
-from heppy.analyzers.examples.zh.ZHTreeProducer import ZHTreeProducer
+from fcc_ee_higgs.analyzers.ZHTreeProducer import ZHTreeProducer
 tree = cfg.Analyzer(
     ZHTreeProducer,
     jets = 'jets',
+    jets_rescaled = 'jets_rescaled', 
     higgses = 'higgses',
+    higgses_rescaled='higgses_rescaled', 
     misenergy = 'missing_energy'
 )
 

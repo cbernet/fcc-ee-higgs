@@ -37,5 +37,4 @@ class ZHnunubbJetRescaler(Analyzer):
             jet_rescaled = copy.deepcopy(jet)
             jet_rescaled._tlv *= scaling_factor
             jets_rescaled.append(jet_rescaled)
-        print
         
