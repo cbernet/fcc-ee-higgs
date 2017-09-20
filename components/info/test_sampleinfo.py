@@ -63,24 +63,35 @@ class TestSampleBaseIntegrity(unittest.TestCase):
         '''Test that njobs_ok is equal or smaller than njobs'''
         for sinfo in self.sb.values():
             self.assertGreaterEqual(sinfo['sample']['njobs'], sinfo['sample']['njobs_ok'])
-        
-    def test_hierarchy(self):
-        '''test that in a family, cross section is the same, and nevents decreases'''
-        # select samples with no mother:
-        seeds = [sinfo for sinfo in self.sb.values() if
-                 len(sinfo.mothers()) == 0]
-        for seed in seeds:
-            descendants = self.sb.descendants(seed)
-            xsec = None
-            nevents = seed['sample']['nevents']
-            for sinfo in descendants:
-                if xsec is None:
-                    xsec = sinfo['sample']['xsection']
-                else:
-                    self.assertEqual(sinfo['sample']['xsection'], xsec)
-                self.assertGreaterEqual(nevents, sinfo['sample']['nevents'])
-                nevents = sinfo['sample']['nevents']
 
-        
+    def test_hierarchy(self):
+        '''test that in a family, cross section is the same, and nevents decreases.'''
+        # select samples with no descendants:
+        no_children = []
+        for sample in self.sb.values():
+            descendants = self.sb.descendants(sample)
+            if len(descendants) == 1:
+                # sample is its only descendants, so no child
+                no_children.append(sample)
+        for final_child in no_children:
+            ancestors = self.sb.ancestors(final_child)
+            xsec = None
+            child = final_child
+            for ancestor in ancestors:
+                if 'mothers' in ancestor['sample'] and \
+                   len(ancestor['sample']['mothers']) > 1:    
+                    # this test must be modified to handle this case
+                    self.assertTrue(False,
+                                    msg='more than 1 mother, modify the test!\n'.format(ancestor))
+                if xsec is None:
+                    xsec = ancestor['sample']['xsection']
+                else:
+                    self.assertEqual(ancestor['sample']['xsection'], xsec)
+                self.assertGreaterEqual(ancestor['sample']['nevents'],
+                                        child['sample']['nevents'],
+                                        msg='\nmother:\n{}\ndaugher:\n{}\n'.format(ancestor, child))
+                child = ancestor
+                
+            
 if __name__ == '__main__':
     unittest.main()
