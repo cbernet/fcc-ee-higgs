@@ -15,7 +15,7 @@ def print_vars(tree):
 
 comps = dict(
     janik=all_components['ee_to_ZZ_Janik_Sep18_ZHnunubb_A_10'],
-    colin=all_components['ee_to_ZZ_Sep12_ZHnunubb_A_9']
+    colin=all_components['ee_to_ZZ_Sep19_ZHnunubb_A_11']
     )
 
 for vcolin, vjanik in varmap.iteritems():

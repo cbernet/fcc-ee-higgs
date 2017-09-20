@@ -13,18 +13,22 @@ def read_pythia(sampledir):
     else:
         return []
     
-def read_heppy(sampledir, treename, treename_janik):
+def read_heppy(sampledir, treenames):
     heppys = glob.glob('/'.join([sampledir, 'heppy.*']))
     files = []
     rootfile = None
     tree = None
     if len(heppys):
-        abstreename = '/'.join([sampledir,treename])
-        if not os.path.isfile(abstreename):
-            abstreename = '/'.join([sampledir,treename_janik])
-            if not os.path.isfile(abstreename):
-                raise ValueError('cannot find tree root file in '+sampledir)        
-        files = [abstreename]
+        for treename in treenames:
+            abstreename = '/'.join([sampledir,treename])
+            if os.path.isfile(abstreename):
+                files = [abstreename]
+                break
+        if len(files) == 0:
+            msg = '''
+            cannot find tree root file in\n {}
+            '''.format(sampledir)
+            raise ValueError(msg)        
         rootfile = TFile(files[0])
         tree = rootfile.Get('events')
     return files, rootfile, tree
@@ -34,8 +38,11 @@ def load_components(pattern=None, mode=None):
         raise ValueError("if you provide mode, it should be set to 'pythia' or 'heppy'")
     print 'loading all components:'
     base = SampleBase(basedir(), pattern)
-    treename = 'heppy.analyzers.examples.zh.ZHTreeProducer.ZHTreeProducer_1/tree.root'
-    treename_janik = 'heppy.analyzers.examples.missE.TreeProducer.TreeProducer_1/tree.root'
+    treenames = [
+        'fcc_ee_higgs.analyzers.ZHTreeProducer.ZHTreeProducer_1/tree.root',        
+        'heppy.analyzers.examples.zh.ZHTreeProducer.ZHTreeProducer_1/tree.root', 
+        'heppy.analyzers.examples.missE.TreeProducer.TreeProducer_1/tree.root'
+    ]
     components = dict()    
     for name in sorted(base.keys()):
         info = base[name]
@@ -46,11 +53,11 @@ def load_components(pattern=None, mode=None):
         sampledir = info['sample']['directory']
         if mode is None:
             files = read_pythia(sampledir)
-            files, rootfile, tree = read_heppy(sampledir, treename, treename_janik)
+            files, rootfile, tree = read_heppy(sampledir, treenames)
         elif mode == 'pythia':
             files = read_pythia(sampledir)
         elif mode == 'heppy':
-            files, rootfile, tree = read_heppy(sampledir, treename, treename_janik)
+            files, rootfile, tree = read_heppy(sampledir, treenames)
         if len(files) == 0:
             continue  # skipping heppy components in pythia mode, and vice versa
         oldest_ancestor = base.oldest_ancestor(info)
