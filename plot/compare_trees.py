@@ -4,6 +4,8 @@ all_components = load_components()
 
 from varmap_janik import varmap
 from cpyroot.tools.treecomparator import TreeComparator
+from cpyroot.tools.splitcanvas import SplitCanvas
+from ROOT import TPad, TCanvas
 
 import pprint 
 
@@ -24,15 +26,32 @@ for vcolin, vjanik in varmap.iteritems():
 tc = comps['colin'].tree
 tj = comps['janik'].tree
 
-cp = TreeComparator(tc, tj, 'colin', 'janik', normalize=-1)
-
 vars = [
     'higgs_acol',
     'higgs_cross', 
-    'higgs_m',
+    'higgs_rescaled_m',
+    'higgs_rescaled_pt',
     'jet1_e',
-    'jet2_e', 
+    'jet2_e',
+    'jet1_b',
+    'misenergy_m',
+    'misenergy_pz',
+    'misenergy_pt',
+    
 ]
 
-for var in vars:
-    cp.draw(var)
+args = {
+    'jet1_b': dict(nbins = 2, xmin = 0, xmax = 2),
+}
+
+cut = 'jet1_e>0 && jet2_e>0'
+
+canvas = SplitCanvas(len(vars), 'canvas', 'title', 400)
+
+cp = TreeComparator(tc, tj, 'colin', 'janik', normalize=-1)
+
+for ivar, var in enumerate(vars):
+    canvas.cd(ivar+1)
+    print TPad.Pad()
+    kwargs = args.get(var, dict())
+    cp.draw(var, cut=cut, **kwargs)
