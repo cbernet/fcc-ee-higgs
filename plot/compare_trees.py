@@ -33,7 +33,10 @@ vars = [
     'higgs_rescaled_pt',
     'jet1_e',
     'jet2_e',
+    'jet1_bmatch', 
+    'jet2_bmatch', 
     'jet1_b',
+    'jet2_b',
     'misenergy_m',
     'misenergy_pz',
     'misenergy_pt',
@@ -42,6 +45,9 @@ vars = [
 
 args = {
     'jet1_b': dict(nbins = 2, xmin = 0, xmax = 2),
+    'jet2_b': dict(nbins = 2, xmin = 0, xmax = 2),
+    'jet1_bmatch': dict(nbins = 2, xmin = 0, xmax = 2),
+    'jet2_bmatch': dict(nbins = 2, xmin = 0, xmax = 2),
 }
 
 cut = 'jet1_e>0 && jet2_e>0'
