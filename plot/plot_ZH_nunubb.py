@@ -21,7 +21,7 @@ if __name__ == '__main__':
     ffbar.name = 'ffbar'
     
     
-    comps = [ZZ, ZH] 
+    comps = [ZZ, ZH, ffbar] 
     lumi = 5e5
     # lumi = 5e6  # 5ab-1
 
@@ -29,8 +29,8 @@ if __name__ == '__main__':
     
     cut_missmass= 'misenergy_m>65 && misenergy_m<125'
 #     cut_missmass= 'misenergy_m>75 && misenergy_m<150'
-    # cut_h_bb = 'jet1_e>0 && jet2_e>0 && (jet1_bmatch==1 && jet2_bmatch==1)'
-    cut_h_bb = 'jet1_e>0 && jet2_e>0 && (jet1_b==1 || jet2_b==1)'
+    cut_h_bb = 'jet1_e>0 && jet2_e>0 && (jet1_bmatch==1 && jet2_bmatch==1)'
+    # cut_h_bb = 'jet1_e>0 && jet2_e>0 && (jet1_b==1 || jet2_b==1)'
     cut_h_pz = 'abs(misenergy_pz)<50'
     cut_h_pt = 'misenergy_pt>15'
     cut_h_acol = 'higgs_acol>100.'
