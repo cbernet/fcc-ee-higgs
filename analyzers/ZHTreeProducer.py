@@ -37,8 +37,7 @@ class ZHTreeProducer(Analyzer):
                 zed = zeds[0]
                 fillZed(self.tree, 'zed', zed)
         misenergy = getattr(event, self.cfg_ana.misenergy)
-        fillParticle(self.tree, 'misenergy', misenergy )
-        
+        fillParticle(self.tree, 'misenergy', misenergy )      
         jets = getattr(event, self.cfg_ana.jets)
         for ijet, jet in enumerate(jets):
             if ijet == 2:

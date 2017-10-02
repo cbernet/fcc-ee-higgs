@@ -13,22 +13,22 @@ if __name__ == '__main__':
         
     from ROOT import RooRealVar, RooDataHist, RooHistPdf, RooArgList, RooArgSet, TH1
     
-    ZZ = components['ee_to_ZZ_Sep12_ZHnunubb_Sep21_A_13']
+    ZZ = components['ee_to_ZZ_Sep12_ZHnunubb_Sep29_A_17']
     ZZ.name = 'ZZ'
-    ZH = components['ee_to_ZH_Z_to_nunu_Sep12_ZHnunubb_Sep21_A_12']
+    ZH = components['ee_to_ZH_Z_to_nunu_Sep12_ZHnunubb_Sep29_A_16']
     ZH.name =  'ZH'
-    ffbar = components['ee_to_ffbar_Sep12_ZHnunubb_Sep21_B_15']
-    ffbar.name = 'ffbar'
+##    ffbar = components['ee_to_ffbar_Sep12_ZHnunubb_Sep21_B_15']
+##    ffbar.name = 'ffbar'
     
     
-    comps = [ZZ, ZH, ffbar] 
+    comps = [ZZ, ZH] 
     lumi = 5e5
     # lumi = 5e6  # 5ab-1
 
     plotter = Plotter(comps, lumi)
     
-    cut_missmass= 'misenergy_m>65 && misenergy_m<125'
-#     cut_missmass= 'misenergy_m>75 && misenergy_m<150'
+#    cut_missmass= 'misenergy_m>65 && misenergy_m<125'
+    cut_missmass= 'misenergy_m>90 && misenergy_m<160'
     cut_h_bb = 'jet1_e>0 && jet2_e>0 && (jet1_bmatch==1 && jet2_bmatch==1)'
     # cut_h_bb = 'jet1_e>0 && jet2_e>0 && (jet1_b==1 || jet2_b==1)'
     cut_h_pz = 'abs(misenergy_pz)<50'
@@ -42,7 +42,7 @@ if __name__ == '__main__':
     cut = str_all_cuts
     bins = 50, 50, 150
     
-    do_fit = False
+    do_fit = True
     plotter.draw(var, cut, bins)
     if do_fit:
         tfitter = TemplateFitter(plotter.plot)

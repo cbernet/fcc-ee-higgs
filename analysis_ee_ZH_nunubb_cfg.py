@@ -49,6 +49,7 @@ from heppy.configuration import Collider
 Collider.BEAMS = 'ee'
 Collider.SQRTS = 240.
 
+# mode = 'ee_to_ZH_Z_to_nunu_Jun21_A_1'
 mode = 'ee_to_ZZ_Sep12_A_2'
 nfiles = 20
 #mode = 'test'
@@ -106,6 +107,13 @@ gen_counter = cfg.Analyzer(
     input_objects = 'gen_leptons',
     min_number = 2,
     veto = False
+)
+
+from analyzers.GenResonanceAnalyzer import GenResonanceAnalyzer
+gen_ana = cfg.Analyzer(
+    GenResonanceAnalyzer,
+    pdgids=[23, 25],
+    statuses=[62]
 )
 
 # importing the papas simulation and reconstruction sequence,
@@ -304,7 +312,8 @@ sequence = cfg.Sequence(
     source,
     #pdebug,
     # gen_leptons,
-    # gen_counter, 
+    # gen_counter,
+    gen_ana, 
     papas_sequence,
     # leptons_true,
     # iso_leptons,
