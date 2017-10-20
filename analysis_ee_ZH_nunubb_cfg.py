@@ -49,10 +49,12 @@ from heppy.configuration import Collider
 Collider.BEAMS = 'ee'
 Collider.SQRTS = 240.
 
+jet_correction = True
+
 # mode = 'ee_to_ZH_Z_to_nunu_Jun21_A_1'
-mode = 'ee_to_ZZ_Sep12_A_2'
+# mode = 'ee_to_ZZ_Sep12_A_2'
 nfiles = 20
-#mode = 'test'
+mode = 'test'
 
 # definition of input samples                                                                                                   
 # from components.ZH_Znunu import components as cps
@@ -109,7 +111,7 @@ gen_counter = cfg.Analyzer(
     veto = False
 )
 
-from analyzers.GenResonanceAnalyzer import GenResonanceAnalyzer
+from fcc_ee_higgs.analyzers.GenResonanceAnalyzer import GenResonanceAnalyzer
 gen_ana = cfg.Analyzer(
     GenResonanceAnalyzer,
     pdgids=[23, 25],
@@ -199,7 +201,15 @@ missing_energy = cfg.Analyzer(
     instance_label = 'missing_energy',
     output = 'missing_energy',
     sqrts = sqrts,
-    to_remove = 'rec_particles'
+    to_remove = 'jets'
+) 
+
+missing_energy_rescaled = cfg.Analyzer(
+    RecoilBuilder,
+    instance_label = 'missing_energy_rescaled',
+    output = 'missing_energy_rescaled',
+    sqrts = sqrts,
+    to_remove = 'jets_rescaled'
 ) 
 
 # Creating a list of particles excluding the decay products of the best zed.
@@ -224,6 +234,15 @@ jets = cfg.Analyzer(
     njets_required=False
 )
 
+if jet_correction:
+    from heppy.analyzers.JetEnergyCorrector import JetEnergyCorrector
+    jets_cor = cfg.Analyzer(
+        JetEnergyCorrector,
+        input_jets='jets',
+        detector=detector 
+    )
+    jets = cfg.Sequence(jets, jets_cor)
+
 from fcc_ee_higgs.analyzers.ZHnunubbJetRescaler import ZHnunubbJetRescaler
 jet_rescaling = cfg.Analyzer(
     ZHnunubbJetRescaler,
@@ -236,12 +255,17 @@ from heppy.test.btag_parametrized_cfg import btag_parametrized, btag
 from heppy.analyzers.roc import cms_roc
 btag.roc = cms_roc
 
+def is_bjet(jet):
+    return jet.tags['b'] == 1
+    
 bjets = cfg.Analyzer(
     Selector,
     'bjets',
     output = 'bjets',
     input_objects = 'jets',
-    filter_func = lambda jet: jet.tags['b'] == 1)
+    # filter_func=is_bjet, 
+    filter_func = lambda jet: jet.tags['b'] == 1
+)
 
 onebjet = cfg.Analyzer(
     EventFilter  ,
@@ -293,10 +317,9 @@ from fcc_ee_higgs.analyzers.ZHTreeProducer import ZHTreeProducer
 tree = cfg.Analyzer(
     ZHTreeProducer,
     jets = 'jets',
-    jets_rescaled = 'jets_rescaled', 
-    higgses = 'higgses',
-    higgses_rescaled='higgses_rescaled', 
-    misenergy = 'missing_energy'
+    jets_rescaled = 'jets_rescaled',
+    higgs=['higgses', 'higgses_rescaled'], 
+    misenergy = ['missing_energy', 'missing_energy_rescaled']
 )
 
 from heppy.analyzers.PDebugger import PDebugger
@@ -313,7 +336,8 @@ sequence = cfg.Sequence(
     #pdebug,
     # gen_leptons,
     # gen_counter,
-    gen_ana, 
+    # gen_leptons, 
+    # gen_ana, 
     papas_sequence,
     # leptons_true,
     # iso_leptons,
@@ -321,18 +345,20 @@ sequence = cfg.Sequence(
     # zeds,
     # zed_counter, 
     # recoil,
-    missing_energy,
     # particles_not_zed,
+    ## jets_raw, 
     jets,
+    missing_energy,
     jet_rescaling, 
     btag_parametrized,
     bjets, 
-    # onebjet, 
+    # onebjet,
+    missing_energy_rescaled, 
     higgses,
     higgses_rescaled, 
     # selection, 
     tree,
-    display
+##    display
 )   
 
 # Specifics to read FCC events 

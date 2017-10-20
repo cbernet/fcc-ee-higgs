@@ -17,4 +17,5 @@ class GenResonanceAnalyzer(Analyzer):
             resonance = Resonance2(b.daughters[0], b.daughters[1],
                                    b.pdgid(), b.status())
             event.gen_bosons.append(resonance)
+        event.gen_bosons.sort(key=lambda x: x.pdgid())
             
