@@ -56,10 +56,23 @@ jet_correction = True
 nfiles = 20
 mode = 'test'
 
-# definition of input samples                                                                                                   
-# from components.ZH_Znunu import components as cps
-from fcc_ee_higgs.components.all import load_components
-cps = load_components(mode='pythia')
+### definition of input samples                                                                                                   
+### from components.ZH_Znunu import components as cps
+##from fcc_ee_higgs.components.all import load_components
+##cps = load_components(mode='pythia')
+
+# setting the base path for samples here, for testing
+import fcc_datasets.basedir as basedir
+basedir.basename = '/Users/cbernet/Datasets/FCC/fcc_ee_higgs/samples'
+
+from fcc_datasets.fcc_component import FCCComponent
+comp = FCCComponent(
+    'pythia/ee_to_ZZ_Sep12_A_2',
+    'Job*/*.root', 
+    cache=False,
+    splitFactor=1
+)
+cps = {comp.name:comp}
 
 selectedComponents = cps.values()                                                                                      
 for comp in selectedComponents:
@@ -67,7 +80,7 @@ for comp in selectedComponents:
 
 test_filename = 'samples/test/ee_ZZ_nunu.root'
 if mode == 'test':
-    comp = cps['ee_to_ZZ_Sep12_A_2']
+    comp = cps['pythia/ee_to_ZZ_Sep12_A_2']
     comp.files = [test_filename]
     comp.splitFactor = 1
     selectedComponents = [comp]
