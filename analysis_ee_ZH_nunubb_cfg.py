@@ -49,18 +49,21 @@ from heppy.configuration import Collider
 Collider.BEAMS = 'ee'
 Collider.SQRTS = 240.
 
-mode = 'ee_to_ZZ_Sep12_A_2'
-nfiles = 20
+# mode = 'ee_to_ZZ_Sep12_A_2'
+mode = 'all'
+nfiles = None
 #mode = 'test'
 
-# definition of input samples                                                                                                   
+# definition of input samples             
+                                     
 # from components.ZH_Znunu import components as cps
 from fcc_ee_higgs.components.all import load_components
 cps = load_components(mode='pythia')
-
-selectedComponents = cps.values()                                                                                      
-for comp in selectedComponents:
-    comp.splitFactor = len(comp.files)
+cps = {k : cps[k] for k in [
+        'ee_to_ZZ_Sep12_A_2',
+        'ee_to_ZH_Z_to_nunu_Jun21_A_1'
+        ]
+       }
 
 test_filename = 'samples/test/ee_ZZ_nunu.root'
 if mode == 'test':
@@ -74,6 +77,10 @@ elif mode == 'debug':
         files=['ee_ffbar.root']
     )
     selectedComponents = [comp]
+elif mode == 'all':
+    selectedComponents = cps.values()                      
+    for comp in selectedComponents:
+        comp.splitFactor = len(comp.files)
 else:
     selectedComponents = [cps[mode]]
     if nfiles: 
