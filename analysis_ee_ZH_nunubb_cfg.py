@@ -80,7 +80,7 @@ selectedComponents = cps.values()
 for comp in selectedComponents:
     comp.splitFactor = min(len(comp.files),nfiles)
 
-test_filename = 'samples/test/ee_ZZ_nunu.root'
+test_filename = os.path.abspath('samples/test/ee_ZZ_nunu.root')
 if mode == 'test':
     comp = cps['pythia/ee_to_ZZ_Sep12_A_2']
     comp.files = [test_filename]
@@ -365,7 +365,6 @@ sequence = cfg.Sequence(
     # zed_counter, 
     # recoil,
     # particles_not_zed,
-    ## jets_raw, 
     jets,
     missing_energy,
     jet_rescaling, 
@@ -377,7 +376,7 @@ sequence = cfg.Sequence(
     higgses_rescaled, 
     # selection, 
     tree,
-##    display
+    # display
 )   
 
 # Specifics to read FCC events 
