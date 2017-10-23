@@ -37,7 +37,8 @@ if context.name == 'fcc':
             for s in config.sequence:
                 if hasattr( s,'detector'):
                     s.detector = cms
-            self.looper = Looper( self.outdir, config,
+            self.looper = Looper( self.outdir,
+                                  config,
                                   nEvents=10,
                                   nPrint=0 )
             self.looper.loop()
