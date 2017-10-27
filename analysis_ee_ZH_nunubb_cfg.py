@@ -51,10 +51,10 @@ Collider.SQRTS = 240.
 
 jet_correction = True
 
-# mode = 'ee_to_ZH_Z_to_nunu_Jun21_A_1'
-mode = 'pythia/ee_to_ZZ_Sep12_A_2'
-nfiles = 999999
-mode = 'test'
+# mode = 'pythia/ee_to_ZZ_Sep12_A_2'
+nfiles = 1
+# mode = 'test'
+mode = 'all'
 
 ### definition of input samples                                                                                                   
 ### from components.ZH_Znunu import components as cps
@@ -68,13 +68,33 @@ if not os.path.isdir(basedir.basename):
     basedir.basename = '/afs/cern.ch/user/c/cbern/work/FCC/fcc_ee_higgs/samples'
 
 from fcc_datasets.fcc_component import FCCComponent
-comp = FCCComponent( #  1.4e-09
+zz = FCCComponent( #  1.4e-09
     'pythia/ee_to_ZZ_Sep12_A_2',
-    'Job*/*.root', 
+#    'Job*/*.root', 
     cache=True,
     splitFactor=1
 )
-cps = {comp.name:comp}
+
+zh = FCCComponent( 
+    'pythia/ee_to_ZH_Z_to_nunu_Jun21_A_1',
+#     'Job*/*.root', 
+    cache=True,
+    splitFactor=1
+)
+ffbar = FCCComponent( 
+    'pythia/ee_to_ffbar_Sep12_B_4',
+#     'Job*/*.root', 
+    cache=True,
+    splitFactor=1
+)
+
+cpslist = [
+    zz,
+    zh,
+    ffbar
+]
+
+cps = dict( (c.name, c) for c in cpslist)
 
 selectedComponents = cps.values()                                                                                      
 for comp in selectedComponents:
@@ -94,12 +114,12 @@ elif mode == 'debug':
     selectedComponents = [comp]
 elif mode == 'all':
     selectedComponents = cps.values()                      
-    for comp in selectedComponents:
-        comp.splitFactor = len(comp.files)
 else:
     selectedComponents = [cps[mode]]
-    if nfiles: 
-        cps[mode].files = cps[mode].files[:nfiles]
+
+if nfiles: 
+    for cp in cps.values():
+        cp.files = cp.files[:nfiles]
     
 # read FCC EDM events from the input root file(s)
 # do help(Reader) for more information
