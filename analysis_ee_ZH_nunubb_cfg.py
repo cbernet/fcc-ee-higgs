@@ -62,8 +62,7 @@ mode = 'test'
 ##cps = load_components(mode='pythia')
 
 # setting the base path for samples here, for testing
-import fcc_datasets.basedir as basedir
-basedir.basename = '/Users/cbernet/Datasets/FCC/fcc_ee_higgs/samples'
+# import fcc_datasets.basedir as basedir
 
 from fcc_datasets.fcc_component import FCCComponent
 comp = FCCComponent(
@@ -302,8 +301,6 @@ higgses = cfg.Analyzer(
     leg_collection = 'jets',
     pdgid = 25
 )
-
-
 
 # Just a basic analysis-specific event Selection module.
 # this module implements a cut-flow counter

@@ -1,8 +1,9 @@
 from cpyroot import *
 
 # from tdrstyle import tdrstyle
-from fcc_ee_higgses.components.all import load_components
+from fcc_ee_higgs.components.all import load_components
 components = load_components(mode='heppy')
+
 from fitter import TemplateFitter, BaseFitter, BallFitter
 from plotter import Plotter
 from marginal_efficiency import marginal_efficiency

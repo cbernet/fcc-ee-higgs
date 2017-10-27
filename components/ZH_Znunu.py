@@ -1,44 +1,18 @@
 import os 
-import heppy.framework.config as cfg
-import heppy.utils.absglob as absglob
-import compfiles
-from basedir import basedir
+from fcc_datasets.fcc_component import FCCComponent
+# import fcc_datasets.basedir as basedir
+# basedir.basename = '/Users/cbernet/Datasets/FCC/fcc_ee_higgs/samples'
 
-# definition of input samples 
-ZHnunu = cfg.MCComponent(
-    'ZHnunu',
-    files = compfiles.get('{}/ee_to_ZH_Z_to_nunu_Jun21_A_1'.format(basedir)),
-    xSection = 0.013, # pb-1
-    nGenEvents = 100*5000)
+ZHnunu = FCCComponent(
+    'heppy/ee_to_ZH_Z_to_nunu_H_to_bb/ee_to_ZZ_Oct23/pythia/ee_to_ZH_Z_to_nunu_Jun21_A_1',
+    'fcc_ee_higgs.analyzers.ZHTreeProducer.ZHTreeProducer_1/tree.root', 
+    xsection=132123,
+    cache=False
+)
 
-# ZZnunu = cfg.MCComponent(
-#     'ZZnunu',
-#     files = compfiles.get('{}/ZZnunu/June21'.format(basedir)),
-#     xSection = 1.360, # pb-1
-#     nGenEvents = 200*5000*34870/5000.)
-
-ZZ = cfg.MCComponent(
-    'ZZ',
-    files = compfiles.get('{}/ee_to_ZZ_Sep12_A_2'.format(basedir)),
-    xSection = 1.360, # pb-1
-    nGenEvents = 200*5000*34870/5000.)
-
-ffbar = cfg.MCComponent(
-    'ffbar',
-    files = compfiles.get('{}/ee_to_ffbar_Sep12_B_4'.format(basedir)),
-    xSection = 1.360, # pb-1
-    nGenEvents = 200*5000*34870/5000.)
-
-# WW = cfg.MCComponent(
-#     'WW',
-#     # files = compfiles.get('{}/WWnunu/June21'.format(basedir)),
-#     # files = compfiles.get ('WW/Job_*/ee_WW.root'),
-#     files = [],
-#     xSection = 16.330, # pb-1
-#     nGenEvents = 8.5e6)
 
 components = dict(
-        ( (comp.name, comp) for comp in [ZHnunu, ZZ, ffbar] )
+        ( (comp.name, comp) for comp in [ZHnunu] )
 )
 
 if __name__ == '__main__':
