@@ -51,10 +51,9 @@ Collider.SQRTS = 240.
 
 jet_correction = True
 
-# mode = 'pythia/ee_to_ZZ_Sep12_A_2'
+mode = 'pythia/ee_to_ZH_Z_to_mumu_Oct30'
 nfiles = 9999
 # mode = 'test'
-mode = 'all'
 
 ### definition of input samples                                                                                                   
 ### from components.ZH_Znunu import components as cps
@@ -62,27 +61,15 @@ mode = 'all'
 ##cps = load_components(mode='pythia')
 
 from fcc_datasets.fcc_component import FCCComponent
-zz = FCCComponent( #  1.4e-09
-    'pythia/ee_to_ZZ_Sep12_A_2',
-    cache=True,
-    splitFactor=1
-)
 
 zh = FCCComponent( 
-    'pythia/ee_to_ZH_Z_to_nunu_Jun21_A_1',
-    cache=True,
-    splitFactor=1
-)
-ffbar = FCCComponent( 
-    'pythia/ee_to_ffbar_Sep12_B_4',
+    'pythia/ee_to_ZH_Z_to_mumu_Oct30',
     cache=True,
     splitFactor=1
 )
 
 cpslist = [
-    zz,
     zh,
-    ffbar
 ]
 
 cps = dict( (c.name, c) for c in cpslist)
@@ -91,17 +78,11 @@ selectedComponents = cps.values()
 for comp in selectedComponents:
     comp.splitFactor = min(len(comp.files),nfiles)
 
-test_filename = os.path.abspath('samples/test/ee_ZZ_nunu.root')
+test_filename = os.path.abspath('samples/test/ee_ZH_Zmumu_1.root')
 if mode == 'test':
-    comp = cps['pythia/ee_to_ZZ_Sep12_A_2']
+    comp = cps['pythia/ee_to_ZH_Z_to_mumu_Oct30']
     comp.files = [test_filename]
     comp.splitFactor = 1
-    selectedComponents = [comp]
-elif mode == 'debug':
-    comp = cfg.Component(
-        'Debug',
-        files=['ee_ffbar.root']
-    )
     selectedComponents = [comp]
 elif mode == 'all':
     selectedComponents = cps.values()                      
@@ -259,7 +240,7 @@ from heppy.analyzers.fcc.JetClusterizer import JetClusterizer
 jets = cfg.Analyzer(
     JetClusterizer,
     output = 'jets',
-    particles = 'rec_particles',
+    particles = 'particles_not_zed',
     fastjet_args = dict( njets = 2 ),
     njets_required=False
 )
@@ -344,9 +325,10 @@ selection = cfg.Analyzer(
 from fcc_ee_higgs.analyzers.ZHTreeProducer import ZHTreeProducer
 tree = cfg.Analyzer(
     ZHTreeProducer,
-    jet_collections = ['jets', 'jets_rescaled'],
-    resonances=['higgses', 'higgses_rescaled'], 
-    misenergy = ['missing_energy', 'missing_energy_rescaled']
+    jet_collections = ['jets'],
+    resonances=['higgses', 'zeds'], 
+    misenergy = ['missing_energy'],
+    recoil='recoil'
 )
 
 from heppy.analyzers.PDebugger import PDebugger
@@ -360,28 +342,25 @@ debug_filename = os.getcwd()+'/python_physics_debug.log' #optional argument
 # the analyzers will process each event in this order
 sequence = cfg.Sequence(
     source,
-    #pdebug,
-    # gen_leptons,
-    # gen_counter,
-    # gen_leptons, 
-    # gen_ana, 
+    gen_leptons,
+    gen_counter,
     papas_sequence,
-    # leptons_true,
-    # iso_leptons,
-    # sel_iso_leptons,
-    # zeds,
-    # zed_counter, 
-    # recoil,
-    # particles_not_zed,
+    leptons_true,
+    iso_leptons,
+    sel_iso_leptons,
+    zeds,
+    zed_counter, 
+    recoil,
+    particles_not_zed,
     jets,
     missing_energy,
-    jet_rescaling, 
+    # jet_rescaling, 
     btag_parametrized,
     bjets, 
     # onebjet,
-    missing_energy_rescaled, 
+    # missing_energy_rescaled, 
     higgses,
-    higgses_rescaled, 
+    # higgses_rescaled, 
     # selection, 
     tree,
     # display

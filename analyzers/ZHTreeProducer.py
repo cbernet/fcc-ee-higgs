@@ -17,11 +17,10 @@ class ZHTreeProducer(Analyzer):
         if hasattr(self.cfg_ana, 'zeds'):  
             bookZed(self.tree, 'zed')
         self.taggers = ['b', 'bmatch', 'bfrac']
-        bookJet(self.tree, 'jet1', self.taggers)
-        bookJet(self.tree, 'jet2', self.taggers)
-        bookJet(self.tree, 'jet1_rescaled', self.taggers)
-        bookJet(self.tree, 'jet2_rescaled', self.taggers)
-        for label in self.cfg_ana.higgs:
+        for label in self.cfg_ana.jet_collections:  
+            bookJet(self.tree, '{}_1'.format(label), self.taggers)
+            bookJet(self.tree, '{}_2'.format(label), self.taggers)
+        for label in self.cfg_ana.resonances:
             bookResonanceWithLegs(self.tree, label)
 ##        bookResonanceWithLegs(self.tree, 'genb1')
 ##        bookResonanceWithLegs(self.tree, 'genb2')
@@ -42,21 +41,18 @@ class ZHTreeProducer(Analyzer):
         for label in self.cfg_ana.misenergy:        
             misenergy = getattr(event, label)
             fillParticle(self.tree, label, misenergy)      
-        jets = getattr(event, self.cfg_ana.jets)
-        for ijet, jet in enumerate(jets):
-            if ijet == 2:
-                break
-            fillJet(self.tree, 'jet{ijet}'.format(ijet=ijet+1), jet, self.taggers)
-        jets_rescaled = getattr(event, self.cfg_ana.jets_rescaled)
-        for ijet, jet in enumerate(jets_rescaled):
-            if ijet == 2:
-                break
-            fillJet(self.tree, 'jet{ijet}_rescaled'.format(ijet=ijet+1), jet, self.taggers)
-        for label in self.cfg_ana.higgs:
-            higgses = getattr(event, label)
-            if len(higgses)>0:  
-                higgs = higgses[0]
-                fillResonanceWithLegs(self.tree, label, higgs)
+        for label in self.cfg_ana.jet_collections:  
+            jets = getattr(event, label)
+            for ijet, jet in enumerate(jets):
+                if ijet == 2:
+                    break
+                fillJet(self.tree, '{label}_{ijet}'.format(label=label, ijet=ijet+1),
+                        jet, self.taggers)
+        for label in self.cfg_ana.resonances:
+            resonances = getattr(event, label)
+            if len(resonances)>0:  
+                resonance = resonances[0]
+                fillResonanceWithLegs(self.tree, label, resonance)
         neutrinos = getattr(event, 'neutrinos', None)
         if neutrinos:
             fill(self.tree, 'n_nu', len(neutrinos))
