@@ -64,7 +64,6 @@ from fcc_datasets.fcc_component import FCCComponent
 
 zh = FCCComponent( 
     'pythia/ee_to_ZH_Z_to_mumu_Oct30',
-    cache=True,
     splitFactor=1
 )
 

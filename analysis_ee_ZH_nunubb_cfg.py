@@ -64,18 +64,15 @@ mode = 'all'
 from fcc_datasets.fcc_component import FCCComponent
 zz = FCCComponent( #  1.4e-09
     'pythia/ee_to_ZZ_Sep12_A_2',
-    cache=True,
     splitFactor=1
 )
 
 zh = FCCComponent( 
     'pythia/ee_to_ZH_Z_to_nunu_Jun21_A_1',
-    cache=True,
     splitFactor=1
 )
 ffbar = FCCComponent( 
     'pythia/ee_to_ffbar_Sep12_B_4',
-    cache=True,
     splitFactor=1
 )
 
