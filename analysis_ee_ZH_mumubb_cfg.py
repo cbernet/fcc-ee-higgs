@@ -53,7 +53,7 @@ jet_correction = True
 
 mode = 'pythia/ee_to_ZH_Z_to_mumu_Oct30'
 nfiles = 9999
-# mode = 'test'
+mode = 'test'
 
 ### definition of input samples                                                                                                   
 ### from components.ZH_Znunu import components as cps
@@ -77,7 +77,7 @@ selectedComponents = cps.values()
 for comp in selectedComponents:
     comp.splitFactor = min(len(comp.files),nfiles)
 
-test_filename = os.path.abspath('samples/test/ee_ZH_Zmumu_1.root')
+test_filename = os.path.abspath('samples/test/ee_ZH_Hbb.root')
 if mode == 'test':
     comp = cps['pythia/ee_to_ZH_Z_to_mumu_Oct30']
     comp.files = [test_filename]
