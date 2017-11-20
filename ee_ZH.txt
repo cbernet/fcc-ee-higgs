@@ -1,3 +1,5 @@
+! ZH signal process, inclusive. 10e6 events, 100 jobs
+
 ! main03.cmnd.
 ! This file contains commands to be read in for a Pythia8 run.
 ! Lines not beginning with a letter or digit are comments.

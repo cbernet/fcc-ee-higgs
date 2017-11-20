@@ -1,3 +1,5 @@
+! ffbar background process. 5e7 events, 500 jobs
+
 ! main03.cmnd.
 ! This file contains commands to be read in for a Pythia8 run.
 ! Lines not beginning with a letter or digit are comments.
@@ -30,7 +32,6 @@ Beams:eCM = 240.                 ! CM energy of collision
 
 WeakSingleBoson:ffbar2ffbar(s:gmZ) = on
 
-! WeakDoubleBoson:ffbar2gmZgmZ = on 
 ! 23:onMode = off
 ! 23:onIfMatch = 13 13
 ! 25:onMode = off

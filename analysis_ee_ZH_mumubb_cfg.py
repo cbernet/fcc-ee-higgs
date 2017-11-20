@@ -53,7 +53,7 @@ jet_correction = True
 
 mode = 'pythia/ee_to_ZH_Z_to_mumu_Oct30'
 nfiles = 9999
-mode = 'test'
+# mode = 'test'
 
 ### definition of input samples                                                                                                   
 ### from components.ZH_Znunu import components as cps

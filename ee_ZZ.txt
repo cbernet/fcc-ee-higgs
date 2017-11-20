@@ -1,3 +1,5 @@
+! ZZ background process. 5e7 events, 500 jobs
+
 ! main03.cmnd.
 ! This file contains commands to be read in for a Pythia8 run.
 ! Lines not beginning with a letter or digit are comments.
