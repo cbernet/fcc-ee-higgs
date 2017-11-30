@@ -6,7 +6,7 @@ get more information:
 ipython
 from analysis_ee_ZH_cfg import * 
 '''
-
+import sys
 import os
 import copy
 import heppy.framework.config as cfg
@@ -51,9 +51,12 @@ Collider.SQRTS = 240.
 
 jet_correction = True
 
-mode = 'pythia/ee_to_ZH_Z_to_mumu_Oct30'
-nfiles = 9999
-# mode = 'test'
+# import pdb; pdb.set_trace()
+# mode = 'pythia/ee_to_ZH_Oct30'
+mode = 'pythia/ee_to_ZZ_Sep12_A_2'
+# mode = 'all'
+nfiles = 2
+mode = 'test'
 
 ### definition of input samples                                                                                                   
 ### from components.ZH_Znunu import components as cps
@@ -63,12 +66,18 @@ nfiles = 9999
 from fcc_datasets.fcc_component import FCCComponent
 
 zh = FCCComponent( 
-    'pythia/ee_to_ZH_Z_to_mumu_Oct30',
+    'pythia/ee_to_ZH_Oct30',
+    splitFactor=1
+)
+
+zz = FCCComponent( 
+    'pythia/ee_to_ZZ_Sep12_A_2',
     splitFactor=1
 )
 
 cpslist = [
     zh,
+    zz
 ]
 
 cps = dict( (c.name, c) for c in cpslist)
@@ -79,7 +88,7 @@ for comp in selectedComponents:
 
 test_filename = os.path.abspath('samples/test/ee_ZH_Zmumu_1.root')
 if mode == 'test':
-    comp = cps['pythia/ee_to_ZH_Z_to_mumu_Oct30']
+    comp = cps['pythia/ee_to_ZH_Oct30']
     comp.files = [test_filename]
     comp.splitFactor = 1
     selectedComponents = [comp]
