@@ -86,7 +86,7 @@ selectedComponents = cps.values()
 for comp in selectedComponents:
     comp.splitFactor = min(len(comp.files),nfiles)
 
-test_filename = os.path.abspath('samples/test/ee_ZH_Zmumu_1.root')
+test_filename = os.path.abspath('samples/test/ee_ZH_Hbb.root')
 if mode == 'test':
     comp = cps['pythia/ee_to_ZH_Oct30']
     comp.files = [test_filename]

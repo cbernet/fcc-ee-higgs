@@ -1,3 +1,5 @@
+! ZH signal process, inclusive. 10e6 events, 100 jobs
+
 ! main03.cmnd.
 ! This file contains commands to be read in for a Pythia8 run.
 ! Lines not beginning with a letter or digit are comments.
@@ -5,7 +7,7 @@
 ! The settings here are illustrative, not always physics-motivated.
 
 ! 1) Settings used in the main program.
-Main:numberOfEvents = 1000        ! number of events to generate
+Main:numberOfEvents = 10000        ! number of events to generate
 Main:timesAllowErrors = 3          ! how many aborts before run stops
 
 Random:setSeed = on
@@ -31,5 +33,5 @@ Beams:eCM = 240.                 ! CM energy of collision
 HiggsSM:ffbar2HZ = on
 ! 23:onMode = off
 ! 23:onIfMatch = 13 13
-! 25:onMode = off
-! 25:onIfMatch = 5 5
+!25:onMode = off
+!25:onIfMatch = 5 5
