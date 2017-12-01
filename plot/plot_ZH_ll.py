@@ -1,7 +1,6 @@
 from cpyroot import *
 
 from tdrstyle import tdrstyle
-from fcc_ee_higgs.components.ZH_Zmumu import WW, ZZ, ZH
 from fcc_ee_higgs.components.tools import load
 
 from fitter import TemplateFitter, BaseFitter, BallFitter
@@ -15,7 +14,8 @@ b_wp = (0.75, 0.015)
 lep_eff = 0.95
 # b_wp = (0.6, 3e-3)
 
-cut_z = '(abs(zeds_m-91)<5. && zeds_pt>10 && zeds_pz<50 && zeds_acol>100 && zeds_cross>10)'
+cut_leps = '(zeds_1_iso_e/zeds_1_e<0.2) && (zeds_1_iso_e/zeds_1_e<0.2)'
+cut_z = '(abs(zeds_m-91)<4. && zeds_pt>10 && zeds_pz<50 && zeds_acol>100 && zeds_cross>10)'
 cut_eff_z = '(rndm<{lep_eff} && rndm<{lep_eff} && zeds_1_pt>7 && zeds_2_pt>7)'.format(lep_eff=lep_eff)
 cut_rad = '((jets_1_e<0 || jets_1_22_e/jets_1_e<0.8) && \
 (jets_2_e<0 || jets_2_22_e/jets_2_e<0.8))'
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     plotter = Plotter(comps, lumi)
 
     var = 'recoil_m'
-    cut = cut_ZH
+    cut = cut_Z
     bins = 50, 50, 150
 
     plotter.draw(var, cut, bins)

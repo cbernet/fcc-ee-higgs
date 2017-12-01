@@ -21,7 +21,10 @@ class ZHTreeProducer(Analyzer):
             bookJet(self.tree, '{}_1'.format(label), self.taggers)
             bookJet(self.tree, '{}_2'.format(label), self.taggers)
         for label in self.cfg_ana.resonances:
-            bookResonanceWithLegs(self.tree, label)
+            iso = False
+            if 'zed' in label:
+                iso = True
+            bookResonanceWithLegs(self.tree, label, iso)
 ##        bookResonanceWithLegs(self.tree, 'genb1')
 ##        bookResonanceWithLegs(self.tree, 'genb2')
         for label in self.cfg_ana.misenergy:
@@ -52,7 +55,10 @@ class ZHTreeProducer(Analyzer):
             resonances = getattr(event, label)
             if len(resonances)>0:  
                 resonance = resonances[0]
-                fillResonanceWithLegs(self.tree, label, resonance)
+                iso = False
+                if 'zed' in label:
+                    iso = True                
+                fillResonanceWithLegs(self.tree, label, resonance, iso)
         neutrinos = getattr(event, 'neutrinos', None)
         if neutrinos:
             fill(self.tree, 'n_nu', len(neutrinos))

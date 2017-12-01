@@ -127,7 +127,7 @@ def fillIso(tree, pName, iso):
     fill(tree, '{pName}_pt'.format(pName=pName), iso.sumpt )
     fill(tree, '{pName}_num'.format(pName=pName), iso.num )    
 
-def bookLepton( tree, pName, pflow=True ):
+def bookIsoParticle( tree, pName, pflow=True ):
     bookParticle(tree, pName )
     if pflow:
         for pdgid in iso_pdgids:
@@ -135,7 +135,7 @@ def bookLepton( tree, pName, pflow=True ):
     bookIso(tree, '{pName}_iso'.format(pName=pName))
         
         
-def fillLepton( tree, pName, lepton ):
+def fillIsoParticle( tree, pName, lepton ):
     fillParticle(tree, pName, lepton )
     for pdgid in iso_pdgids:
         #import pdb; pdb.set_trace()
@@ -143,16 +143,7 @@ def fillLepton( tree, pName, lepton ):
         if hasattr(lepton, isoname):
             iso = getattr(lepton, isoname)
             fillIso(tree, '{pName}_iso{pdgid:d}'.format(pName=pName, pdgid=pdgid), iso)
-    #fillIso(tree, '{pName}_iso'.format(pName=pName), lepton.iso)
-    
-        
-def bookIsoParticle(tree, pName):
-    bookParticle(tree, pName )
-    bookLepton(tree, '{pName}_lep'.format(pName=pName) )
-
-def fillIsoParticle(tree, pName, ptc, lepton):
-    fillParticle(tree, pName, ptc)
-    fillLepton(tree, '{pName}_lep'.format(pName=pName), lepton)
+    fillIso(tree, '{pName}_iso'.format(pName=pName), lepton.iso)
 
 def bookResonance(tree, pName):
     bookParticle(tree, pName )
@@ -176,15 +167,21 @@ def fillZed(tree, pName, zed):
     fillLepton(tree, '{pName}_1'.format(pName=pName), zed.leg1() )
     fillLepton(tree, '{pName}_2'.format(pName=pName), zed.leg2() )
 
-def bookResonanceWithLegs(tree, pName):
+def bookResonanceWithLegs(tree, pName, iso=False):
     bookResonance(tree, pName)
-    bookParticle(tree, '{pName}_1'.format(pName=pName)  )
-    bookParticle(tree, '{pName}_2'.format(pName=pName)  )
+    book = bookParticle
+    if iso:
+        book = bookIsoParticle
+    book(tree, '{pName}_1'.format(pName=pName)  )
+    book(tree, '{pName}_2'.format(pName=pName)  )
 
-def fillResonanceWithLegs(tree, pName, higgs):
-    fillResonance(tree, pName, higgs)
-    fillParticle(tree, '{pName}_1'.format(pName=pName), higgs.leg1() )
-    fillParticle(tree, '{pName}_2'.format(pName=pName), higgs.leg2() )
+def fillResonanceWithLegs(tree, pName, res, iso=False):
+    fillResonance(tree, pName, res)
+    fill = fillParticle
+    if iso:
+        fill = fillIsoParticle
+    fill(tree, '{pName}_1'.format(pName=pName), res.leg1() )
+    fill(tree, '{pName}_2'.format(pName=pName), res.leg2() )
 
 def bookMet(tree, pName):
     var(tree, '{pName}_pt'.format(pName=pName)  )

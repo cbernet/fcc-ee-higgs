@@ -9,3 +9,4 @@ if __name__ == '__main__':
     tree = rfile.Get('events')
     tree.Draw('zeds_m', cut_Z)
     print tree.GetSelectedRows()
+
