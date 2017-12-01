@@ -55,8 +55,8 @@ jet_correction = True
 # mode = 'pythia/ee_to_ZH_Oct30'
 mode = 'pythia/ee_to_ZZ_Sep12_A_2'
 # mode = 'all'
-nfiles = 2
-mode = 'test'
+nfiles = 1
+# mode = 'test'
 
 ### definition of input samples                                                                                                   
 ### from components.ZH_Znunu import components as cps
@@ -118,7 +118,7 @@ gen_leptons = cfg.Analyzer(
     'gen_leptons',
     output = 'gen_leptons',
     input_objects = 'gen_particles',
-    filter_func = lambda ptc: ptc.e() > 5. and abs(ptc.pdgid()) == lepton_id
+    filter_func = lambda ptc: ptc.pt() > 10. and abs(ptc.pdgid()) == lepton_id
 )
 
 from heppy.analyzers.EventFilter   import EventFilter  
@@ -149,10 +149,10 @@ from heppy.test.papas_cfg import papasdisplaycompare as display
 # we could use two different instances for the Selector module
 # to get separate collections of electrons and muons
 # help(Selector) for more information
-leptons_true = cfg.Analyzer(
+leptons = cfg.Analyzer(
     Selector,
     'sel_leptons',
-    output = 'leptons_true',
+    output = 'leptons',
     input_objects = 'rec_particles',
     filter_func = lambda ptc: ptc.e()>10. and abs(ptc.pdgid()) in [11, 13]
 )
@@ -163,7 +163,7 @@ from heppy.analyzers.IsolationAnalyzer import IsolationAnalyzer
 from heppy.particles.isolation import EtaPhiCircle
 iso_leptons = cfg.Analyzer(
     IsolationAnalyzer,
-    candidates = 'leptons_true',
+    candidates = 'leptons',
     particles = 'rec_particles',
     iso_area = EtaPhiCircle(0.4)
 )
@@ -179,9 +179,9 @@ sel_iso_leptons = cfg.Analyzer(
     Selector,
     'sel_iso_leptons',
     output = 'sel_iso_leptons',
-    input_objects = 'leptons_true',
+    input_objects = 'leptons',
     # filter_func = relative_isolation
-    filter_func = lambda lep : lep.iso.sumpt/lep.pt()<0.3 # fairly loose
+    filter_func = lambda lep : lep.iso.sumpt/lep.pt()<0.5 # fairly loose
 )
 
 # Building Zeds
@@ -353,7 +353,7 @@ sequence = cfg.Sequence(
     gen_leptons,
     gen_counter,
     papas_sequence,
-    leptons_true,
+    leptons,
     iso_leptons,
     sel_iso_leptons,
     zeds,
