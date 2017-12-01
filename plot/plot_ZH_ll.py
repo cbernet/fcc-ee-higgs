@@ -27,7 +27,7 @@ cut_hbb = '(((jets_1_bmatch==1 && rndm<{eff}) || (jets_1_bmatch==0 && rndm<{fake
 cut_hinv = '(jets_1_e<0 && jets_2_e<0)'
 cut_hvis = '(jets_1_e>0 && jets_2_e>0)'
 
-cut_ZH = ' && '.join([cut_z, cut_eff_z, cut_rad])
+cut_Z = ' && '.join([cut_z, cut_rad])
 
 
 if __name__ == '__main__':
