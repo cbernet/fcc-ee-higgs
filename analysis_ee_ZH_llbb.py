@@ -203,8 +203,10 @@ zed_selector = cfg.Analyzer(
     'sel_zeds',
     output = 'sel_zeds',
     input_objects = 'zeds',
+    filter_func=lambda zed: True,
+    nmax=1
     # filter_func = relative_isolation
-    filter_func = lambda zed: zed.leg1().pdgid() == -zed.leg2().pdgid()
+    # filter_func = lambda zed: zed.leg1().pdgid() == -zed.leg2().pdgid()
 )
 
 from heppy.analyzers.EventFilter   import EventFilter  
