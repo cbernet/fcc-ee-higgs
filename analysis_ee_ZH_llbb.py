@@ -41,7 +41,7 @@ from EventStore import EventStore as Events
 from heppy.framework.event import Event
 # comment the following line to see all the collections stored in the event 
 # if collection is listed then print loop.event.papasevent will include the collections
-Event.print_patterns=['zeds*', 'higgs*', 'jets*', 'bquarks', 'recoil*', 'collections']
+Event.print_patterns=['gen_bosons', 'zeds*', 'higgs*', 'jets*', 'bquarks', 'recoil*', 'collections']
 
 # definition of the collider
 # help(Collider) for more information
@@ -55,7 +55,7 @@ jet_correction = True
 # mode = 'pythia/ee_to_ZH_Oct30'
 mode = 'pythia/ee_to_ZZ_Sep12_A_2'
 # mode = 'all'
-nfiles = 4
+nfiles = 1
 # mode = 'test'
 
 ### definition of input samples                                                                                                   
@@ -110,6 +110,18 @@ source = cfg.Analyzer(
     gen_vertices = 'GenVertex'
 )
 
+
+# gen Z
+
+from fcc_ee_higgs.analyzers.GenResonanceAnalyzer import GenResonanceAnalyzer
+gen_zeds_ll = cfg.Analyzer(
+    GenResonanceAnalyzer,
+    pdgids=[23],
+    statuses=[62],
+    decay_pdgids=[11, 13],
+    verbose=False
+)
+
 # gen level filtering
 
 gen_pt_min = 10.
@@ -122,7 +134,6 @@ gen_eles = cfg.Analyzer(
     input_objects = 'gen_particles',
     filter_func = lambda ptc: ptc.pt() > gen_pt_min and abs(ptc.pdgid()) == 11 and ptc.status() == 1
 )
-
 
 from heppy.analyzers.Selector import Selector
 gen_mus = cfg.Analyzer(
@@ -366,6 +377,7 @@ debug_filename = os.getcwd()+'/python_physics_debug.log' #optional argument
 # the analyzers will process each event in this order
 sequence = cfg.Sequence(
     source,
+    gen_zeds_ll, 
     gen_eles,
     gen_mus,
     gen_ll_filter, 
