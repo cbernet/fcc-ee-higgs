@@ -53,9 +53,9 @@ jet_correction = True
 
 # import pdb; pdb.set_trace()
 # mode = 'pythia/ee_to_ZH_Oct30'
-mode = 'pythia/ee_to_ZZ_Sep12_A_2'
-# mode = 'all'
-nfiles = 1
+# mode = 'pythia/ee_to_ZZ_Sep12_A_2'
+mode = 'all'
+nfiles = sys.maxint
 # mode = 'test'
 min_gen_z = 0
 min_rec_z = 1
@@ -77,9 +77,16 @@ zz = FCCComponent(
     splitFactor=1
 )
 
+ww = FCCComponent( 
+    'pythia/ee_to_WW_Dec5',
+    splitFactor=1
+)
+
+
+
 cpslist = [
     zh,
-    zz
+    ww
 ]
 
 cps = dict( (c.name, c) for c in cpslist)
