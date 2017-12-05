@@ -1,7 +1,18 @@
 from cpyroot import *
 import sys
 
-from fcc_ee_higgs.plot.plot_ZH_ll import cut_Z
+from fcc_ee_higgs.plot.plot_ZH_ll import cut_Z, cut_leps
+
+colors = range(1, 5)
+
+def efficiency(cutstr, opt=''):
+    print cutstr
+    tree.SetLineColor(colors.pop())
+    tree.Draw('zeds_m', cutstr, opt)
+    nsel = tree.GetSelectedRows()
+    print 'n_sel:', nsel
+    print 'eff  :', nsel / float(ntot) 
+    
 
 if __name__ == '__main__':
     
@@ -10,9 +21,12 @@ if __name__ == '__main__':
     sfname = '/'.join([dataset, 'software.yaml'])
     rfile = TFile(rfname)
     tree = rfile.Get('events')
-    tree.Draw('zeds_m', cut_Z, 'goff')
+    ntot = tree.GetEntries()
     print sys.argv[1]
-    print tree.GetSelectedRows()
+    print 'n_tot:', ntot
     with open(sfname) as soft:
         print soft.read()
-
+    
+    efficiency(cut_leps )
+    
+    efficiency(cut_Z, 'same')

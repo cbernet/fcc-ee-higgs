@@ -57,6 +57,8 @@ mode = 'pythia/ee_to_ZZ_Sep12_A_2'
 # mode = 'all'
 nfiles = 1
 # mode = 'test'
+min_gen_z = 0
+min_rec_z = 1
 
 ### definition of input samples                                                                                                   
 ### from components.ZH_Znunu import components as cps
@@ -121,6 +123,16 @@ gen_zeds_ll = cfg.Analyzer(
     decay_pdgids=[11, 13],
     verbose=False
 )
+
+from heppy.analyzers.EventFilter   import EventFilter  
+gen_zeds_ll_counter = cfg.Analyzer(
+    EventFilter  ,
+    'gen_zeds_ll_counter',
+    input_objects = 'gen_bosons',
+    min_number = min_gen_z,
+    veto = False
+)
+
 
 # gen level filtering
 
@@ -196,7 +208,7 @@ sel_iso_leptons = cfg.Analyzer(
     output = 'sel_iso_leptons',
     input_objects = 'leptons',
     # filter_func = relative_isolation
-    filter_func = lambda lep : lep.iso.sumpt/lep.pt()<0.5 # fairly loose
+    filter_func = lambda lep : lep.iso.sumpt/lep.pt()< 0.5
 )
 
 # Building Zeds
@@ -225,7 +237,7 @@ zed_counter = cfg.Analyzer(
     EventFilter  ,
     'zed_counter',
     input_objects = 'sel_zeds',
-    min_number = 1,
+    min_number = min_rec_z,
     veto = False
 )
 
@@ -377,7 +389,8 @@ debug_filename = os.getcwd()+'/python_physics_debug.log' #optional argument
 # the analyzers will process each event in this order
 sequence = cfg.Sequence(
     source,
-    gen_zeds_ll, 
+    gen_zeds_ll,
+    gen_zeds_ll_counter, 
     gen_eles,
     gen_mus,
     gen_ll_filter, 

@@ -36,12 +36,14 @@ def fillP4( tree, pName, p4):
 
 def bookParticle( tree, pName ):
     var(tree, '{pName}_pdgid'.format(pName=pName))
+    var(tree, '{pName}_q'.format(pName=pName))
 ##    var(tree, '{pName}_ip'.format(pName=pName)) #TODO Colin clean up hierarchy
 ##    var(tree, '{pName}_ip_signif'.format(pName=pName))
     bookP4(tree, pName)
     
 def fillParticle( tree, pName, particle ):
     fill(tree, '{pName}_pdgid'.format(pName=pName), particle.pdgid() )
+    fill(tree, '{pName}_q'.format(pName=pName), particle.q() )
 ##    ip = -99
 ##    ip_signif = -1e9
 ##    if hasattr(particle, 'path'):
