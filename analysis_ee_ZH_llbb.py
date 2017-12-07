@@ -78,14 +78,15 @@ zz = FCCComponent(
 )
 
 ww = FCCComponent( 
-    'pythia/ee_to_WW_Dec5',
+    'pythia/ee_to_WW_Dec6_large',
     splitFactor=1
 )
 
 
 
 cpslist = [
-    zh,
+#    zh,
+#    zz,
     ww
 ]
 
