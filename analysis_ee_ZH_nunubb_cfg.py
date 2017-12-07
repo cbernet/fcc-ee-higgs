@@ -52,7 +52,7 @@ Collider.SQRTS = 240.
 jet_correction = True
 
 # mode = 'pythia/ee_to_ZZ_Sep12_A_2'
-nfiles = 9999
+nfiles = 1
 # mode = 'test'
 mode = 'all'
 
@@ -62,24 +62,25 @@ mode = 'all'
 ##cps = load_components(mode='pythia')
 
 from fcc_datasets.fcc_component import FCCComponent
-zz = FCCComponent( #  1.4e-09
-    'pythia/ee_to_ZZ_Sep12_A_2',
+zz = FCCComponent( 
+    'pythia/ee_to_ZH_Oct30',
     splitFactor=1
 )
 
 zh = FCCComponent( 
-    'pythia/ee_to_ZH_Z_to_nunu_Jun21_A_1',
-    splitFactor=1
-)
-ffbar = FCCComponent( 
-    'pythia/ee_to_ffbar_Sep12_B_4',
+    'pythia/ee_to_ZZ_Sep12_A_2',
     splitFactor=1
 )
 
+##ffbar = FCCComponent( 
+##    'pythia/ee_to_ffbar_Sep12_B_4',
+##    splitFactor=1
+##)
+
 cpslist = [
     zz,
-    zh,
-    ffbar
+##    zh,
+##    ffbar
 ]
 
 cps = dict( (c.name, c) for c in cpslist)
@@ -118,26 +119,6 @@ source = cfg.Analyzer(
     gen_vertices = 'GenVertex'
 )
 
-# gen level filtering
-lepton_id = 13
-from heppy.analyzers.Selector import Selector
-gen_leptons = cfg.Analyzer(
-    Selector,
-    'gen_leptons',
-    output = 'gen_leptons',
-    input_objects = 'gen_particles',
-    filter_func = lambda ptc: ptc.e() > 5. and abs(ptc.pdgid()) == lepton_id
-)
-
-from heppy.analyzers.EventFilter   import EventFilter  
-gen_counter = cfg.Analyzer(
-    EventFilter  ,
-    'gen_counter',
-    input_objects = 'gen_leptons',
-    min_number = 2,
-    veto = False
-)
-
 from fcc_ee_higgs.analyzers.GenResonanceAnalyzer import GenResonanceAnalyzer
 gen_ana = cfg.Analyzer(
     GenResonanceAnalyzer,
@@ -152,77 +133,10 @@ from heppy.test.papas_cfg import papas, papas_sequence, detector
 
 from heppy.test.papas_cfg import papasdisplaycompare as display 
 
-# Use a Selector to select leptons from the output of papas simulation.
-# Currently, we're treating electrons and muons transparently.
-# we could use two different instances for the Selector module
-# to get separate collections of electrons and muons
-# help(Selector) for more information
-leptons_true = cfg.Analyzer(
-    Selector,
-    'sel_leptons',
-    output = 'leptons_true',
-    input_objects = 'rec_particles',
-    filter_func = lambda ptc: ptc.e()>10. and abs(ptc.pdgid()) in [11, 13]
-)
 
-# Compute lepton isolation w/r other particles in the event.
-# help(IsolationAnalyzer) for more information
-from heppy.analyzers.IsolationAnalyzer import IsolationAnalyzer
-from heppy.particles.isolation import EtaPhiCircle
-iso_leptons = cfg.Analyzer(
-    IsolationAnalyzer,
-    candidates = 'leptons_true',
-    particles = 'rec_particles',
-    iso_area = EtaPhiCircle(0.4)
-)
-
-# Select isolated leptons with a Selector
-# one can pass a function like this one to the filter:
-def relative_isolation(lepton):
-    sumpt = lepton.iso_211.sumpt + lepton.iso_22.sumpt + lepton.iso_130.sumpt
-    sumpt /= lepton.pt()
-    return sumpt
-# ... or use a lambda statement as done below. 
-sel_iso_leptons = cfg.Analyzer(
-    Selector,
-    'sel_iso_leptons',
-    output = 'sel_iso_leptons',
-    input_objects = 'leptons_true',
-    # filter_func = relative_isolation
-    filter_func = lambda lep : lep.iso.sumpt/lep.pt()<0.3 # fairly loose
-)
-
-# Building Zeds
-# help(ResonanceBuilder) for more information
-from heppy.analyzers.ResonanceBuilder import ResonanceBuilder
-zeds = cfg.Analyzer(
-    ResonanceBuilder,
-    output = 'zeds',
-    leg_collection = 'sel_iso_leptons',
-    pdgid = 23
-)
-
-zed_counter = cfg.Analyzer(
-    EventFilter  ,
-    'zed_counter',
-    input_objects = 'zeds',
-    min_number = 0,
-    veto = False
-)
-
-# Computing the recoil p4 (here, p_initial - p_zed)
-# help(RecoilBuilder) for more information
 sqrts = Collider.SQRTS 
 
 from heppy.analyzers.RecoilBuilder import RecoilBuilder
-recoil = cfg.Analyzer(
-    RecoilBuilder,
-    instance_label = 'recoil',
-    output = 'recoil',
-    sqrts = sqrts,
-    to_remove = 'zeds_legs'
-) 
-
 missing_energy = cfg.Analyzer(
     RecoilBuilder,
     instance_label = 'missing_energy',
@@ -238,16 +152,6 @@ missing_energy_rescaled = cfg.Analyzer(
     sqrts = sqrts,
     to_remove = 'jets_rescaled'
 ) 
-
-# Creating a list of particles excluding the decay products of the best zed.
-# help(Masker) for more information
-from heppy.analyzers.Masker import Masker
-particles_not_zed = cfg.Analyzer(
-    Masker,
-    output = 'particles_not_zed',
-    input = 'rec_particles',
-    mask = 'zeds_legs',
-)
 
 # Make jets from the particles not used to build the best zed.
 # Here the event is forced into 2 jets to target ZH, H->b bbar)
@@ -280,29 +184,29 @@ jet_rescaling = cfg.Analyzer(
 # b tagging 
 from heppy.test.btag_parametrized_cfg import btag_parametrized, btag
 from heppy.analyzers.roc import cms_roc
-btag.roc = cms_roc
+btag.roc = None
 
 def is_bjet(jet):
     return jet.tags['b'] == 1
     
-bjets = cfg.Analyzer(
-    Selector,
-    'bjets',
-    output = 'bjets',
-    input_objects = 'jets',
-    # filter_func=is_bjet, 
-    filter_func = lambda jet: jet.tags['b'] == 1
-)
-
-onebjet = cfg.Analyzer(
-    EventFilter  ,
-    'onebjet',
-    input_objects = 'bjets',
-    min_number = 1,
-    veto = False
-)
+##bjets = cfg.Analyzer(
+##    Selector,
+##    'bjets',
+##    output = 'bjets',
+##    input_objects = 'jets',
+##    filter_func = lambda jet: jet.tags['b'] == 1
+##)
+##
+##onebjet = cfg.Analyzer(
+##    EventFilter  ,
+##    'onebjet',
+##    input_objects = 'bjets',
+##    min_number = 1,
+##    veto = False
+##)
 
 # Build Higgs candidates from pairs of jets.
+from heppy.analyzers.ResonanceBuilder import ResonanceBuilder
 higgses_rescaled = cfg.Analyzer(
     ResonanceBuilder,
     output = 'higgses_rescaled',
@@ -357,24 +261,12 @@ debug_filename = os.getcwd()+'/python_physics_debug.log' #optional argument
 # the analyzers will process each event in this order
 sequence = cfg.Sequence(
     source,
-    #pdebug,
-    # gen_leptons,
-    # gen_counter,
-    # gen_leptons, 
-    # gen_ana, 
     papas_sequence,
-    # leptons_true,
-    # iso_leptons,
-    # sel_iso_leptons,
-    # zeds,
-    # zed_counter, 
-    # recoil,
-    # particles_not_zed,
     jets,
     missing_energy,
     jet_rescaling, 
     btag_parametrized,
-    bjets, 
+    # bjets, 
     # onebjet,
     missing_energy_rescaled, 
     higgses,
