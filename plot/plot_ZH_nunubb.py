@@ -1,7 +1,7 @@
 from cpyroot import *
 
 from tdrstyle import tdrstyle
-from fcc_ee_higgs.components.ZH_Znunu import ZHnunu, ZZ, ffbar
+from fcc_ee_higgs.components.ZH_nunubb import ZH, ZZ
 from fcc_ee_higgs.components.tools import load
 
 from fitter import TemplateFitter, BaseFitter, BallFitter
@@ -13,14 +13,14 @@ plot = None
 if __name__ == '__main__':
         
     from ROOT import RooRealVar, RooDataHist, RooHistPdf, RooArgList, RooArgSet, TH1
-    ZHnunu.name =  'ZH'
+    ZH.name =  'ZH'
     ZZ.name =  'ZZ'
-    ffbar.name =  'ffbar'
+    # ffbar.name =  'ffbar'
 ##    ffbar = components['ee_to_ffbar_Sep12_ZHnunubb_Sep21_B_15']
 ##    ffbar.name = 'ffbar'
     
     
-    comps = [ZZ, ZHnunu, ffbar]
+    comps = [ZZ, ZH]
     load(comps)
     lumi = 500e12
     # lumi = 5e6  # 5ab-1
@@ -29,8 +29,8 @@ if __name__ == '__main__':
     cut_missmass= 'missing_energy_m>80 && missing_energy_m<135'
     # cut_h_bb = 'jet1_e>0 && jet2_e>0 && (jet1_bmatch==1 && jet2_bmatch==1)'
     from fcc_ee_higgs.plot.plot_ZH_ll import cut_hbb
-    cut_hbb = cut_hbb.replace('jets_1', 'jet1')
-    cut_hbb = cut_hbb.replace('jets_2', 'jet2')
+    # cut_hbb = cut_hbb.replace('jets_1', 'jet1')
+    # cut_hbb = cut_hbb.replace('jets_2', 'jet2')
     # cut_h_bb = 'jet1_e>0 && jet2_e>0 && (jet1_b==1 && jet2_b==1)'
     cut_h_pz = 'abs(missing_energy_pz)<50'
     cut_h_pt = 'missing_energy_pt>15'
