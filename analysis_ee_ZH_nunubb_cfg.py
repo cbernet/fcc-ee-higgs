@@ -8,6 +8,7 @@ from analysis_ee_ZH_cfg import *
 '''
 
 import os
+import sys
 import copy
 import heppy.framework.config as cfg
 
@@ -63,12 +64,12 @@ mode = 'all'
 
 from fcc_datasets.fcc_component import FCCComponent
 zz = FCCComponent( 
-    'pythia/ee_to_ZH_Oct30',
+    'pythia/ee_to_ZZ_Sep12_A_2',
     splitFactor=1
 )
 
 zh = FCCComponent( 
-    'pythia/ee_to_ZZ_Sep12_A_2',
+    'pythia/ee_to_ZH_Oct30',
     splitFactor=1
 )
 
@@ -78,8 +79,8 @@ zh = FCCComponent(
 ##)
 
 cpslist = [
-    zz,
-##    zh,
+##    zz,
+    zh,
 ##    ffbar
 ]
 
@@ -179,6 +180,7 @@ jet_rescaling = cfg.Analyzer(
     ZHnunubbJetRescaler,
     output='jets_rescaled', 
     jets='jets',
+    verbose=True
 )
 
 # b tagging 
