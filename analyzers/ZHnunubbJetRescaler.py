@@ -33,8 +33,15 @@ class ZHnunubbJetRescaler(Analyzer):
 ##            scaling_factor = xmax
         # print xmin, xmax
         # print scaling_factor
+        if self.cfg_ana.verbose:
+            pi.Print()
+            sump4.Print()
+            print a, b, xmin, xmax, scaling_factor
         for jet in jets:
             jet_rescaled = copy.deepcopy(jet)
             jet_rescaled._tlv *= scaling_factor
             jets_rescaled.append(jet_rescaled)
+            if self.cfg_ana.verbose:
+                print jet
+                print jet_rescaled
         
