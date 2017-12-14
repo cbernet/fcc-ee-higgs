@@ -53,7 +53,7 @@ Collider.SQRTS = 240.
 jet_correction = True
 
 # mode = 'pythia/ee_to_ZZ_Sep12_A_2'
-nfiles = 1
+nfiles = sys.maxint
 # mode = 'test'
 mode = 'all'
 
@@ -79,7 +79,7 @@ zh = FCCComponent(
 ##)
 
 cpslist = [
-##    zz,
+    zz,
     zh,
 ##    ffbar
 ]
