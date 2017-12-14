@@ -26,7 +26,7 @@ if __name__ == '__main__':
     # lumi = 5e6  # 5ab-1
     
     # cut_missmass= 'missing_energy_m>65 && missing_energy_m<125'
-    cut_missmass= 'missing_energy_m>80 && missing_energy_m<125'
+    cut_missmass= 'missing_energy_m>80 && missing_energy_m<125'  # reoptimed cut
     # cut_h_bb = 'jet1_e>0 && jet2_e>0 && (jet1_bmatch==1 && jet2_bmatch==1)'
     from fcc_ee_higgs.plot.plot_ZH_ll import cut_hbb
     # cut_hbb = cut_hbb.replace('jets_1', 'jet1')
