@@ -73,15 +73,15 @@ zh = FCCComponent(
     splitFactor=1
 )
 
-##ffbar = FCCComponent( 
-##    'pythia/ee_to_ffbar_Sep12_B_4',
-##    splitFactor=1
-##)
+ffbar = FCCComponent( 
+    'pythia/ee_to_ffbar_Sep12_B_4',
+    splitFactor=1
+)
 
 cpslist = [
     zz,
     zh,
-##    ffbar
+    ffbar
 ]
 
 cps = dict( (c.name, c) for c in cpslist)
