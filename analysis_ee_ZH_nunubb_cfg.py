@@ -56,6 +56,9 @@ jet_correction = True
 nfiles = sys.maxint
 # mode = 'test'
 mode = 'all'
+from heppy.papas.detectors.CLIC import clic
+from heppy.papas.detectors.CMS import cms
+detector = clic
 
 ### definition of input samples                                                                                                   
 ### from components.ZH_Znunu import components as cps
@@ -130,10 +133,12 @@ gen_ana = cfg.Analyzer(
 # importing the papas simulation and reconstruction sequence,
 # as well as the detector used in papas
 # check papas_cfg.py for more information
-from heppy.test.papas_cfg import papas, papas_sequence, detector
-
+from heppy.test.papas_cfg import papas, pfreconstruct, papas_sequence
 from heppy.test.papas_cfg import papasdisplaycompare as display 
 
+papas.detector = detector    
+display.detector = detector
+pfreconstruct.detector = detector
 
 sqrts = Collider.SQRTS 
 
@@ -180,17 +185,17 @@ jet_rescaling = cfg.Analyzer(
     ZHnunubbJetRescaler,
     output='jets_rescaled', 
     jets='jets',
-    verbose=True
+    verbose=False
 )
 
 # b tagging 
 from heppy.test.btag_parametrized_cfg import btag_parametrized, btag
-from heppy.analyzers.roc import cms_roc
-btag.roc = None
 
-def is_bjet(jet):
-    return jet.tags['b'] == 1
-    
+##from heppy.analyzers.roc import cms_roc
+##btag.roc = None
+##
+##def is_bjet(jet):
+##    return jet.tags['b'] == 1
 ##bjets = cfg.Analyzer(
 ##    Selector,
 ##    'bjets',
