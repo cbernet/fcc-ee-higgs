@@ -72,22 +72,22 @@ zh = FCCComponent(
     splitFactor=1
 )
 
-zz = FCCComponent( 
-    'pythia/ee_to_ZZ_Sep12_A_2',
-    splitFactor=1
-)
-
-ww = FCCComponent( 
-    'pythia/ee_to_WW_Dec6_large',
-    splitFactor=1
-)
+##zz = FCCComponent( 
+##    'pythia/ee_to_ZZ_Sep12_A_2',
+##    splitFactor=1
+##)
+##
+##ww = FCCComponent( 
+##    'pythia/ee_to_WW_Dec6_large',
+##    splitFactor=1
+##)
 
 
 
 cpslist = [
-#    zh,
+    zh,
 #    zz,
-    ww
+#    ww
 ]
 
 cps = dict( (c.name, c) for c in cpslist)
@@ -171,6 +171,20 @@ gen_ll_filter = cfg.Analyzer(
     mus='gen_mus'
 )
 
+gen_nus = cfg.Analyzer(
+    Selector,
+    'gen_nus',
+    output = 'gen_nus',
+    input_objects = 'gen_particles',
+    filter_func = lambda ptc: abs(ptc.pdgid()) in [12, 14, 16] and ptc.status() == 1    
+)
+
+from heppy.analyzers.P4SumBuilder import P4SumBuilder
+gen_missing_energy = cfg.Analyzer(
+    P4SumBuilder,
+    output = 'gen_missing_energy',
+    particles = 'gen_nus', 
+) 
 
 # importing the papas simulation and reconstruction sequence,
 # as well as the detector used in papas
@@ -382,7 +396,7 @@ tree = cfg.Analyzer(
     ZHTreeProducer,
     jet_collections = ['jets'],
     resonances=['higgses', 'zeds'], 
-    misenergy = ['missing_energy'],
+    misenergy = ['missing_energy', 'gen_missing_energy'],
     recoil='recoil'
 )
 
@@ -401,6 +415,8 @@ sequence = cfg.Sequence(
     gen_zeds_ll_counter, 
     gen_eles,
     gen_mus,
+    gen_nus,
+    gen_missing_energy, 
     gen_ll_filter, 
     papas_sequence,
     leptons,
