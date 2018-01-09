@@ -39,13 +39,13 @@ class Plotter(object):
         plot.legendBorders = (0.22, 0.65, 0.44, 0.92)
         return plot
     
-    def draw(self, var, cut, bins, title=''):
+    def draw(self, var, cut, bins, title='', label=''):
         self.plot = self._prepare_plot(var, cut, bins)
         self.plot.DrawStack()
         # self.plot.supportHist.GetYaxis().SetTitleOffset(1.35)
         # self.plot.supportHist.GetYaxis().SetNdivisions(5)
         # self.plot.supportHist.GetXaxis().SetNdivisions(5)
         self.plot.supportHist.GetXaxis().SetTitle(title)
-        self.papaslabel.DrawLatexNDC(0.60, 0.88, 'PAPAS (CMS model)')
+        self.papaslabel.DrawLatexNDC(0.60, 0.88, label)
         print var, cut 
         
