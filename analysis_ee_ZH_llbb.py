@@ -59,6 +59,9 @@ nfiles = sys.maxint
 # mode = 'test'
 min_gen_z = 0
 min_rec_z = 1
+from heppy.papas.detectors.CLIC import clic
+from heppy.papas.detectors.CMS import cms
+detector = clic
 
 ### definition of input samples                                                                                                   
 ### from components.ZH_Znunu import components as cps
@@ -69,7 +72,7 @@ from fcc_datasets.fcc_component import FCCComponent
 
 zh = FCCComponent( 
     'pythia/ee_to_ZH_Oct30',
-    splitFactor=1
+    splitFactor=4
 )
 
 ##zz = FCCComponent( 
@@ -86,8 +89,8 @@ zh = FCCComponent(
 
 cpslist = [
     zh,
-#    zz,
-#    ww
+##    zz,
+##    ww
 ]
 
 cps = dict( (c.name, c) for c in cpslist)
@@ -189,9 +192,12 @@ gen_missing_energy = cfg.Analyzer(
 # importing the papas simulation and reconstruction sequence,
 # as well as the detector used in papas
 # check papas_cfg.py for more information
-from heppy.test.papas_cfg import papas, papas_sequence, detector
-
+from heppy.test.papas_cfg import papas, pfreconstruct, papas_sequence
 from heppy.test.papas_cfg import papasdisplaycompare as display 
+
+papas.detector = detector    
+display.detector = detector
+pfreconstruct.detector = detector
 
 # Use a Selector to select leptons from the output of papas simulation.
 # Currently, we're treating electrons and muons transparently.
