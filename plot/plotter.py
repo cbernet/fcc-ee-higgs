@@ -6,7 +6,7 @@ from cpyroot.tools.DataMC.DataMCPlot import DataMCPlot
 sZZ = Style(lineColor=4, fillColor=kBlue-9, fillStyle=3344)
 sZH= Style(lineColor=2, fillColor=10, fillStyle=1001)
 sWW= Style(lineColor=6, fillStyle=3003)
-sffbar = Style(lineColor=6, fillStyle=3003)
+sffbar = Style(lineColor=1, fillStyle=3003)
 
 histPref = {
     'ZZ*': {'style':sZZ, 'layer':10, 'legend':'ZZ'},

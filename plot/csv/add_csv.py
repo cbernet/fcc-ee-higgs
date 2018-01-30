@@ -26,6 +26,7 @@ if __name__ == '__main__':
     
     from ROOT import TFile
     from fcc_ee_higgs.plot.csv.csvmap import CSVMap
+    import shutil
     
     if len(sys.argv) != 3:
         print 'usage: add_csv.py <tree.root> <csvmaps.root>'
@@ -37,4 +38,10 @@ if __name__ == '__main__':
     csvmap = CSVMap()
     csvmap.read(csvmaps_fname)
     
-    add_csv(tree, csvmap, 'tree_with_csv.root')
+    treecsv_fname = 'tree_with_csv.root'
+    add_csv(tree, csvmap, treecsv_fname)
+    backup_fname = 'old_'+tree_fname
+    shutil.move(tree_fname, backup_fname)
+    shutil.move(treecsv_fname, tree_fname)
+    print 'your tree now contains csv values.'
+    print 'original file copied to', backup_fname

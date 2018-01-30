@@ -82,6 +82,8 @@ def normalize_map(hist):
     sums = hist.ProjectionX()
     for xbin in range(1, hist.GetNbinsX() + 1):
         the_sum = sums.GetBinContent(xbin)
+        if the_sum == 0:
+            break
         for ybin in range(1, hist.GetNbinsY() + 1):
             hist_norm.SetBinContent(xbin, ybin, hist.GetBinContent(xbin, ybin) / the_sum)
     return hist_norm
@@ -92,5 +94,5 @@ if __name__ == '__main__':
     
     csvmap = CSVMap()
     nbins = 121 * 10
-    csvmap.build_map('qcd.root', 7, 30, 100, nbins, -11, 1.1)
+    csvmap.build_map('qcd.root', 10, 0, 100, nbins, -11, 1.1)
     

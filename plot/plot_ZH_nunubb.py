@@ -13,28 +13,31 @@ plot = None
 if __name__ == '__main__':
     from ROOT import RooRealVar, RooDataHist, RooHistPdf, RooArgList, RooArgSet, TH1
         
-    detector = 'cms'
+    detector = 'clic'
     plot_missmass = False
     bb_operator = ' || '
+    comps = []
     if detector is 'cms':
         from fcc_ee_higgs.components.ZH_nunubb import ZH, ZZ, WW, ffbar
+        WW.name = 'WW'
+        comps = [ZZ, ZH, WW]
     elif detector is 'clic':
         from fcc_ee_higgs.components.ZH_nunubb_clic import ZH, ZZ, ffbar
+        comps = [ZZ, ZH, ffbar]
     ZH.name =  'ZH' 
     ZZ.name =  'ZZ'
-    WW.name = 'WW'
     ffbar.name =  'ffbar'    
-    comps = [ZZ, ZH, WW]
     load(comps)
     lumi = 500e12
     # lumi = 5e6  # 5ab-1
     
     # cut_missmass= 'missing_energy_m>65 && missing_energy_m<125'
     cut_missmass= 'missing_energy_m>80 && missing_energy_m<125'  # reoptimized cut
-    from fcc_ee_higgs.plot.plot_ZH_ll import get_cut_hbb, b_wp
+    from fcc_ee_higgs.plot.plot_ZH_ll import get_cut_hbb
     if detector is 'clic':
         b_wp = (0.8, 4e-3)
-    cut_hbb = get_cut_hbb(b_wp[0], b_wp[1], bb_operator)
+    # cut_hbb = '(jets_1_csv+jets_2_csv)>0.8'
+    cut_hbb = get_cut_hbb(b_wp[0], b_wp[1], ' || ')
     cut_h_pz = 'abs(missing_energy_pz)<50'
     cut_h_pt = 'missing_energy_pt>15'
     cut_h_acol = 'higgses_acol>100.'
