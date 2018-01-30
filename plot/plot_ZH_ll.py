@@ -1,7 +1,7 @@
 from cpyroot import *
 
 from tdrstyle.tdrstyle import setTDRStyle
-setTDRStyle(square=False)
+setTDRStyle(square=True)
 from fcc_ee_higgs.components.tools import load
 
 from fitter import TemplateFitter, BaseFitter, BallFitter
@@ -11,9 +11,32 @@ import pprint
 
 plot = None
 
+from ROOT import TPaveText
+infos = []
+def print_info(detector, lumimb):
+    lumi = int(lumimb/1e12)  # now in fb-1
+    xmin, ymin = 0.62, 0.7
+    xmax, ymax = xmin + 0.288, ymin + 0.15
+    pave = TPaveText(xmin, ymin, xmax, ymax, 'ndc')
+    pave.AddText(detector)
+    pave.AddText('{lumi} fb^{{-1}}'.format(lumi=lumi))
+    pave.SetTextSizePixels(28)
+    pave.SetTextAlign(11)
+    pave.SetBorderSize(0)
+    pave.SetFillColor(0)
+    pave.SetFillStyle(0)
+    pave.Draw()
+    infos.append(pave)
+    
+def get_cut_hbb(eff, fake, operator='||'):
+    return '(((jets_1_bmatch==1 && rndm<{eff}) || (jets_1_bmatch==0 && rndm<{fake})) {op} \
+((jets_2_bmatch==1 && rndm<{eff}) || (jets_2_bmatch==0 && rndm<{fake})))'.format(eff=eff, fake=fake, op=operator)
+        
+
 #b_wp = (0.6, 0.01)
 lep_eff = 0.95
 b_wp = (0.6, 3e-3)
+# b_wp = (0.7, 1.7e-2)
 
 cut_leps = '(zeds_1_iso_e/zeds_1_e<0.2) && (zeds_1_iso_e/zeds_1_e<0.2) && zeds_1_e>0 && zeds_2_e>0'
 cut_z = '(abs(zeds_m-91)<4. && zeds_pt>10 && zeds_pz<50 && zeds_acol>100 && zeds_cross>10) && (zeds_1_pdgid==-zeds_2_pdgid) '
@@ -21,14 +44,11 @@ cut_eff_z = '(rndm<{lep_eff} && rndm<{lep_eff} && zeds_1_pt>7 && zeds_2_pt>7)'.f
 cut_rad = '((jets_1_e<0 || jets_1_22_e/jets_1_e<0.8) && \
 (jets_2_e<0 || jets_2_22_e/jets_2_e<0.8))'
 # cut_hbb = '(jets_1_b==1 && jets_2_b==1)'
-cut_hbb = '(((jets_1_bmatch==1 && rndm<{eff}) || (jets_1_bmatch==0 && rndm<{fake})) || \
-((jets_2_bmatch==1 && rndm<{eff}) || (jets_2_bmatch==0 && rndm<{fake})))'.format(
-    eff=b_wp[0], fake=b_wp[1]
-)
+cut_hbb = get_cut_hbb(b_wp[0], b_wp[1], ' || ')
 cut_hinv = '(jets_1_e<0 && jets_2_e<0)'
 cut_hvis = '(jets_1_e>0 && jets_2_e>0)'
 
-cut_Z = ' && '.join([cut_leps, cut_z, cut_rad, cut_hbb])
+cut_Z = ' && '.join([cut_leps, cut_z, cut_rad])
 
 
 if __name__ == '__main__':
@@ -41,20 +61,28 @@ if __name__ == '__main__':
     WW.name =  'WW'
     
     # comps = [WW, ZZ, ZH]
+    detector = 'CMS'
     comps = [WW, ZZ, ZH]
     load(comps)
     lumi = 500e12
+    # channel = 'inclusive'
+    channel = 'bb'
+    cut = cut_Z
+    if channel is 'bb':
+        cut = ' && '.join([cut_Z, cut_hbb])
     # lumi = 5e6  # 5ab-1
 
     plotter = Plotter(comps, lumi)
 
     var = 'recoil_m'
-    cut = cut_Z 
     bins = 50, 50, 150
 
-    plotter.draw(var, cut, bins, title='Higgs mass (GeV)')
-##    tfitter = TemplateFitter(plotter.plot)
-##    tfitter.draw_data()
+    plotter.draw(var, cut, bins, title='m_{H} (GeV)')
+    print_info(detector, lumi)
+    gPad.SaveAs('{var}_zh_{channel}.png'.format(var=var, channel=channel))
+
+    tfitter = TemplateFitter(plotter.plot)
+    tfitter.draw_data()
     
 ##    for name, pdf in tfitter.pdfs.iteritems():
 ##        print name, pdf

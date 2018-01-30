@@ -1,7 +1,7 @@
 from cpyroot import *
 
 from tdrstyle import tdrstyle
-from fcc_ee_higgs.components.ZH_nunubb import ZH, ZZ
+# from fcc_ee_higgs.components.ZH_nunubb import ZH, ZZ, ffbar
 from fcc_ee_higgs.components.tools import load
 
 from fitter import TemplateFitter, BaseFitter, BallFitter
@@ -11,27 +11,33 @@ from marginal_efficiency import marginal_efficiency
 plot = None
 
 if __name__ == '__main__':
-        
     from ROOT import RooRealVar, RooDataHist, RooHistPdf, RooArgList, RooArgSet, TH1
-    ZH.name =  'ZH'
+        
+    detector = 'clic'
+    plot_missmass = False
+    bb_operator = ' || '
+    comps = []
+    if detector is 'cms':
+        from fcc_ee_higgs.components.ZH_nunubb import ZH, ZZ, WW, ffbar
+        WW.name = 'WW'
+        comps = [ZZ, ZH, WW]
+    elif detector is 'clic':
+        from fcc_ee_higgs.components.ZH_nunubb_clic import ZH, ZZ, ffbar
+        comps = [ZZ, ZH, ffbar]
+    ZH.name =  'ZH' 
     ZZ.name =  'ZZ'
-    # ffbar.name =  'ffbar'
-##    ffbar = components['ee_to_ffbar_Sep12_ZHnunubb_Sep21_B_15']
-##    ffbar.name = 'ffbar'
-    
-    
-    comps = [ZZ, ZH]
+    ffbar.name =  'ffbar'    
     load(comps)
     lumi = 500e12
     # lumi = 5e6  # 5ab-1
     
     # cut_missmass= 'missing_energy_m>65 && missing_energy_m<125'
-    cut_missmass= 'missing_energy_m>80 && missing_energy_m<125'  # reoptimed cut
-    # cut_h_bb = 'jet1_e>0 && jet2_e>0 && (jet1_bmatch==1 && jet2_bmatch==1)'
-    from fcc_ee_higgs.plot.plot_ZH_ll import cut_hbb
-    # cut_hbb = cut_hbb.replace('jets_1', 'jet1')
-    # cut_hbb = cut_hbb.replace('jets_2', 'jet2')
-    # cut_h_bb = 'jet1_e>0 && jet2_e>0 && (jet1_b==1 && jet2_b==1)'
+    cut_missmass= 'missing_energy_m>80 && missing_energy_m<125'  # reoptimized cut
+    from fcc_ee_higgs.plot.plot_ZH_ll import get_cut_hbb
+    if detector is 'clic':
+        b_wp = (0.8, 4e-3)
+    # cut_hbb = '(jets_1_csv+jets_2_csv)>0.8'
+    cut_hbb = get_cut_hbb(b_wp[0], b_wp[1], ' || ')
     cut_h_pz = 'abs(missing_energy_pz)<50'
     cut_h_pt = 'missing_energy_pt>15'
     cut_h_acol = 'higgses_acol>100.'
@@ -42,13 +48,16 @@ if __name__ == '__main__':
     var = 'higgses_rescaled_m'
     cut = str_all_cuts
     bins = 50, 50, 150
-    title = 'Higgs mass (GeV)' 
+    title = 'Higgs mass (GeV)'
+    label = 'PAPAS (CMS)'
+    if detector is 'clic':
+        label = 'PAPAS (CLIC-FCCee)'
     
-    plot_missmass = False
+    
     if plot_missmass:
-        comps = [ZH, ZZ]
+        comps = [ZH, ZZ, WW, ffbar]
         var = 'missing_energy_m'
-        cuts = [cut_h_pz, cut_h_pt, cut_h_acol, cut_h_cross]
+        cuts = [cut_h_pz, cut_h_pt, cut_h_acol, cut_h_cross, cut_hbb]
         cut = ' && '.join(cuts)
         title = 'Missing mass (GeV)'
         bins = 50, 0, 200
@@ -57,7 +66,7 @@ if __name__ == '__main__':
         
     do_fit = False
     c = TCanvas()
-    plotter.draw(var, cut, bins, title=title)
+    plotter.draw(var, cut, bins, title=title, label=label)
     if do_fit:
         tfitter = TemplateFitter(plotter.plot)
         tfitter.draw_data()

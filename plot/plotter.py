@@ -6,7 +6,7 @@ from cpyroot.tools.DataMC.DataMCPlot import DataMCPlot
 sZZ = Style(lineColor=4, fillColor=kBlue-9, fillStyle=3344)
 sZH= Style(lineColor=2, fillColor=10, fillStyle=1001)
 sWW= Style(lineColor=6, fillStyle=3003)
-sffbar = Style(lineColor=6, fillStyle=3003)
+sffbar = Style(lineColor=1, fillStyle=3003)
 
 histPref = {
     'ZZ*': {'style':sZZ, 'layer':10, 'legend':'ZZ'},
@@ -39,13 +39,13 @@ class Plotter(object):
         plot.legendBorders = (0.22, 0.65, 0.44, 0.92)
         return plot
     
-    def draw(self, var, cut, bins, title=''):
+    def draw(self, var, cut, bins, title='', label=''):
         self.plot = self._prepare_plot(var, cut, bins)
         self.plot.DrawStack()
         # self.plot.supportHist.GetYaxis().SetTitleOffset(1.35)
         # self.plot.supportHist.GetYaxis().SetNdivisions(5)
         # self.plot.supportHist.GetXaxis().SetNdivisions(5)
         self.plot.supportHist.GetXaxis().SetTitle(title)
-        self.papaslabel.DrawLatexNDC(0.60, 0.88, 'PAPAS (CMS model)')
+        self.papaslabel.DrawLatexNDC(0.60, 0.88, label)
         print var, cut 
         
