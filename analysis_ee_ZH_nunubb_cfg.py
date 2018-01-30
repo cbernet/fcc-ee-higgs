@@ -54,11 +54,11 @@ jet_correction = True
 
 # mode = 'pythia/ee_to_ZZ_Sep12_A_2'
 nfiles = sys.maxint
-# mode = 'test'
+# mode = 'debug'
 mode = 'all'
 from heppy.papas.detectors.CLIC import clic
 from heppy.papas.detectors.CMS import cms
-detector = clic
+detector = cms
 
 ### definition of input samples                                                                                                   
 ### from components.ZH_Znunu import components as cps
@@ -81,10 +81,18 @@ ffbar = FCCComponent(
     splitFactor=1
 )
 
+ww = FCCComponent( 
+    'pythia/ee_to_WW_Dec6_large',
+    splitFactor=1
+)
+
+
+
 cpslist = [
-    zz,
-    zh,
-    ffbar
+    # zz,
+    # zh,
+    # ffbar,
+    ww, 
 ]
 
 cps = dict( (c.name, c) for c in cpslist)
@@ -100,10 +108,9 @@ if mode == 'test':
     comp.splitFactor = 1
     selectedComponents = [comp]
 elif mode == 'debug':
-    comp = cfg.Component(
-        'Debug',
-        files=['ee_ffbar.root']
-    )
+    comp = cpslist[0]
+    comp.files = comp.files[:1]
+    comp.splitFactor = 1 
     selectedComponents = [comp]
 elif mode == 'all':
     selectedComponents = cps.values()                      
