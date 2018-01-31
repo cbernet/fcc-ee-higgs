@@ -20,7 +20,6 @@ class Plotter(object):
     def __init__(self, comps, lumi):
         self.comps = comps
         self.lumi = lumi
-        self.papaslabel = TLatex()
 
     def _project(self, comp, var, cut, *bins):
         hist_name = comp.name
@@ -39,13 +38,15 @@ class Plotter(object):
         plot.legendBorders = (0.22, 0.65, 0.44, 0.92)
         return plot
     
-    def draw(self, var, cut, bins, title='', label=''):
+    def draw(self, var, cut, bins, title=''):
         self.plot = self._prepare_plot(var, cut, bins)
         self.plot.DrawStack()
         # self.plot.supportHist.GetYaxis().SetTitleOffset(1.35)
         # self.plot.supportHist.GetYaxis().SetNdivisions(5)
         # self.plot.supportHist.GetXaxis().SetNdivisions(5)
         self.plot.supportHist.GetXaxis().SetTitle(title)
-        self.papaslabel.DrawLatexNDC(0.60, 0.88, label)
-        print var, cut 
+        print 'variable:'
+        print var
+        print 'cut:'
+        print cut 
         
