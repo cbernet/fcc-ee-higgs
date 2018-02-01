@@ -97,6 +97,7 @@ Create your working directory:
 ```bash
 mkdir test_ana
 cd test_ana
+git clone https://github.com/HEP-FCC/heppy.git
 git clone https://github.com/cbernet/fcc_datasets.git
 git clone https://github.com/cbernet/fcc-ee-higgs.git fcc_ee_higgs
 git clone https://github.com/cbernet/cpyroot.git
@@ -107,6 +108,9 @@ Initialize your environment:
 
 ```bash
 source /cvmfs/fcc.cern.ch/sw/0.8.1/init_fcc_stack.sh
+cd heppy
+source ./init.sh
+cd ..
 cd fcc_datasets
 source ./init.sh
 cd ..
@@ -145,5 +149,5 @@ ipython
 Plot the mass recoiling against the Z boson, which decays to two leptons: 
 
 ```python
-%run 
+%run plot/plot_ZH_ll.py
 ```
