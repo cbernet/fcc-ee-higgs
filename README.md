@@ -87,3 +87,63 @@ For the CMS detector, the selection implements a different b tagging working poi
 
 **Please note that the master commit will move overtime! If this documentation gets outdated, tell me.** 
 
+## Analysis instructions
+
+
+### lxplus
+
+Create your working directory: 
+
+```bash
+mkdir test_ana
+cd test_ana
+git clone https://github.com/cbernet/fcc_datasets.git
+git clone https://github.com/cbernet/fcc-ee-higgs.git fcc_ee_higgs
+git clone https://github.com/cbernet/cpyroot.git
+git clone https://github.com/cbernet/tdr-style.git tdrstyle
+```
+
+Initialize your environment: 
+
+```bash
+source /cvmfs/fcc.cern.ch/sw/0.8.1/init_fcc_stack.sh
+cd fcc_datasets
+source ./init.sh
+cd ..
+export FCCDATASETBASEOUT=/eos/experiment/fcc/ee/datasets
+export PYTHONPATH=$PWD:$PYTHONPATH
+```
+
+You should now be able to use the official datasets. For example, list one of the `heppy (papas)` datasets: 
+
+```bash
+lsdataset.py heppy/ee_to_ZH_Z_to_ll/CLIC_FCCee/Jan30/ee_to_ZH_Oct30
+>
+heppy/ee_to_ZH_Z_to_ll/CLIC_FCCee/Jan30/ee_to_ZH_Oct30
+/afs/cern.ch/user/c/cbern/work/FCC/fcc_ee_higgs/samples/heppy/ee_to_ZH_Z_to_ll/CLIC_FCCee/Jan30/ee_to_ZH_Oct30
+fcc_ee_higgs.analyzers.ZHTreeProducer.ZHTreeProducer_1/tree.root : {'good': True, 'n_events': 32864, 'zero_size': False}
+{'processing': {'nfiles': 100, 'ngoodfiles': 100},
+ 'sample': {'id': UUID('98aa885a-f206-4c87-9479-dbe5316e9861'),
+            'jobtype': 'heppy',
+            'mother': 'pythia/ee_to_ZH_Oct30',
+            'nevents': 32864,
+            'nfiles': 1,
+            'ngoodfiles': 1,
+            'pattern': 'fcc_ee_higgs.analyzers.ZHTreeProducer.ZHTreeProducer_1/tree.root'},
+ 'software': {'fcc_datasets': u'df41188443d8b15436543f854ee7de77a6934036',
+              'fcc_ee_higgs': u'b01b8340ea89aa7cdbfbf9ac510f0bafc8f308b0',
+              'heppy': u'7cb2d942997594a80988187d0ab50901627575b4'}}
+```
+
+Now go to the fcc_ee_higgs directory and start ipython
+
+```bash 
+cd fcc_ee_higgs
+ipython
+```
+
+Plot the mass recoiling against the Z boson, which decays to two leptons: 
+
+```python
+%run 
+```
