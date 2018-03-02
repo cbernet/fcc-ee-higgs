@@ -45,13 +45,14 @@ class Plotter(object):
         plot.legendBorders = (0.22, 0.65, 0.44, 0.92)
         return plot
     
-    def draw(self, var, cut, bins, title=''):
+    def draw(self, var, cut, bins, xtitle='', ytitle=''):
         self.plot = self._prepare_plot(var, cut, bins)
         self.plot.DrawStack()
         # self.plot.supportHist.GetYaxis().SetTitleOffset(1.35)
         # self.plot.supportHist.GetYaxis().SetNdivisions(5)
         # self.plot.supportHist.GetXaxis().SetNdivisions(5)
-        self.plot.supportHist.GetXaxis().SetTitle(title)
+        self.plot.supportHist.GetXaxis().SetTitle(xtitle)
+        self.plot.supportHist.GetYaxis().SetTitle(ytitle)
         print 'variable:'
         print var
         print 'cut:'
@@ -59,7 +60,14 @@ class Plotter(object):
         
         
     def print_info(self, detector, xmin=None, ymin=None):
-        lumi = int(self.lumi / 1e12)
+        lumitext = ''
+        lumi = self.lumi
+        if lumi > 1e15:
+            lumi = int(self.lumi / 1e15)
+            lumitext = '{lumi} ab^{{-1}}'.format(lumi=lumi)
+        elif lumi > 1e12:
+            lumi = int(self.lumi / 1e12)
+            lumitext = '{lumi} fb^{{-1}}'.format(lumi=lumi)            
         if not xmin:
             xmin = 0.62
         if not ymin:
@@ -67,7 +75,7 @@ class Plotter(object):
         xmax, ymax = xmin + 0.288, ymin + 0.12
         self.pave = TPaveText(xmin, ymin, xmax, ymax, 'ndc')
         self.pave.AddText(detector)
-        self.pave.AddText('{lumi} fb^{{-1}}'.format(lumi=lumi))
+        self.pave.AddText(lumitext)
         self.pave.SetTextSizePixels(28)
         self.pave.SetTextAlign(11)
         self.pave.SetBorderSize(0)

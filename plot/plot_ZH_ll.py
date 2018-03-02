@@ -1,6 +1,7 @@
 if __name__ == '__main__':
 
     from cpyroot import *
+    from ROOT import TGaxis
     from tdrstyle.tdrstyle import setTDRStyle
     setTDRStyle(square=True)
     from fitter import TemplateFitter
@@ -9,10 +10,15 @@ if __name__ == '__main__':
             
     do_fit = True
 
+    TGaxis.SetMaxDigits(3)
+
     c = TCanvas()
     plotter = Plotter(comps, lumi)
-    plotter.draw(var, cut, bins, title=xtitle)
-    plotter.print_info(detector)
+    nbins, xmin, xmax = bins
+    gevperbin = int((xmax - xmin) / nbins)
+    plotter.draw(var, cut, bins, xtitle=xtitle, ytitle='Events/{} GeV'.format(gevperbin))
+    # plotter.print_info(detector)
+    plotter.print_info("")
     
     gPad.SaveAs('{var}_zh_{channel}_{detector}.png'.format(
         var=var, channel=channel, detector=detector))
