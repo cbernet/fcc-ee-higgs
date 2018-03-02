@@ -89,8 +89,8 @@ zz = FCCComponent(
 
 
 cpslist = [
-##    zh,
-    zz,
+    zh,
+##    zz,
 ##    ww
 ]
 
@@ -130,24 +130,34 @@ source = cfg.Analyzer(
 
 # gen Z
 
+##from fcc_ee_higgs.analyzers.GenResonanceAnalyzer import GenResonanceAnalyzer
+##gen_zeds_ll = cfg.Analyzer(
+##    GenResonanceAnalyzer,
+##    pdgids=[23],
+##    statuses=[62],
+##    decay_pdgids=[11, 13],
+##    verbose=False
+##)
+##
+##from heppy.analyzers.EventFilter   import EventFilter  
+##gen_zeds_ll_counter = cfg.Analyzer(
+##    EventFilter  ,
+##    'gen_zeds_ll_counter',
+##    input_objects = 'gen_bosons',
+##    min_number = min_gen_z,
+##    veto = False
+##)
+
+# gen bosons
+
 from fcc_ee_higgs.analyzers.GenResonanceAnalyzer import GenResonanceAnalyzer
-gen_zeds_ll = cfg.Analyzer(
+gen_bosons = cfg.Analyzer(
     GenResonanceAnalyzer,
-    pdgids=[23],
+    pdgids=[23, 25],
     statuses=[62],
-    decay_pdgids=[11, 13],
+    # decay_pdgids=[11, 13],
     verbose=False
 )
-
-from heppy.analyzers.EventFilter   import EventFilter  
-gen_zeds_ll_counter = cfg.Analyzer(
-    EventFilter  ,
-    'gen_zeds_ll_counter',
-    input_objects = 'gen_bosons',
-    min_number = min_gen_z,
-    veto = False
-)
-
 
 # gen level filtering
 
@@ -296,16 +306,8 @@ missing_energy = cfg.Analyzer(
     instance_label = 'missing_energy',
     output = 'missing_energy',
     sqrts = sqrts,
-    to_remove = 'jets'
-) 
-
-missing_energy_rescaled = cfg.Analyzer(
-    RecoilBuilder,
-    instance_label = 'missing_energy_rescaled',
-    output = 'missing_energy_rescaled',
-    sqrts = sqrts,
-    to_remove = 'jets_rescaled'
-) 
+    to_remove = 'rec_particles'
+)
 
 # Creating a list of particles excluding the decay products of the best zed.
 # help(Masker) for more information
@@ -316,6 +318,21 @@ particles_not_zed = cfg.Analyzer(
     input = 'rec_particles',
     mask = 'sel_zeds_legs',
 )
+
+iso_leptons_not_zed = cfg.Analyzer(
+    Masker,
+    output = 'iso_leptons_not_zed',
+    input = 'sel_iso_leptons',
+    mask = 'sel_zeds_legs',
+)
+
+second_zeds = cfg.Analyzer(
+    ResonanceBuilder,
+    output = 'second_zeds',
+    leg_collection = 'iso_leptons_not_zed',
+    pdgid = 23
+)
+
 
 # Make jets from the particles not used to build the best zed.
 # Here the event is forced into 2 jets to target ZH, H->b bbar)
@@ -338,69 +355,11 @@ if jet_correction:
     )
     jets = cfg.Sequence(jets, jets_cor)
 
-from fcc_ee_higgs.analyzers.ZHnunubbJetRescaler import ZHnunubbJetRescaler
-jet_rescaling = cfg.Analyzer(
-    ZHnunubbJetRescaler,
-    output='jets_rescaled', 
-    jets='jets',
-)
-
-# b tagging 
-from heppy.test.btag_parametrized_cfg import btag_parametrized, btag
-from heppy.analyzers.roc import cms_roc
-btag.roc = cms_roc
-
-def is_bjet(jet):
-    return jet.tags['b'] == 1
-    
-bjets = cfg.Analyzer(
-    Selector,
-    'bjets',
-    output = 'bjets',
-    input_objects = 'jets',
-    # filter_func=is_bjet, 
-    filter_func = lambda jet: jet.tags['b'] == 1
-)
-
-onebjet = cfg.Analyzer(
-    EventFilter  ,
-    'onebjet',
-    input_objects = 'bjets',
-    min_number = 1,
-    veto = False
-)
-
-# Build Higgs candidates from pairs of jets.
-higgses_rescaled = cfg.Analyzer(
-    ResonanceBuilder,
-    output = 'higgses_rescaled',
-    leg_collection = 'jets_rescaled',
-    pdgid = 25
-)
-
 higgses = cfg.Analyzer(
     ResonanceBuilder,
     output = 'higgses',
     leg_collection = 'jets',
     pdgid = 25
-)
-
-# Just a basic analysis-specific event Selection module.
-# this module implements a cut-flow counter
-# After running the example as
-#    heppy_loop.py Trash/ analysis_ee_ZH_cfg.py -f -N 100 
-# this counter can be found in:
-#    Trash/example/heppy.analyzers.examples.zh.selection.Selection_cuts/cut_flow.txt
-# Counter cut_flow :
-#         All events                                     100      1.00    1.0000
-#         At least 2 leptons                              87      0.87    0.8700
-#         Both leptons e>30                               79      0.91    0.7900
-# For more information, check the code of the Selection class
-# in heppy/analyzers/examples/zh/selection.py
-from heppy.analyzers.examples.zh.selection import Selection
-selection = cfg.Analyzer(
-    Selection,
-    instance_label='cuts'
 )
 
 # Analysis-specific ntuple producer
@@ -410,24 +369,18 @@ from fcc_ee_higgs.analyzers.ZHTreeProducer import ZHTreeProducer
 tree = cfg.Analyzer(
     ZHTreeProducer,
     jet_collections = ['jets'],
-    resonances=['higgses', 'zeds'], 
+    resonances=['higgses', 'zeds', 'second_zeds'], 
     misenergy = ['missing_energy', 'gen_missing_energy'],
     recoil='recoil'
-)
-
-from heppy.analyzers.PDebugger import PDebugger
-pdebug = cfg.Analyzer(
-PDebugger,
-output_to_stdout = False, #optional
-debug_filename = os.getcwd()+'/python_physics_debug.log' #optional argument
 )
 
 # definition of a sequence of analyzers,
 # the analyzers will process each event in this order
 sequence = cfg.Sequence(
     source,
-    gen_zeds_ll,
-    gen_zeds_ll_counter, 
+    ##    gen_zeds_ll,
+    ##    gen_zeds_ll_counter,
+    gen_bosons, 
     gen_eles,
     gen_mus,
     gen_nus,
@@ -442,11 +395,11 @@ sequence = cfg.Sequence(
     zed_counter,
     leg_extractor, 
     recoil,
+    missing_energy,
+    iso_leptons_not_zed,
+    second_zeds, 
     particles_not_zed,
     jets,
-    missing_energy,
-    btag_parametrized,
-    bjets, 
     higgses, 
     tree,
     display

@@ -1,6 +1,11 @@
 from cpyroot.tools.DataMC import DataMCPlot, Histogram
 from ROOT import RooRealVar, RooPolynomial, RooConstVar, RooDataSet, RooDataHist, RooHistPdf, RooGaussian, RooArgSet, RooAddPdf, RooArgList, RooFit, SetOwnership, RooAbsArg
+from ROOT import RooMsgService
 from ROOT import TCanvas
+
+
+RooMsgService.instance().setSilentMode(True)
+RooMsgService.instance().setGlobalKillBelow(RooFit.ERROR)
 
 class BaseFitter(object):
 
@@ -24,7 +29,8 @@ class BaseFitter(object):
         pdfs = RooArgList()
         yields = RooArgList()
         for compname, comp in self.plot.histosDict.iteritems():
-            print compname
+            if comp.weighted.Integral() == 0:
+                continue
             assert(isinstance(comp, Histogram))
             hist = RooDataHist(compname, compname, RooArgList(self.xvar),
                                comp.weighted)
@@ -34,14 +40,15 @@ class BaseFitter(object):
                              RooArgSet(self.xvar),
                              hist)
             self.pdfs[compname] = pdf
-            self.pdfs[compname].Print()
+            # self.pdfs[compname].Print()
             pdfs.add(pdf)
-            
             nevts = comp.Integral(xmin=xmin, xmax=xmax)
+            nmin = min(0, nevts * (1 - comp.uncertainty))
+            nmax = nevts * (1 + comp.uncertainty)
             theyield = RooRealVar('n{}'.format(compname),
                                   'n{}'.format(compname),
                                   nevts,
-                                  0, 50000)
+                                  nmin, nmax)
             self.ryields[compname] = theyield
             self.yields[compname] = nevts
             yields.add(theyield)
@@ -56,9 +63,20 @@ class BaseFitter(object):
         self.data = self.underlying_model.generate(RooArgSet(self.xvar), nevents)
 
     def _fit(self):
-        self.tresult = self.underlying_model.fitTo(self.data,
-                                            RooFit.Extended(), RooFit.Save())
+        self.tresult = self.underlying_model.fitTo(
+            self.data,
+            RooFit.Extended(),
+            RooFit.Save(),
+            RooFit.PrintEvalErrors(-1)
+        )
+
+    def print_result(self):
         self.tresult.Print()
+        yzh = self.ryields['ZH']
+        zh_val = yzh.getVal()
+        zh_err = yzh.getError()
+        print 'ZH yield  = {:8.2f}'.format(zh_val)
+        print 'ZH uncert = {:8.2f}%'.format(zh_err / zh_val * 100.)
 
     def draw_pdfs(self):
         self.pframe = self.xvar.frame()

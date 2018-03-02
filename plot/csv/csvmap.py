@@ -82,10 +82,13 @@ def normalize_map(hist):
     sums = hist.ProjectionX()
     for xbin in range(1, hist.GetNbinsX() + 1):
         the_sum = sums.GetBinContent(xbin)
+        print 'sum', the_sum
         if the_sum == 0:
-            break
+            continue
         for ybin in range(1, hist.GetNbinsY() + 1):
-            hist_norm.SetBinContent(xbin, ybin, hist.GetBinContent(xbin, ybin) / the_sum)
+            value = hist.GetBinContent(xbin, ybin) / the_sum
+            print value
+            hist_norm.SetBinContent(xbin, ybin, value)
     return hist_norm
         
     

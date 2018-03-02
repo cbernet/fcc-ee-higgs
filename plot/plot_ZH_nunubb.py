@@ -1,77 +1,26 @@
-from cpyroot import *
-
-from tdrstyle import tdrstyle
-# from fcc_ee_higgs.components.ZH_nunubb import ZH, ZZ, ffbar
-from fcc_ee_higgs.components.tools import load
-
-from fitter import TemplateFitter, BaseFitter, BallFitter
-from fcc_ee_higgs.plot.plotter import Plotter
-from marginal_efficiency import marginal_efficiency
-
-plot = None
-
 if __name__ == '__main__':
-    from ROOT import RooRealVar, RooDataHist, RooHistPdf, RooArgList, RooArgSet, TH1
-        
-    detector = 'clic'
-    plot_missmass = False
-    bb_operator = ' || '
-    comps = []
-    if detector is 'cms':
-        from fcc_ee_higgs.components.ZH_nunubb import ZH, ZZ, WW, ffbar
-        WW.name = 'WW'
-        comps = [ZZ, ZH, WW]
-    elif detector is 'clic':
-        from fcc_ee_higgs.components.ZH_nunubb_clic import ZH, ZZ, ffbar
-        comps = [ZZ, ZH, ffbar]
-    ZH.name =  'ZH' 
-    ZZ.name =  'ZZ'
-    ffbar.name =  'ffbar'    
-    load(comps)
-    lumi = 500e12
-    # lumi = 5e6  # 5ab-1
-    
-    # cut_missmass= 'missing_energy_m>65 && missing_energy_m<125'
-    cut_missmass= 'missing_energy_m>80 && missing_energy_m<125'  # reoptimized cut
-    from fcc_ee_higgs.plot.plot_ZH_ll import get_cut_hbb
-    if detector is 'clic':
-        b_wp = (0.8, 4e-3)
-    # cut_hbb = '(jets_1_csv+jets_2_csv)>0.8'
-    cut_hbb = get_cut_hbb(b_wp[0], b_wp[1], ' || ')
-    cut_h_pz = 'abs(missing_energy_pz)<50'
-    cut_h_pt = 'missing_energy_pt>15'
-    cut_h_acol = 'higgses_acol>100.'
-    cut_h_cross = 'higgses_cross>10'
-    all_cuts = [cut_missmass, cut_hbb, cut_h_pz, cut_h_pt, cut_h_acol, cut_h_cross]
-    str_all_cuts = ' && '.join(all_cuts)
 
-    var = 'higgses_rescaled_m'
-    cut = str_all_cuts
-    bins = 50, 50, 150
-    title = 'Higgs mass (GeV)'
-    label = 'PAPAS (CMS)'
-    if detector is 'clic':
-        label = 'PAPAS (CLIC-FCCee)'
-    
-    
-    if plot_missmass:
-        comps = [ZH, ZZ, WW, ffbar]
-        var = 'missing_energy_m'
-        cuts = [cut_h_pz, cut_h_pt, cut_h_acol, cut_h_cross, cut_hbb]
-        cut = ' && '.join(cuts)
-        title = 'Missing mass (GeV)'
-        bins = 50, 0, 200
-    
-    plotter = Plotter(comps, lumi)
-        
-    do_fit = False
+    from cpyroot import *
+    from tdrstyle.tdrstyle import setTDRStyle
+    setTDRStyle(square=True)
+    from fitter import TemplateFitter
+    from fcc_ee_higgs.plot.plotter import Plotter
+    from fcc_ee_higgs.plot.plotconfig_ZH_nunubb import comps, var, cut, channel, bins, detector, lumi, xtitle 
+            
+    do_fit = True
+
     c = TCanvas()
-    plotter.draw(var, cut, bins, title=title, label=label)
+    plotter = Plotter(comps, lumi)
+    plotter.draw(var, cut, bins, title=xtitle)
+    plotter.print_info(detector)
+    
+    gPad.SaveAs('{var}_zh_{channel}_{detector}.png'.format(
+        var=var, channel=channel, detector=detector))
+
     if do_fit:
         tfitter = TemplateFitter(plotter.plot)
         tfitter.draw_data()
-    
-    # marginal_efficiency(ZZ.tree, all_cuts)
+        tfitter.print_result()
 ##    for name, pdf in tfitter.pdfs.iteritems():
 ##        print name, pdf
 ##        print pdf.Print()
