@@ -86,10 +86,17 @@ zz = FCCComponent(
 ##    splitFactor=1
 ##)
 
-
+import glob
+test_files=glob.glob('Out_pythia_Zll_orsel/Job*/*.root')
+test = cfg.Component(
+    'zzll',
+    files=test_files, 
+    splitFactor=len(test_files)
+)
 
 cpslist = [
-    zh,
+    test
+##    zh,
 ##    zz,
 ##    ww
 ]
@@ -161,7 +168,7 @@ gen_bosons = cfg.Analyzer(
 
 # gen level filtering
 
-gen_pt_min = 10.
+gen_e_min = 5.
 
 from heppy.analyzers.Selector import Selector
 gen_eles = cfg.Analyzer(
@@ -169,7 +176,7 @@ gen_eles = cfg.Analyzer(
     'gen_eles',
     output = 'gen_eles',
     input_objects = 'gen_particles',
-    filter_func = lambda ptc: ptc.pt() > gen_pt_min and abs(ptc.pdgid()) == 11 and ptc.status() == 1
+    filter_func = lambda ptc: ptc.e() > gen_e_min and abs(ptc.pdgid()) == 11 and ptc.status() == 1
 )
 
 from heppy.analyzers.Selector import Selector
@@ -178,7 +185,7 @@ gen_mus = cfg.Analyzer(
     'gen_mus',
     output = 'gen_mus',
     input_objects = 'gen_particles',
-    filter_func = lambda ptc: ptc.pt() > gen_pt_min and abs(ptc.pdgid()) == 13 and ptc.status() == 1
+    filter_func = lambda ptc: ptc.e() > gen_e_min and abs(ptc.pdgid()) == 13 and ptc.status() == 1
 )
 
 from fcc_ee_higgs.analyzers.GenDiLeptonFilter import GenDiLeptonFilter
