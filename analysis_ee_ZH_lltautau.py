@@ -80,6 +80,12 @@ zz = FCCComponent(
     'pythia/ee_to_ZZ_Sep12_A_2',
     splitFactor=1
 )
+
+ffbar2l = FCCComponent( 
+    'pythia/ee_to_ffbar_2l_Mar7',
+    splitFactor=1
+)
+
 ##
 ##ww = FCCComponent( 
 ##    'pythia/ee_to_WW_Dec6_large',
@@ -95,7 +101,8 @@ test = cfg.Component(
 )
 
 cpslist = [
-    test
+    ffbar2l, 
+##    test,
 ##    zh,
 ##    zz,
 ##    ww
@@ -289,7 +296,7 @@ zed_counter = cfg.Analyzer(
     veto = False
 )
 
-from fcc_ee_higgs.analyzers.ResonanceLegExtractor import ResonanceLegExtractor
+from heppy.analyzers.ResonanceLegExtractor import ResonanceLegExtractor
 leg_extractor = cfg.Analyzer(
     ResonanceLegExtractor,
     resonances = 'sel_zeds'
