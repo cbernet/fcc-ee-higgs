@@ -27,10 +27,4 @@ if __name__ == '__main__':
         tfitter = TemplateFitter(plotter.plot)
         tfitter.draw_data()
         tfitter.print_result()
-##    for name, pdf in tfitter.pdfs.iteritems():
-##        print name, pdf
-##        print pdf.Print()
-##    tfitter.draw_data()
-##    sys.exit(1)
-##    fitter.draw_pdfs()
 

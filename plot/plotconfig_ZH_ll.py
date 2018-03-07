@@ -3,11 +3,11 @@ var = 'recoil_m'
 xtitle = 'm_{H} (GeV)'
 
 # channel = 'bb'
-# channel = 'inclusive'
-channel = 'tautau'
+channel = 'inclusive'
+# channel = 'tautau'
 
-# detector = 'CLIC-FCCee'
-detector = 'CMS'
+detector = 'CLIC-FCCee'
+# detector = 'CMS'
 lumi = 500e12
 
 # bins = 100, 50, 150
@@ -47,6 +47,3 @@ cut_Z = ' && '.join([cut_leps, cut_z, cut_rad])
 cut = cut_Z
 if channel is 'bb':
     cut = ' && '.join([cut_Z, cut_hbb])
-elif channel is 'tautau':
-    cut = ' && '.join([cut_Z, cut_htautau])
-    
