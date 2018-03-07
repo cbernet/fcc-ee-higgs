@@ -80,11 +80,17 @@ zz = FCCComponent(
     'pythia/ee_to_ZZ_Sep12_A_2',
     splitFactor=1
 )
-##
-##ww = FCCComponent( 
-##    'pythia/ee_to_WW_Dec6_large',
-##    splitFactor=1
-##)
+
+
+ww = FCCComponent( 
+    'pythia/ee_to_WW_Dec6_large',
+    splitFactor=1
+)
+
+ffbar = FCCComponent(
+    'pythia/ee_to_ffbar_Sep12_B_4',
+    splitFactor=1
+)
 
 import glob
 test_files=glob.glob('Out_pythia_Zll_orsel/Job*/*.root')
@@ -95,10 +101,11 @@ test = cfg.Component(
 )
 
 cpslist = [
-    test
-##    zh,
-##    zz,
-##    ww
+##    test
+#    zh,
+#    zz,
+#    ww
+    ffbar
 ]
 
 cps = dict( (c.name, c) for c in cpslist)
