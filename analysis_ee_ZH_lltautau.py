@@ -92,7 +92,7 @@ ffbar = FCCComponent(
 )
 
 ffbar2l = FCCComponent( 
-    'pythia/ee_to_ffbar_2l_Mar7',
+    'pythia/ee_to_ffbar_2l_Mar6',
     splitFactor=1
 )
 
