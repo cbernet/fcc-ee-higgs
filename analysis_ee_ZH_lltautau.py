@@ -347,7 +347,6 @@ second_zeds = cfg.Analyzer(
     pdgid = 23
 )
 
-
 # Make jets from the particles not used to build the best zed.
 # Here the event is forced into 2 jets to target ZH, H->b bbar)
 # help(JetClusterizer) for more information

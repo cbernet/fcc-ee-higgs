@@ -16,6 +16,7 @@ histPref = {
     'WW*': {'style':sWW, 'layer':5, 'legend':'WW'},
     'ZH*': {'style':sZH, 'layer':11, 'legend':'ZH'},
     'ffbar': {'style':sffbar, 'layer':4, 'legend':'ffbar'},
+    'll': {'style':sffbar, 'layer':4, 'legend':'ll'},
 }
 
 class Plotter(object):
