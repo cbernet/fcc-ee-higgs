@@ -30,17 +30,25 @@ class Efficiencies(object):
     def marginal(self):
         all_cuts =  ' && '.join(self.cuts.values())
         print 'all cuts', all_cuts
-        nall = self.tree.Draw("1", all_cuts, "goff")
-        print 'nsel', nall
+        len_cutstr = max(len(cutstr) for cutstr in self.cuts.values()) + 5
+        form = '{{cutstr:<{len_cutstr}}}\t{{eff:5.2f}}'.format(len_cutstr=len_cutstr)
+        self.tree.Draw("1", all_cuts, "goff")
+        nall = self.tree.GetSelectedRows()
+        if not nall:
+            print 'cannot compute marginal efficiencies, no events after full selection'
+            return
         for cutname, cutstr in self.cuts.iteritems():
-            print cutname, cutstr
+            # print cutname, cutstr
             cuts_nm1 = copy.copy(self.cuts)
             del cuts_nm1[cutname]
             the_cut = ' && '.join(cuts_nm1.values())
-            print the_cut
+            # print the_cut
             self.tree.Draw("1", the_cut, "goff")
             nmarg = self.tree.GetSelectedRows()
-            print nmarg
-            print 'marginal eff', float(nall) / nmarg
+            # print nmarg
+            eff = '-1.0'
+            if nmarg:
+                eff = float(nall) / nmarg
+            print form.format(cutstr=cutstr, eff=eff)
         
             
