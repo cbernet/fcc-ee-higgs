@@ -17,6 +17,8 @@ class ZHTreeProducer(Analyzer):
         if hasattr(self.cfg_ana, 'zeds'):  
             bookZed(self.tree, 'zed')
         self.taggers = ['b', 'bmatch', 'bfrac']
+        for label in self.cfg_ana.particles:
+            bookParticle(self.tree, label)            
         for label in self.cfg_ana.jet_collections:  
             bookJet(self.tree, '{}_1'.format(label), self.taggers)
             bookJet(self.tree, '{}_2'.format(label), self.taggers)
@@ -29,7 +31,6 @@ class ZHTreeProducer(Analyzer):
         bookResonanceWithLegs(self.tree, 'genboson2')
         for label in self.cfg_ana.misenergy:
             bookParticle(self.tree, label)
-        bookParticle(self.tree, 'otherptc')
         var(self.tree, 'notherptcs')
         var(self.tree, 'n_nu')
        
@@ -45,7 +46,12 @@ class ZHTreeProducer(Analyzer):
                 fillZed(self.tree, 'zed', zed)
         for label in self.cfg_ana.misenergy:        
             misenergy = getattr(event, label)
-            fillParticle(self.tree, label, misenergy)      
+            fillParticle(self.tree, label, misenergy)
+        for label in self.cfg_ana.particles:
+            ptcs = getattr(event, label)
+            fill(self.tree, 'n_'+label, len(ptcs))
+            if len(ptcs):
+                fillParticle(self.tree, label, otherptcs[0])            
         for label in self.cfg_ana.jet_collections:  
             jets = getattr(event, label)
             for ijet, jet in enumerate(jets):
@@ -66,10 +72,6 @@ class ZHTreeProducer(Analyzer):
             fill(self.tree, 'n_nu', len(neutrinos))
         for i, boson in enumerate(event.gen_bosons[:2]):
             fillResonanceWithLegs(self.tree, 'genboson{i}'.format(i=i+1), boson)
-        otherptcs = event.particles_not_zed
-        fill(self.tree, 'notherptcs', len(otherptcs))
-        if len(otherptcs):
-            fillParticle(self.tree, 'otherptc', otherptcs[0])
         self.tree.tree.Fill()
         
     def write(self, setup):

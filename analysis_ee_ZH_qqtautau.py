@@ -75,7 +75,7 @@ zh = FCCComponent(
     'pythia/ee_to_ZH_Oct30',
     splitFactor=4
 )
-
+##
 ##zz = FCCComponent( 
 ##    'pythia/ee_to_ZZ_Sep12_A_2',
 ##    splitFactor=1
@@ -141,27 +141,6 @@ source = cfg.Analyzer(
     gen_vertices = 'GenVertex'
 )
 
-
-# gen Z
-
-##from fcc_ee_higgs.analyzers.GenResonanceAnalyzer import GenResonanceAnalyzer
-##gen_zeds_ll = cfg.Analyzer(
-##    GenResonanceAnalyzer,
-##    pdgids=[23],
-##    statuses=[62],
-##    decay_pdgids=[11, 13],
-##    verbose=False
-##)
-##
-##from heppy.analyzers.EventFilter   import EventFilter  
-##gen_zeds_ll_counter = cfg.Analyzer(
-##    EventFilter  ,
-##    'gen_zeds_ll_counter',
-##    input_objects = 'gen_bosons',
-##    min_number = min_gen_z,
-##    veto = False
-##)
-
 # gen bosons
 
 from fcc_ee_higgs.analyzers.GenResonanceAnalyzer import GenResonanceAnalyzer
@@ -172,50 +151,6 @@ gen_bosons = cfg.Analyzer(
     # decay_pdgids=[11, 13],
     verbose=False
 )
-
-# gen level filtering
-
-gen_e_min = 5.
-
-from heppy.analyzers.Selector import Selector
-gen_eles = cfg.Analyzer(
-    Selector,
-    'gen_eles',
-    output = 'gen_eles',
-    input_objects = 'gen_particles',
-    filter_func = lambda ptc: ptc.e() > gen_e_min and abs(ptc.pdgid()) == 11 and ptc.status() == 1
-)
-
-from heppy.analyzers.Selector import Selector
-gen_mus = cfg.Analyzer(
-    Selector,
-    'gen_mus',
-    output = 'gen_mus',
-    input_objects = 'gen_particles',
-    filter_func = lambda ptc: ptc.e() > gen_e_min and abs(ptc.pdgid()) == 13 and ptc.status() == 1
-)
-
-from fcc_ee_higgs.analyzers.GenDiLeptonFilter import GenDiLeptonFilter
-gen_ll_filter = cfg.Analyzer(
-    GenDiLeptonFilter,
-    eles='gen_eles',
-    mus='gen_mus'
-)
-
-gen_nus = cfg.Analyzer(
-    Selector,
-    'gen_nus',
-    output = 'gen_nus',
-    input_objects = 'gen_particles',
-    filter_func = lambda ptc: abs(ptc.pdgid()) in [12, 14, 16] and ptc.status() == 1    
-)
-
-from heppy.analyzers.P4SumBuilder import P4SumBuilder
-gen_missing_energy = cfg.Analyzer(
-    P4SumBuilder,
-    output = 'gen_missing_energy',
-    particles = 'gen_nus', 
-) 
 
 # importing the papas simulation and reconstruction sequence,
 # as well as the detector used in papas
@@ -232,6 +167,7 @@ pfreconstruct.detector = detector
 # we could use two different instances for the Selector module
 # to get separate collections of electrons and muons
 # help(Selector) for more information
+from heppy.analyzers.Selector import Selector
 leptons = cfg.Analyzer(
     Selector,
     'sel_leptons',
@@ -251,13 +187,6 @@ iso_leptons = cfg.Analyzer(
     iso_area = EtaPhiCircle(0.4)
 )
 
-# Select isolated leptons with a Selector
-# one can pass a function like this one to the filter:
-def relative_isolation(lepton):
-    sumpt = lepton.iso_211.sumpt + lepton.iso_22.sumpt + lepton.iso_130.sumpt
-    sumpt /= lepton.pt()
-    return sumpt
-# ... or use a lambda statement as done below. 
 sel_iso_leptons = cfg.Analyzer(
     Selector,
     'sel_iso_leptons',
@@ -277,29 +206,10 @@ zeds = cfg.Analyzer(
     pdgid = 23
 )
 
-zed_selector = cfg.Analyzer(
-    Selector,
-    'sel_zeds',
-    output = 'sel_zeds',
-    input_objects = 'zeds',
-    nmax=1, 
-    # filter_func=lambda zed: True,
-    filter_func = lambda zed: zed.leg1().pdgid() == -zed.leg2().pdgid()
-)
-
-from heppy.analyzers.EventFilter   import EventFilter  
-zed_counter = cfg.Analyzer(
-    EventFilter  ,
-    'zed_counter',
-    input_objects = 'sel_zeds',
-    min_number = min_rec_z,
-    veto = False
-)
-
 from heppy.analyzers.ResonanceLegExtractor import ResonanceLegExtractor
 leg_extractor = cfg.Analyzer(
     ResonanceLegExtractor,
-    resonances = 'sel_zeds'
+    resonances = 'zeds'
 )
 
 # Computing the recoil p4 (here, p_initial - p_zed)
@@ -307,14 +217,6 @@ leg_extractor = cfg.Analyzer(
 sqrts = Collider.SQRTS 
 
 from heppy.analyzers.RecoilBuilder import RecoilBuilder
-recoil = cfg.Analyzer(
-    RecoilBuilder,
-    instance_label = 'recoil',
-    output = 'recoil',
-    sqrts = sqrts,
-    to_remove = 'sel_zeds_legs'
-) 
-
 missing_energy = cfg.Analyzer(
     RecoilBuilder,
     instance_label = 'missing_energy',
@@ -333,20 +235,6 @@ particles_not_zed = cfg.Analyzer(
     mask = 'sel_zeds_legs',
 )
 
-iso_leptons_not_zed = cfg.Analyzer(
-    Masker,
-    output = 'iso_leptons_not_zed',
-    input = 'sel_iso_leptons',
-    mask = 'sel_zeds_legs',
-)
-
-second_zeds = cfg.Analyzer(
-    ResonanceBuilder,
-    output = 'second_zeds',
-    leg_collection = 'iso_leptons_not_zed',
-    pdgid = 23
-)
-
 # Make jets from the particles not used to build the best zed.
 # Here the event is forced into 2 jets to target ZH, H->b bbar)
 # help(JetClusterizer) for more information
@@ -354,7 +242,7 @@ from heppy.analyzers.fcc.JetClusterizer import JetClusterizer
 jets = cfg.Analyzer(
     JetClusterizer,
     output = 'jets',
-    particles = 'particles_not_zed',
+    particles = 'rec_particles',
     fastjet_args = dict( njets = 2 ),
     njets_required=False
 )
@@ -382,37 +270,23 @@ from fcc_ee_higgs.analyzers.ZHTreeProducer import ZHTreeProducer
 tree = cfg.Analyzer(
     ZHTreeProducer,
     jet_collections = ['jets'],
-    resonances=['higgses', 'zeds', 'second_zeds'], 
-    misenergy = ['missing_energy', 'gen_missing_energy'],
-    particles =['otherptcs'], 
-    recoil='recoil'
+    resonances=['higgses', 'zeds'], 
+    misenergy = ['missing_energy'],
+    particles=[], 
 )
 
 # definition of a sequence of analyzers,
 # the analyzers will process each event in this order
 sequence = cfg.Sequence(
     source,
-    ##    gen_zeds_ll,
-    ##    gen_zeds_ll_counter,
     gen_bosons, 
-    gen_eles,
-    gen_mus,
-    gen_nus,
-    gen_missing_energy, 
-    gen_ll_filter, 
     papas_sequence,
     leptons,
     iso_leptons,
     sel_iso_leptons,
     zeds,
-    zed_selector, 
-    zed_counter,
     leg_extractor, 
-    recoil,
     missing_energy,
-    iso_leptons_not_zed,
-    second_zeds, 
-    particles_not_zed,
     jets,
     higgses, 
     tree,
