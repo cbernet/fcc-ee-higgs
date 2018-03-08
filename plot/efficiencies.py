@@ -1,4 +1,5 @@
 import copy
+from heppy.statistics.counter import Counter
 
 class Efficiencies(object):
     
@@ -7,7 +8,24 @@ class Efficiencies(object):
         """"""
         self.cuts = cuts
         self.tree = tree
-        print self.cuts
+
+    def fill_cut_flow(self):
+        self.cut_flow = Counter('Cuts')
+        ntot = self.tree.GetEntries()
+        nlast = ntot
+        cut = '1'
+        self.cut_flow.register('Preselection')
+        self.cut_flow.inc('Preselection', ntot)
+        for cutname, cutstr in self.cuts.iteritems():
+            cut = ' && '.join([cut, cutstr])
+            print cutstr
+            self.tree.Draw("1", cut, 'goff')
+            nsel = self.tree.GetSelectedRows()
+            self.cut_flow.register(cutstr)
+            self.cut_flow.inc(cutstr, nsel)
+            print nsel, float(nsel) / ntot, float(nsel) / nlast
+            nlast = nsel
+        print self.cut_flow
         
     def marginal(self):
         all_cuts =  ' && '.join(self.cuts.values())
