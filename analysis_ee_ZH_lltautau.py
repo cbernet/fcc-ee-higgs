@@ -237,7 +237,7 @@ leptons = cfg.Analyzer(
     'sel_leptons',
     output = 'leptons',
     input_objects = 'rec_particles',
-    filter_func = lambda ptc: ptc.e()>10. and abs(ptc.pdgid()) in [11, 13]
+    filter_func = lambda ptc: ptc.e() > 5. and abs(ptc.pdgid()) in [11, 13]
 )
 
 # Compute lepton isolation w/r other particles in the event.
