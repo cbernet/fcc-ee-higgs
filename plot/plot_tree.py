@@ -6,6 +6,8 @@ if __name__ == '__main__':
     from ROOT import TGaxis
     from tdrstyle.tdrstyle import setTDRStyle
     setTDRStyle(square=True)
+    
+    from fcc_ee_higgs.plot.efficiencies import Efficiencies
             
     config_fname, root_fname = sys.argv[1:]
     

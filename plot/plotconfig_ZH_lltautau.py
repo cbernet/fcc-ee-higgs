@@ -28,7 +28,7 @@ load(comps)
 from fcc_ee_higgs.plot.cuts import Cuts
 
 cut_lepiso = '((zeds_1_iso_e/zeds_1_e<0.2) && (zeds_2_iso_e/zeds_2_e<0.2) && zeds_1_e>0 && zeds_2_e>0)'
-cut_z_mass =  '(abs(zeds_m-91)<5)'  # try opening this 
+cut_z_mass =  '(abs(zeds_m-91)<10)'  # try opening this 
 cut_z_kine = '(zeds_pt>10 && zeds_pz<50 && zeds_acol>100 && zeds_cross>10)'
 cut_z_flavour = '(zeds_1_pdgid==-zeds_2_pdgid)'
 cut_rad = '(((jets_1_e<0 || jets_1_22_e/jets_1_e<0.8) && \
