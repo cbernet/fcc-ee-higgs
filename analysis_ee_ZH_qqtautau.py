@@ -41,7 +41,7 @@ from EventStore import EventStore as Events
 from heppy.framework.event import Event
 # comment the following line to see all the collections stored in the event 
 # if collection is listed then print loop.event.papasevent will include the collections
-Event.print_patterns=['gen_bosons', '*zeds*', 'higgs*', 'jets*', 'bquarks', 'recoil*', 'collections']
+Event.print_patterns=['gen_bosons', '*jets*', '*taus*', 'higgses', 'zedqqs']
 
 # definition of the collider
 # help(Collider) for more information
@@ -98,14 +98,14 @@ zh = FCCComponent(
 
 import glob
 test_files=glob.glob('ee_ZH_Htautau.root')
-test = cfg.Component(
-    'zzll',
+zhtautau = cfg.Component(
+    'zhtautau',
     files=test_files, 
     splitFactor=len(test_files)
 )
 
 cpslist = [
-    test, 
+    zhtautau, 
 ]
 
 cps = dict( (c.name, c) for c in cpslist)
@@ -259,28 +259,16 @@ from heppy.analyzers.Masker import Masker
 taus = cfg.Analyzer(
     TauSelector,
     output='taus', 
-    jets='jets'
+    jets='jets',
+    verbose=False
 )
 
-higgses = cfg.Analyzer(
-    ResonanceBuilder,
-    output = 'higgses',
-    leg_collection = 'taus',
-    pdgid = 25
-)
-
-jets_not_taus = cfg.Analyzer(
-    Masker,
-    output = 'jets_not_taus',
-    input = 'jets',
-    mask = 'taus',
-)
-
-zedqqs = cfg.Analyzer(
-    ResonanceBuilder,
-    output = 'zedqqs',
-    leg_collection = 'jets_not_taus',
-    pdgid = 23
+from heppy.analyzers.EventFilter import EventFilter
+two_taus = cfg.Analyzer(
+    EventFilter, 
+    input_objects='taus',
+    min_number=2, 
+    veto=False
 )
 
 taus_rescaled = cfg.Analyzer(
@@ -289,26 +277,60 @@ taus_rescaled = cfg.Analyzer(
     jets='jets_rescaled'
 )
 
-higgses_rescaled = cfg.Analyzer(
-    ResonanceBuilder,
-    output = 'higgses_rescaled',
-    leg_collection = 'taus_rescaled',
-    pdgid = 25
+from fcc_ee_higgs.analyzers.QQTauTauAnalyzer import QQTauTauAnalyzer
+qqtautau = cfg.Analyzer(
+    QQTauTauAnalyzer,
+    jets='jets_rescaled',
+    taus='taus_rescaled'
 )
 
-jets_not_taus_rescaled = cfg.Analyzer(
-    Masker,
-    output = 'jets_not_taus_rescaled',
-    input = 'jets_rescaled',
-    mask = 'taus_rescaled',
-)
-
-zedqqs_rescaled = cfg.Analyzer(
-    ResonanceBuilder,
-    output = 'zedqqs_rescaled',
-    leg_collection = 'jets_not_taus_rescaled',
-    pdgid = 23
-)
+##higgses = cfg.Analyzer(
+##    ResonanceBuilder,
+##    output = 'higgses',
+##    leg_collection = 'taus',
+##    pdgid = 25
+##)
+##
+##jets_not_taus = cfg.Analyzer(
+##    Masker,
+##    output = 'jets_not_taus',
+##    input = 'jets',
+##    mask = 'taus',
+##)
+##
+##zedqqs = cfg.Analyzer(
+##    ResonanceBuilder,
+##    output = 'zedqqs',
+##    leg_collection = 'jets_not_taus',
+##    pdgid = 23
+##)
+##
+##taus_rescaled = cfg.Analyzer(
+##    TauSelector,
+##    output='taus_rescaled', 
+##    jets='jets_rescaled'
+##)
+##
+##higgses_rescaled = cfg.Analyzer(
+##    ResonanceBuilder,
+##    output = 'higgses_rescaled',
+##    leg_collection = 'taus_rescaled',
+##    pdgid = 25
+##)
+##
+##jets_not_taus_rescaled = cfg.Analyzer(
+##    Masker,
+##    output = 'jets_not_taus_rescaled',
+##    input = 'jets_rescaled',
+##    mask = 'taus_rescaled',
+##)
+##
+##zedqqs_rescaled = cfg.Analyzer(
+##    ResonanceBuilder,
+##    output = 'zedqqs_rescaled',
+##    leg_collection = 'jets_not_taus_rescaled',
+##    pdgid = 23
+##)
 
 # Analysis-specific ntuple producer
 # please have a look at the code of the ZHTreeProducer class,
@@ -316,8 +338,8 @@ zedqqs_rescaled = cfg.Analyzer(
 from fcc_ee_higgs.analyzers.ZHTreeProducer import ZHTreeProducer
 tree = cfg.Analyzer(
     ZHTreeProducer,
-    jet_collections = ['jets', 'jets_rescaled', 'taus', 'taus_rescaled'],
-    resonances=['higgses', 'higgses_rescaled', 'zedlls', 'zedqqs', 'zedqqs_rescaled'], 
+    jet_collections = ['bestjets', 'besttaus'],
+    resonances=['higgses', 'zedqqs'], 
     misenergy = ['missing_energy'],
     particles=[], 
 )
@@ -335,17 +357,21 @@ sequence = cfg.Sequence(
     leg_extractor, 
     missing_energy,
     jets,
-    beta4rescaler, 
-    taus, 
-    higgses,
-    jets_not_taus,
-    zedqqs,
-    taus_rescaled,
-    higgses_rescaled,
-    jets_not_taus_rescaled,
-    zedqqs_rescaled, 
-    tree,
-    display
+    taus,
+    two_taus,
+    beta4rescaler,
+    taus_rescaled, 
+    qqtautau, 
+    tree,  
+##    beta4rescaler, 
+##    higgses,
+##    jets_not_taus,
+##    zedqqs,
+##    taus_rescaled,
+##    higgses_rescaled,
+##    jets_not_taus_rescaled,
+##    zedqqs_rescaled, 
+    
 )   
 
 # Specifics to read FCC events 

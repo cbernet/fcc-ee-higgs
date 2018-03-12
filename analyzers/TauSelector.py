@@ -11,8 +11,12 @@ class TauSelector(Analyzer):
         for jet in jets:
             csts = jet.constituents
             ncharged = sum(csts[the_id].num() for the_id in ids)
-##            print ncharged
-##            pprint.pprint(jet.constituents.particles)
+            if self.cfg_ana.verbose:
+                print csts
             if ncharged == 1 or ncharged == 3:
                 taus.append(jet)
+                if self.cfg_ana.verbose:
+                    print '... is tau'
+            elif self.cfg_ana.verbose:
+                print '... is not tau'
         setattr(event, self.cfg_ana.output, taus)
