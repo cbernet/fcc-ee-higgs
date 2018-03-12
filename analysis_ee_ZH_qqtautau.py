@@ -75,17 +75,17 @@ zh = FCCComponent(
     'pythia/ee_to_ZH_Oct30',
     splitFactor=4
 )
-##
-##zz = FCCComponent( 
-##    'pythia/ee_to_ZZ_Sep12_A_2',
-##    splitFactor=1
-##)
-##
-##ww = FCCComponent( 
-##    'pythia/ee_to_WW_Dec6_large',
-##    splitFactor=1
-##)
-##
+
+zz = FCCComponent( 
+   'pythia/ee_to_ZZ_Sep12_A_2',
+   splitFactor=1
+)
+
+ww = FCCComponent( 
+   'pythia/ee_to_WW_Dec6_large',
+   splitFactor=1
+)
+
 ##ffbar = FCCComponent(
 ##    'pythia/ee_to_ffbar_Sep12_B_4',
 ##    splitFactor=1
@@ -105,7 +105,9 @@ zhtautau = cfg.Component(
 )
 
 cpslist = [
-    zhtautau, 
+    zh,
+    zz,
+    ww
 ]
 
 cps = dict( (c.name, c) for c in cpslist)
