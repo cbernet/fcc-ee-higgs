@@ -92,7 +92,7 @@ ffbar = FCCComponent(
 )
 
 ffbar2l = FCCComponent( 
-    'pythia/ee_to_ffbar_2l_Mar6',
+    'pythia/ee_to_2l_Mar8',
     splitFactor=1
 )
 
@@ -105,6 +105,9 @@ test = cfg.Component(
 )
 
 cpslist = [
+#    zh,
+#    zz,
+#    ww,
     ffbar2l, 
 ]
 
