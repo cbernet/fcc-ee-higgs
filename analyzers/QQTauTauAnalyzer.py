@@ -1,5 +1,6 @@
 from heppy.framework.analyzer import Analyzer
 
+import sys
 import itertools
 
 from fcc_ee_higgs.analyzers.beta4 import beta4
@@ -26,17 +27,24 @@ class QQTauTauAnalyzer(Analyzer):
             self.counters['cutflow'].inc('3 taus')
         elif len(taus) == 4:
             self.counters['cutflow'].inc('4 taus')
-        dmz = 999999.
+        dmz = sys.float_info.max
         higgs = None
         zed = None
         besttaus = None
         bestjets = None
+        first = True
         for tau1, tau2 in itertools.combinations(taus, 2):
             qqjetsp = [jet for jet in jets if jet not in [tau1, tau2]]
             assert(len(qqjetsp) == 2)
             zedp = Resonance2(qqjetsp[0], qqjetsp[1], 23, 1)
             dmzp = abs(zedp.m() - 91)
-            if dmzp < dmz:
+            if dmzp < dmz or first:
+                first = False
+                # the first flag ensures that the products are
+                # calculated at least once.
+                # rarely (~1 per mil), the rescaling goes completely
+                # wrong and produce very high energy jets, hence
+                # dmz much larger than the starting value
                 dmz = dmzp
                 higgs = Resonance2(tau1, tau2, 25, 1)
                 zed = zedp
