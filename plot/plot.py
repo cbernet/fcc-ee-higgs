@@ -54,3 +54,12 @@ if __name__ == '__main__':
         tfitter.draw_data()
         tfitter.print_result()
 
+        h = TH1F('h', 'uncertainty', 200, 0, 10)
+        for i in range(1000):
+            tfitter = TemplateFitter(plotter.plot)
+            unc = tfitter.print_result()
+            h.Fill(unc)
+        c_unc = TCanvas()
+        print h.GetMean()
+        h.Draw()
+

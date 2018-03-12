@@ -97,7 +97,7 @@ zh = FCCComponent(
 ##)
 
 import glob
-test_files=glob.glob('Out_pythia_Zll_orsel/Job*/*.root')
+test_files=glob.glob('ee_ZH_Htautau.root')
 test = cfg.Component(
     'zzll',
     files=test_files, 
@@ -105,7 +105,7 @@ test = cfg.Component(
 )
 
 cpslist = [
-    zh, 
+    test, 
 ]
 
 cps = dict( (c.name, c) for c in cpslist)
@@ -199,9 +199,9 @@ sel_iso_leptons = cfg.Analyzer(
 # Building Zeds
 # help(ResonanceBuilder) for more information
 from heppy.analyzers.ResonanceBuilder import ResonanceBuilder
-zeds = cfg.Analyzer(
+zedlls = cfg.Analyzer(
     ResonanceBuilder,
-    output = 'zeds',
+    output = 'zedlls',
     leg_collection = 'sel_iso_leptons',
     pdgid = 23
 )
@@ -209,7 +209,7 @@ zeds = cfg.Analyzer(
 from heppy.analyzers.ResonanceLegExtractor import ResonanceLegExtractor
 leg_extractor = cfg.Analyzer(
     ResonanceLegExtractor,
-    resonances = 'zeds'
+    resonances = 'zedlls'
 )
 
 # Computing the recoil p4 (here, p_initial - p_zed)
@@ -225,16 +225,6 @@ missing_energy = cfg.Analyzer(
     to_remove = 'rec_particles'
 )
 
-# Creating a list of particles excluding the decay products of the best zed.
-# help(Masker) for more information
-from heppy.analyzers.Masker import Masker
-particles_not_zed = cfg.Analyzer(
-    Masker,
-    output = 'particles_not_zed',
-    input = 'rec_particles',
-    mask = 'sel_zeds_legs',
-)
-
 # Make jets from the particles not used to build the best zed.
 # Here the event is forced into 2 jets to target ZH, H->b bbar)
 # help(JetClusterizer) for more information
@@ -243,7 +233,7 @@ jets = cfg.Analyzer(
     JetClusterizer,
     output = 'jets',
     particles = 'rec_particles',
-    fastjet_args = dict( njets = 2 ),
+    fastjet_args = dict( njets = 4),
     njets_required=False
 )
 
@@ -256,11 +246,68 @@ if jet_correction:
     )
     jets = cfg.Sequence(jets, jets_cor)
 
+from fcc_ee_higgs.analyzers.Beta4Rescaler import Beta4Rescaler
+beta4rescaler = cfg.Analyzer(
+    Beta4Rescaler,
+    output='jets_rescaled', 
+    jets='jets'
+)
+
+from fcc_ee_higgs.analyzers.TauSelector import TauSelector
+from heppy.analyzers.Masker import Masker
+
+taus = cfg.Analyzer(
+    TauSelector,
+    output='taus', 
+    jets='jets'
+)
+
 higgses = cfg.Analyzer(
     ResonanceBuilder,
     output = 'higgses',
-    leg_collection = 'jets',
+    leg_collection = 'taus',
     pdgid = 25
+)
+
+jets_not_taus = cfg.Analyzer(
+    Masker,
+    output = 'jets_not_taus',
+    input = 'jets',
+    mask = 'taus',
+)
+
+zedqqs = cfg.Analyzer(
+    ResonanceBuilder,
+    output = 'zedqqs',
+    leg_collection = 'jets_not_taus',
+    pdgid = 23
+)
+
+taus_rescaled = cfg.Analyzer(
+    TauSelector,
+    output='taus_rescaled', 
+    jets='jets_rescaled'
+)
+
+higgses_rescaled = cfg.Analyzer(
+    ResonanceBuilder,
+    output = 'higgses_rescaled',
+    leg_collection = 'taus_rescaled',
+    pdgid = 25
+)
+
+jets_not_taus_rescaled = cfg.Analyzer(
+    Masker,
+    output = 'jets_not_taus_rescaled',
+    input = 'jets_rescaled',
+    mask = 'taus_rescaled',
+)
+
+zedqqs_rescaled = cfg.Analyzer(
+    ResonanceBuilder,
+    output = 'zedqqs_rescaled',
+    leg_collection = 'jets_not_taus_rescaled',
+    pdgid = 23
 )
 
 # Analysis-specific ntuple producer
@@ -269,8 +316,8 @@ higgses = cfg.Analyzer(
 from fcc_ee_higgs.analyzers.ZHTreeProducer import ZHTreeProducer
 tree = cfg.Analyzer(
     ZHTreeProducer,
-    jet_collections = ['jets'],
-    resonances=['higgses', 'zeds'], 
+    jet_collections = ['jets', 'jets_rescaled', 'taus', 'taus_rescaled'],
+    resonances=['higgses', 'higgses_rescaled', 'zedlls', 'zedqqs', 'zedqqs_rescaled'], 
     misenergy = ['missing_energy'],
     particles=[], 
 )
@@ -284,11 +331,19 @@ sequence = cfg.Sequence(
     leptons,
     iso_leptons,
     sel_iso_leptons,
-    zeds,
+    zedlls,
     leg_extractor, 
     missing_energy,
     jets,
-    higgses, 
+    beta4rescaler, 
+    taus, 
+    higgses,
+    jets_not_taus,
+    zedqqs,
+    taus_rescaled,
+    higgses_rescaled,
+    jets_not_taus_rescaled,
+    zedqqs_rescaled, 
     tree,
     display
 )   
