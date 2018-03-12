@@ -75,8 +75,10 @@ class BaseFitter(object):
         yzh = self.ryields['ZH']
         zh_val = yzh.getVal()
         zh_err = yzh.getError()
+        percent_unc = zh_err / zh_val * 100.
         print 'ZH yield  = {:8.2f}'.format(zh_val)
-        print 'ZH uncert = {:8.2f}%'.format(zh_err / zh_val * 100.)
+        print 'ZH uncert = {:8.2f}%'.format(percent_unc)
+        return percent_unc
 
     def draw_pdfs(self):
         self.pframe = self.xvar.frame()

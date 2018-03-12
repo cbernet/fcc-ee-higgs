@@ -17,21 +17,23 @@ class ZHTreeProducer(Analyzer):
         if hasattr(self.cfg_ana, 'zeds'):  
             bookZed(self.tree, 'zed')
         self.taggers = ['b', 'bmatch', 'bfrac']
+        for label in self.cfg_ana.particles:
+            bookParticle(self.tree, label)
+            var(self.tree, 'n_'+label)            
         for label in self.cfg_ana.jet_collections:  
             bookJet(self.tree, '{}_1'.format(label), self.taggers)
             bookJet(self.tree, '{}_2'.format(label), self.taggers)
         for label in self.cfg_ana.resonances:
             iso = False
-            if 'zed' in label:
+            if 'zed' in label and not 'qq' in label:
                 iso = True
             bookResonanceWithLegs(self.tree, label, iso)
         bookResonanceWithLegs(self.tree, 'genboson1')
         bookResonanceWithLegs(self.tree, 'genboson2')
         for label in self.cfg_ana.misenergy:
-            bookParticle(self.tree, label)
-        bookParticle(self.tree, 'otherptc')
-        var(self.tree, 'notherptcs')
+            bookParticle(self.tree, label)        
         var(self.tree, 'n_nu')
+        var(self.tree, 'beta4_chi2')
        
     def process(self, event):
         self.tree.reset()
@@ -45,7 +47,12 @@ class ZHTreeProducer(Analyzer):
                 fillZed(self.tree, 'zed', zed)
         for label in self.cfg_ana.misenergy:        
             misenergy = getattr(event, label)
-            fillParticle(self.tree, label, misenergy)      
+            fillParticle(self.tree, label, misenergy)
+        for label in self.cfg_ana.particles:
+            ptcs = getattr(event, label)
+            fill(self.tree, 'n_'+label, len(ptcs))
+            if len(ptcs):
+                fillParticle(self.tree, label, otherptcs[0])            
         for label in self.cfg_ana.jet_collections:  
             jets = getattr(event, label)
             for ijet, jet in enumerate(jets):
@@ -58,7 +65,7 @@ class ZHTreeProducer(Analyzer):
             if len(resonances)>0:  
                 resonance = resonances[0]
                 iso = False
-                if 'zed' in label:
+                if 'zed' in label and not 'qq' in label:
                     iso = True                
                 fillResonanceWithLegs(self.tree, label, resonance, iso)
         neutrinos = getattr(event, 'neutrinos', None)
@@ -66,10 +73,8 @@ class ZHTreeProducer(Analyzer):
             fill(self.tree, 'n_nu', len(neutrinos))
         for i, boson in enumerate(event.gen_bosons[:2]):
             fillResonanceWithLegs(self.tree, 'genboson{i}'.format(i=i+1), boson)
-        otherptcs = event.particles_not_zed
-        fill(self.tree, 'notherptcs', len(otherptcs))
-        if len(otherptcs):
-            fillParticle(self.tree, 'otherptc', otherptcs[0])
+        if hasattr(event, 'beta4_chi2'):
+            fill(self.tree, 'beta4_chi2', event.beta4_chi2)
         self.tree.tree.Fill()
         
     def write(self, setup):
