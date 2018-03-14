@@ -1,4 +1,4 @@
-var = 'higgses_m'
+var = 'higgs_r_m'
 # var = 'zeds_m'
 xtitle = 'm_{H} (GeV)'
 
@@ -27,7 +27,7 @@ load(comps)
 
 from fcc_ee_higgs.plot.cuts import Cuts
 
-cut_zqq = 'zedqqs_m>89 && zedqqs_m<100'
+cut_zqq = 'zedqq2_r_m>75 && zedqq2_r_m<110'
 cut_htautau = '(((besttaus_1_211_num+besttaus_1_11_num+besttaus_1_13_num)==1 || (besttaus_1_211_num+besttaus_1_11_num+besttaus_1_13_num)==3) && \
  ((besttaus_2_211_num+besttaus_2_11_num+besttaus_2_13_num)==1 || (besttaus_2_211_num+besttaus_2_11_num+besttaus_2_13_num)==3))'
 cut_htautau_1prong = '(((besttaus_1_211_num+besttaus_1_11_num+besttaus_1_13_num)==1) && \
@@ -47,8 +47,8 @@ cut_zedll_2 = '(!(besttaus_1_11_num==1 && besttaus_2_11_num==1) && !(besttaus_1_
 
 cuts = Cuts([
     ('cut_zqq', cut_zqq), 
-    ('cut_htautau_1prong', cut_htautau_1prong),
-    ('cut_zqqs_acol', 'zedqqs_acol>108'), 
+    # ('cut_htautau_1prong', cut_htautau_1prong),
+    ('cut_zqqs_acol', 'zedqq2_r_acol>108'), 
     ('cut_zqq_jets', cut_zqq_jets),
     # ('cut_zedll', cut_zedll)
     ('cut_zedll_2', cut_zedll_2)
@@ -62,3 +62,4 @@ cut = str(cuts)
 cut_gen_htautau = 'abs(genboson2_1_pdgid)==15'
 cut_gen_hww = 'abs(genboson2_1_pdgid)==24'
 cut_gen_hbb = 'abs(genboson2_1_pdgid)==5'
+

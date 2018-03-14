@@ -19,3 +19,6 @@ if __name__ == '__main__':
     tree = tfile.Get('events')
     
     c = TCanvas()
+    
+    eff = Efficiencies(tree, cuts)
+    eff.fill_cut_flow('tree')

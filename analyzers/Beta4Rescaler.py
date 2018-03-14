@@ -1,7 +1,6 @@
 
 from heppy.framework.analyzer import Analyzer
 from heppy.configuration import Collider
-from ROOT import TLorentzVector
 
 import copy
 import math

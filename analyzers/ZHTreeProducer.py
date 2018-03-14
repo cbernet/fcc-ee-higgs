@@ -52,7 +52,7 @@ class ZHTreeProducer(Analyzer):
             ptcs = getattr(event, label)
             fill(self.tree, 'n_'+label, len(ptcs))
             if len(ptcs):
-                fillParticle(self.tree, label, otherptcs[0])            
+                fillParticle(self.tree, label, ptcs[0])            
         for label in self.cfg_ana.jet_collections:  
             jets = getattr(event, label)
             for ijet, jet in enumerate(jets):

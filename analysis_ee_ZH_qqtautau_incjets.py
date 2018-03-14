@@ -183,58 +183,6 @@ papas.detector = detector
 display.detector = detector
 pfreconstruct.detector = detector
 
-# Use a Selector to select leptons from the output of papas simulation.
-# Currently, we're treating electrons and muons transparently.
-# we could use two different instances for the Selector module
-# to get separate collections of electrons and muons
-# help(Selector) for more information
-from heppy.analyzers.Selector import Selector
-leptons = cfg.Analyzer(
-    Selector,
-    'sel_leptons',
-    output = 'leptons',
-    input_objects = 'rec_particles',
-    filter_func = lambda ptc: ptc.e() > 5. and abs(ptc.pdgid()) in [11, 13]
-)
-
-# Compute lepton isolation w/r other particles in the event.
-# help(IsolationAnalyzer) for more information
-from heppy.analyzers.IsolationAnalyzer import IsolationAnalyzer
-from heppy.particles.isolation import EtaPhiCircle
-iso_leptons = cfg.Analyzer(
-    IsolationAnalyzer,
-    candidates = 'leptons',
-    particles = 'rec_particles',
-    iso_area = EtaPhiCircle(0.4)
-)
-
-sel_iso_leptons = cfg.Analyzer(
-    Selector,
-    'sel_iso_leptons',
-    output = 'sel_iso_leptons',
-    input_objects = 'leptons',
-    # filter_func = relative_isolation
-    filter_func = lambda lep : lep.iso.sumpt/lep.pt()< 0.5
-)
-
-# Building Zeds
-# help(ResonanceBuilder) for more information
-from heppy.analyzers.ResonanceBuilder import ResonanceBuilder
-zedlls = cfg.Analyzer(
-    ResonanceBuilder,
-    output = 'zedlls',
-    leg_collection = 'sel_iso_leptons',
-    pdgid = 23
-)
-
-from heppy.analyzers.ResonanceLegExtractor import ResonanceLegExtractor
-leg_extractor = cfg.Analyzer(
-    ResonanceLegExtractor,
-    resonances = 'zedlls'
-)
-
-# Computing the recoil p4 (here, p_initial - p_zed)
-# help(RecoilBuilder) for more information
 sqrts = Collider.SQRTS 
 
 from heppy.analyzers.RecoilBuilder import RecoilBuilder
@@ -255,6 +203,7 @@ jets = cfg.Analyzer(
     output = 'jets',
     particles = 'rec_particles',
     fastjet_args = dict( R=0.2, p=-1, emin=5),
+#     fastjet_args = dict( njets=4 ),
     verbose=False
 )
 
@@ -267,13 +216,6 @@ if jet_correction:
     )
     jets = cfg.Sequence(jets, jets_cor)
 
-from fcc_ee_higgs.analyzers.Beta4Rescaler import Beta4Rescaler
-beta4rescaler = cfg.Analyzer(
-    Beta4Rescaler,
-    output='jets_rescaled', 
-    jets='jets'
-)
-
 from fcc_ee_higgs.analyzers.TauSelector import TauSelector
 from heppy.analyzers.Masker import Masker
 
@@ -281,7 +223,7 @@ taus = cfg.Analyzer(
     TauSelector,
     output='taus', 
     jets='jets',
-    verbose=True
+    verbose=False
 )
 
 from heppy.analyzers.EventFilter import EventFilter
@@ -314,17 +256,12 @@ gen_tau_match = cfg.Analyzer(
     match_particles = 'taus',
 )
 
-taus_rescaled = cfg.Analyzer(
-    TauSelector,
-    output='taus_rescaled', 
-    jets='jets_rescaled'
-)
-
-from fcc_ee_higgs.analyzers.QQTauTauAnalyzer import QQTauTauAnalyzer
+from fcc_ee_higgs.analyzers.QQTauTauAnalyzer2 import QQTauTauAnalyzer2
 qqtautau = cfg.Analyzer(
-    QQTauTauAnalyzer,
-    jets='jets_rescaled',
-    taus='taus_rescaled'
+    QQTauTauAnalyzer2,
+    jets='jets',
+    taus='taus',
+    particles='rec_particles'
 )
 
 from fcc_ee_higgs.analyzers.TauTreeProducer import TauTreeProducer
@@ -342,55 +279,6 @@ gen_tau_tree = cfg.Analyzer(
     
 )
 
-
-##higgses = cfg.Analyzer(
-##    ResonanceBuilder,
-##    output = 'higgses',
-##    leg_collection = 'taus',
-##    pdgid = 25
-##)
-##
-##jets_not_taus = cfg.Analyzer(
-##    Masker,
-##    output = 'jets_not_taus',
-##    input = 'jets',
-##    mask = 'taus',
-##)
-##
-##zedqqs = cfg.Analyzer(
-##    ResonanceBuilder,
-##    output = 'zedqqs',
-##    leg_collection = 'jets_not_taus',
-##    pdgid = 23
-##)
-##
-##taus_rescaled = cfg.Analyzer(
-##    TauSelector,
-##    output='taus_rescaled', 
-##    jets='jets_rescaled'
-##)
-##
-##higgses_rescaled = cfg.Analyzer(
-##    ResonanceBuilder,
-##    output = 'higgses_rescaled',
-##    leg_collection = 'taus_rescaled',
-##    pdgid = 25
-##)
-##
-##jets_not_taus_rescaled = cfg.Analyzer(
-##    Masker,
-##    output = 'jets_not_taus_rescaled',
-##    input = 'jets_rescaled',
-##    mask = 'taus_rescaled',
-##)
-##
-##zedqqs_rescaled = cfg.Analyzer(
-##    ResonanceBuilder,
-##    output = 'zedqqs_rescaled',
-##    leg_collection = 'jets_not_taus_rescaled',
-##    pdgid = 23
-##)
-
 # Analysis-specific ntuple producer
 # please have a look at the code of the ZHTreeProducer class,
 # in heppy/analyzers/examples/zh/ZHTreeProducer.py
@@ -398,9 +286,9 @@ from fcc_ee_higgs.analyzers.ZHTreeProducer import ZHTreeProducer
 tree = cfg.Analyzer(
     ZHTreeProducer,
     jet_collections = ['bestjets', 'besttaus'],
-    resonances=['higgses', 'zedqqs'], 
+    resonances=['higgs', 'higgs_r', 'zedqq2', 'zedqq2_r'], 
     misenergy = ['missing_energy'],
-    particles=[], 
+    particles=['zedqq'], 
 )
 
 # definition of a sequence of analyzers,
@@ -408,27 +296,27 @@ tree = cfg.Analyzer(
 sequence = cfg.Sequence(
     source,
     gen_taus,
-#    two_gen_taus_in_acceptance,
+    two_gen_taus_in_acceptance,
 #    display, 
-##    gen_bosons, 
+    gen_bosons, 
     papas_sequence,
 ##    leptons,
 ##    iso_leptons,
 ##    sel_iso_leptons,
 ##    zedlls,
 ##    leg_extractor, 
-##    missing_energy,
+    missing_energy,
     jets,
     taus,
     two_taus,
     rec_tau_match, 
     tau_tree,
     gen_tau_match,
-    gen_tau_tree
+    gen_tau_tree, 
 ##    beta4rescaler,
 ##    taus_rescaled, 
-##    qqtautau, 
-##    tree,  
+    qqtautau, 
+    tree,  
 ##    beta4rescaler, 
 ##    higgses,
 ##    jets_not_taus,
