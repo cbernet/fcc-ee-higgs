@@ -109,6 +109,6 @@ class QQTauTauAnalyzer2(Analyzer):
         setattr(event, 'zedqq', [best_hyp.zed])
         setattr(event, 'zedqq2', [best_hyp.zed2])
         setattr(event, 'zedqq2_r', [best_hyp.zed2_r])
-        setattr(event, 'higgs', [best_hyp.higgs_r])        
+        setattr(event, 'higgs', [best_hyp.higgs])        
         setattr(event, 'higgs_r', [best_hyp.higgs_r])        
 

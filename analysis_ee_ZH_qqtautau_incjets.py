@@ -56,7 +56,7 @@ jet_correction = True
 # mode = 'pythia/ee_to_ZZ_Sep12_A_2'
 mode = 'all'
 # nfiles = sys.maxint
-nfiles = 4
+nfiles = 1
 # mode = 'test'
 min_gen_z = 0
 min_rec_z = 1
@@ -111,7 +111,7 @@ ztautau = cfg.Component(
 )
 
 cpslist = [
-    zhtautau
+    ww
 ]
 
 cps = dict( (c.name, c) for c in cpslist)
@@ -167,10 +167,10 @@ two_gen_taus_in_acceptance = cfg.Analyzer(
 from fcc_ee_higgs.analyzers.GenResonanceAnalyzer import GenResonanceAnalyzer
 gen_bosons = cfg.Analyzer(
     GenResonanceAnalyzer,
-    pdgids=[23, 25],
+    pdgids=[23, 24, 25],
     statuses=[62],
     # decay_pdgids=[11, 13],
-    verbose=False
+    verbose=True
 )
 
 # importing the papas simulation and reconstruction sequence,
@@ -296,7 +296,7 @@ tree = cfg.Analyzer(
 sequence = cfg.Sequence(
     source,
     gen_taus,
-    two_gen_taus_in_acceptance,
+#    two_gen_taus_in_acceptance,
 #    display, 
     gen_bosons, 
     papas_sequence,

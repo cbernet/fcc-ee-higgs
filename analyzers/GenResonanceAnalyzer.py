@@ -8,7 +8,7 @@ class GenResonanceAnalyzer(Analyzer):
 
     def process(self, event):
         bosons = [ptc for ptc in event.gen_particles
-                  if ptc.pdgid() in self.cfg_ana.pdgids
+                  if abs(ptc.pdgid()) in self.cfg_ana.pdgids
                   and ptc.status() in self.cfg_ana.statuses]
         if not hasattr(event, 'genbrowser'):
             event.genbrowser = GenBrowser(event.gen_particles,
