@@ -1,4 +1,5 @@
 from itertools import count
+import fnmatch
 
 from ROOT import TPaveText, TH1
 
@@ -7,7 +8,7 @@ from cpyroot.tools.style import *
 from cpyroot.tools.DataMC.DataMCPlot import DataMCPlot
 
 sZZ = Style(lineColor=4, fillColor=kBlue-9, fillStyle=3344)
-sZH= Style(lineColor=2, fillColor=10, fillStyle=1001)
+sZH= Style(lineColor=2, fillColor=10, fillStyle=0)
 sWW= Style(lineColor=6, fillStyle=3003)
 sffbar = Style(lineColor=1, fillStyle=3003)
 
@@ -26,7 +27,18 @@ class Plotter(object):
     def __init__(self, comps, lumi):
         self.comps = comps
         self.lumi = lumi
+        self._set_styles()
 
+    def _set_styles(self):
+        for comp in self.comps:
+            found = False
+            for key, pref in histPref.iteritems():
+                if fnmatch.fnmatch(comp.name, key):
+                    comp.style = pref['style']
+                    found = True
+            if not found:
+                comp.style = sData
+                
     def _project(self, comp, var, cut, *bins):
         # hist_name = '{}_{}'.format(comp.name, self._ihist.next())
         hist_name = comp.name

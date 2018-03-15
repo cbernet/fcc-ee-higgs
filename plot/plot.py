@@ -11,6 +11,7 @@ if __name__ == '__main__':
     from fitter import TemplateFitter
     from fcc_ee_higgs.plot.plotter import Plotter
     from fcc_ee_higgs.plot.efficiencies import Efficiencies
+    from fcc_ee_higgs.plot.pdf import PDF
 
     parser = OptionParser()
     parser.usage = """plot.py <plotconfig file>
@@ -43,11 +44,15 @@ if __name__ == '__main__':
     gPad.SaveAs('{var}_zh_{channel}_{detector}.png'.format(
         var=var, channel=channel, detector=detector))
 
+    pdf = PDF(comps)
+
     if options.cutflow:
         effs = {}
         for comp in comps:
             effs[comp.name] = Efficiencies(comp.tree, cuts)
-            effs[comp.name].fill_cut_flow(comp.name)
+            eff = effs[comp.name]
+            eff.fill_cut_flow(comp.name)
+            eff.print_cut_flow()
 
     if options.fit:
         tfitter = TemplateFitter(plotter.plot)

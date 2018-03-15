@@ -14,7 +14,7 @@ bins = 50, 50, 150
 ##ZH.name =  'ZH'
 ##ZZ.name =  'ZZ'
 
-from fcc_ee_higgs.components.ZH_qqtautau_clic_Mar13 import ZH, ZZ, WW
+from fcc_ee_higgs.components.ZH_qqtautau_clic_Mar15 import ZH, ZZ, WW
 comps = [ZZ, ZH, WW]
 ZH.name =  'ZH'
 ZZ.name =  'ZZ'
@@ -25,9 +25,18 @@ WW.name = 'WW'
 from fcc_ee_higgs.components.tools import load
 load(comps)
 
+vars = dict(
+    bestjets_1_num = 'bestjets_1_211_num+bestjets_1_22_num+bestjets_1_22_num',
+    bestjets_2_num = 'bestjets_1_211_num+bestjets_1_22_num+bestjets_1_22_num',
+)    
+for comp in comps:
+    for alias, varstr in vars.iteritems():
+        comp.tree.SetAlias(alias, varstr)
+    
 from fcc_ee_higgs.plot.cuts import Cuts
-
-cut_zqq = 'zedqq2_r_m>75 && zedqq2_r_m<110'
+cut_zqq = 'abs(zedqq2_r_m-91)<5'
+cut_zqq_acol = 'zedqq2_r_acol>110'
+cut_zqq_acol_2 = 'zedqq2_acol>110'
 cut_htautau = '(((besttaus_1_211_num+besttaus_1_11_num+besttaus_1_13_num)==1 || (besttaus_1_211_num+besttaus_1_11_num+besttaus_1_13_num)==3) && \
  ((besttaus_2_211_num+besttaus_2_11_num+besttaus_2_13_num)==1 || (besttaus_2_211_num+besttaus_2_11_num+besttaus_2_13_num)==3))'
 cut_htautau_1prong = '(((besttaus_1_211_num+besttaus_1_11_num+besttaus_1_13_num)==1) && \
@@ -37,6 +46,9 @@ cut_tau1_l = '((besttaus_1_11_num==1 || besttaus_1_13_num==1) && besttaus_1_211_
 cut_tau2_l = '((besttaus_2_11_num==1 || besttaus_2_13_num==1) && besttaus_2_211_num==0)'
 cut_zedll = '!({}) && !({})'.format(cut_tau1_l, cut_tau2_l)
 cut_zedll_2 = '(!(besttaus_1_11_num==1 && besttaus_2_11_num==1) && !(besttaus_1_13_num==1 && besttaus_2_13_num==1))'
+cut_zqq_2_WW = 'zedqq2_m>80'
+cut_jete_WW = 'bestjets_1_e<80.'
+cut_jetn_WW = '1'
 
 ##cut_htautau_or = '(((jets_1_211_num+jets_1_11_num+jets_1_13_num)==1 || (jets_1_211_num+jets_1_11_num+jets_1_13_num)==3) || \
 ## ((jets_2_211_num+jets_2_11_num+jets_2_13_num)==1 || (jets_2_211_num+jets_2_11_num+jets_2_13_num)==3))'
@@ -44,22 +56,26 @@ cut_zedll_2 = '(!(besttaus_1_11_num==1 && besttaus_2_11_num==1) && !(besttaus_1_
 ##cut_missm = 'missing_energy_m/recoil_m<0.8'
 ##cut_rm4l = '!((second_zeds_1_pdgid==-second_zeds_2_pdgid) && (abs(second_zeds_1_pdgid)==13 || abs(second_zeds_1_pdgid)==11))'
 ##cut_leppt = '(zeds_1_pt>10 && zeds_2_pt>10)'
-
-cuts = Cuts([
-    ('cut_zqq', cut_zqq), 
-    # ('cut_htautau_1prong', cut_htautau_1prong),
-    ('cut_zqqs_acol', 'zedqq2_r_acol>108'), 
-    ('cut_zqq_jets', cut_zqq_jets),
-    # ('cut_zedll', cut_zedll)
-    ('cut_zedll_2', cut_zedll_2)
-    # ('cut_htautau_or', cut_htautau_or),  
-    # gain in precision! to investigate: try an or- nice but contamination is large of course...
-##    ('cut_rm4l', cut_rm4l)
-])
-
-cut = str(cuts)
-
 cut_gen_htautau = 'abs(genboson2_1_pdgid)==15'
 cut_gen_hww = 'abs(genboson2_1_pdgid)==24'
 cut_gen_hbb = 'abs(genboson2_1_pdgid)==5'
+
+cuts = Cuts([
+    ('cut_zqq', cut_zqq),
+    ('cut_htautau', cut_htautau), 
+    ('cut_htautau_1prong', cut_htautau_1prong),
+    ('cut_zqqs_acol', cut_zqq_acol), 
+    ('cut_zqqs_acol_2', cut_zqq_acol_2),
+    ('cut_zqq_2_WW', cut_zqq_2_WW), 
+    ('cut_zqq_jets', cut_zqq_jets),
+    # ('cut_zedll', cut_zedll)
+    ('cut_zedll_2', cut_zedll_2),
+    # ('cut_jete_WW', cut_jete_WW)
+    ('cut_jetn_WW', cut_jetn_WW)
+    # ('cut_gen_htautau', cut_gen_htautau)
+    # ('cut_htautau_or', cut_htautau_or),  
+    # gain in precision! to investigate: try an or- nice but contamination is large of course...
+])
+
+cut = str(cuts)
 

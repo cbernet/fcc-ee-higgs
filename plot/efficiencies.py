@@ -20,9 +20,13 @@ class Efficiencies(object):
         for cutname, cutstr in self.cuts.iteritems():
             cut = ' && '.join([cut, cutstr])
             nsel = self.tree.GetEntries(cut)
-            self.cut_flow.register(cutstr)
-            self.cut_flow.inc(cutstr, nsel)
+            self.cut_flow.register(cutname)
+            self.cut_flow.inc(cutname, nsel)
             nlast = nsel
+    
+    def print_cut_flow(self):
+        for cutname, cutstr in self.cuts.iteritems():
+            print '{:<20} {}'.format(cutname, cutstr)
         print self.cut_flow
         
     def marginal(self):
