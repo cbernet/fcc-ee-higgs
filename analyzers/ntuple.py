@@ -86,7 +86,7 @@ def fillComponent(tree, pName, component):
 pdgids = [211, 22, 130, 11, 13]
     
 def bookJet( tree, pName, taggers=None):
-    bookP4(tree, pName )
+    bookParticle(tree, pName )
     for pdgid in pdgids:
         bookComponent(tree, '{pName}_{pdgid:d}'.format(pName=pName, pdgid=pdgid))
     if taggers:
@@ -95,7 +95,7 @@ def bookJet( tree, pName, taggers=None):
 
 
 def fillJet( tree, pName, jet, taggers=None):
-    fillP4(tree, pName, jet )
+    fillParticle(tree, pName, jet )
     if taggers:
         for tagger in taggers:
             if tagger in jet.tags:

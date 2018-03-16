@@ -56,7 +56,7 @@ jet_correction = True
 # mode = 'pythia/ee_to_ZZ_Sep12_A_2'
 mode = 'all'
 # nfiles = sys.maxint
-nfiles = 1
+nfiles = 4
 # mode = 'test'
 min_gen_z = 0
 min_rec_z = 1
@@ -111,6 +111,7 @@ ztautau = cfg.Component(
 )
 
 cpslist = [
+#     zhtautau,
     ww
 ]
 
@@ -170,7 +171,7 @@ gen_bosons = cfg.Analyzer(
     pdgids=[23, 24, 25],
     statuses=[62],
     # decay_pdgids=[11, 13],
-    verbose=True
+    verbose=False
 )
 
 # importing the papas simulation and reconstruction sequence,
@@ -225,6 +226,36 @@ taus = cfg.Analyzer(
     jets='jets',
     verbose=False
 )
+
+# Compute lepton isolation w/r other particles in the event.
+# help(IsolationAnalyzer) for more information
+from heppy.analyzers.IsolationAnalyzer import IsolationAnalyzer
+from heppy.particles.isolation import EtaPhiCircle
+iso_taus = cfg.Analyzer(
+    IsolationAnalyzer,
+    candidates = 'taus',
+    particles = 'rec_particles',
+    iso_area = EtaPhiCircle(0.4),
+    off_iso_area =EtaPhiCircle(0.2)
+)
+
+# Select isolated leptons with a Selector
+# one can pass a function like this one to the filter:
+def relative_isolation(tau):
+    sumpt = tau.iso_211.sumpt + tau.iso_22.sumpt + tau.iso_130.sumpt
+    sumpt /= tau.pt()
+    return sumpt
+# ... or use a lambda statement as done below.
+from heppy.analyzers.Selector import Selector
+sel_iso_taus = cfg.Analyzer(
+    Selector,
+    'sel_iso_taus',
+    output = 'sel_iso_taus',
+    input_objects = 'taus',
+    # filter_func = relative_isolation
+    filter_func = lambda lep : lep.iso.sumpt/lep.pt()< 0.5
+)
+
 
 from heppy.analyzers.EventFilter import EventFilter
 two_taus = cfg.Analyzer(
@@ -282,13 +313,13 @@ gen_tau_tree = cfg.Analyzer(
 # Analysis-specific ntuple producer
 # please have a look at the code of the ZHTreeProducer class,
 # in heppy/analyzers/examples/zh/ZHTreeProducer.py
-from fcc_ee_higgs.analyzers.ZHTreeProducer import ZHTreeProducer
+from fcc_ee_higgs.analyzers.QQTauTauTreeProducer import QQTauTauTreeProducer
 tree = cfg.Analyzer(
-    ZHTreeProducer,
+    QQTauTauTreeProducer,
     jet_collections = ['bestjets', 'besttaus'],
     resonances=['higgs', 'higgs_r', 'zedqq2', 'zedqq2_r'], 
     misenergy = ['missing_energy'],
-    particles=['zedqq'], 
+    particles=['zedqq'],
 )
 
 # definition of a sequence of analyzers,
@@ -296,8 +327,8 @@ tree = cfg.Analyzer(
 sequence = cfg.Sequence(
     source,
     gen_taus,
-#    two_gen_taus_in_acceptance,
-#    display, 
+##    two_gen_taus_in_acceptance,
+##    display, 
     gen_bosons, 
     papas_sequence,
 ##    leptons,
@@ -308,6 +339,8 @@ sequence = cfg.Sequence(
     missing_energy,
     jets,
     taus,
+    iso_taus,
+    sel_iso_taus, 
     two_taus,
     rec_tau_match, 
     tau_tree,

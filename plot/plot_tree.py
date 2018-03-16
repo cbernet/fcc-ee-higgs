@@ -22,3 +22,4 @@ if __name__ == '__main__':
     
     eff = Efficiencies(tree, cuts)
     eff.fill_cut_flow('tree')
+    eff.print_cut_flow()

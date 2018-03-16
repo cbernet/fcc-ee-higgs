@@ -92,6 +92,8 @@ class QQTauTauAnalyzer2(Analyzer):
         dmz = sys.float_info.max
         event_hypos = []
         for taus in itertools.combinations(taus, 2):
+            if taus[0].q() * taus[1].q() > 0:
+                continue
             hypo = EventHypothesis(taus, jets)
             forced = hypo.force_2_jets(particles)
             if not forced:

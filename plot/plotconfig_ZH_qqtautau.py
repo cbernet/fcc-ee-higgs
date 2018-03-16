@@ -34,7 +34,8 @@ for comp in comps:
         comp.tree.SetAlias(alias, varstr)
     
 from fcc_ee_higgs.plot.cuts import Cuts
-cut_zqq = 'abs(zedqq2_r_m-91)<5'
+cut_zqq = '(zedqq2_r_m>75 && zedqq2_r_m<110)'
+# cut_zqq = 'zedqq2_r_m>70 && zedqq2_r_m<110'
 cut_zqq_acol = 'zedqq2_r_acol>110'
 cut_zqq_acol_2 = 'zedqq2_acol>110'
 cut_htautau = '(((besttaus_1_211_num+besttaus_1_11_num+besttaus_1_13_num)==1 || (besttaus_1_211_num+besttaus_1_11_num+besttaus_1_13_num)==3) && \
@@ -49,6 +50,8 @@ cut_zedll_2 = '(!(besttaus_1_11_num==1 && besttaus_2_11_num==1) && !(besttaus_1_
 cut_zqq_2_WW = 'zedqq2_m>80'
 cut_jete_WW = 'bestjets_1_e<80.'
 cut_jetn_WW = '1'
+cut_zqq_acop = 'zedqq2_acop>5'
+cut_tau_iso = '((besttaus_1_iso_e/besttaus_1_e<0.05) && (besttaus_2_iso_e/besttaus_2_e<0.05))'
 
 ##cut_htautau_or = '(((jets_1_211_num+jets_1_11_num+jets_1_13_num)==1 || (jets_1_211_num+jets_1_11_num+jets_1_13_num)==3) || \
 ## ((jets_2_211_num+jets_2_11_num+jets_2_13_num)==1 || (jets_2_211_num+jets_2_11_num+jets_2_13_num)==3))'
@@ -64,14 +67,16 @@ cuts = Cuts([
     ('cut_zqq', cut_zqq),
     ('cut_htautau', cut_htautau), 
     ('cut_htautau_1prong', cut_htautau_1prong),
-    ('cut_zqqs_acol', cut_zqq_acol), 
-    ('cut_zqqs_acol_2', cut_zqq_acol_2),
+    ('cut_zqq_acol', cut_zqq_acol), 
+    ('cut_zqq_acol_2', cut_zqq_acol_2),
     ('cut_zqq_2_WW', cut_zqq_2_WW), 
     ('cut_zqq_jets', cut_zqq_jets),
     # ('cut_zedll', cut_zedll)
     ('cut_zedll_2', cut_zedll_2),
+    ('cut_tau_iso', cut_tau_iso), 
+    # ('cut_zqq_acop', cut_zqq_acop)
     # ('cut_jete_WW', cut_jete_WW)
-    ('cut_jetn_WW', cut_jetn_WW)
+    # ('cut_jetn_WW', cut_jetn_WW)
     # ('cut_gen_htautau', cut_gen_htautau)
     # ('cut_htautau_or', cut_htautau_or),  
     # gain in precision! to investigate: try an or- nice but contamination is large of course...
