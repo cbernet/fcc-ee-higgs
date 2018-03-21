@@ -371,12 +371,12 @@ onebjet = cfg.Analyzer(
 )
 
 # Build Higgs candidates from pairs of jets.
-higgses_rescaled = cfg.Analyzer(
-    ResonanceBuilder,
-    output = 'higgses_rescaled',
-    leg_collection = 'jets_rescaled',
-    pdgid = 25
-)
+##higgses_rescaled = cfg.Analyzer(
+##    ResonanceBuilder,
+##    output = 'higgses_rescaled',
+##    leg_collection = 'jets_rescaled',
+##    pdgid = 25
+##)
 
 higgses = cfg.Analyzer(
     ResonanceBuilder,
@@ -426,8 +426,8 @@ debug_filename = os.getcwd()+'/python_physics_debug.log' #optional argument
 # the analyzers will process each event in this order
 sequence = cfg.Sequence(
     source,
-    gen_zeds_ll,
-    gen_zeds_ll_counter, 
+##    gen_zeds_ll,
+##    gen_zeds_ll_counter, 
     gen_eles,
     gen_mus,
     gen_nus,
@@ -449,7 +449,7 @@ sequence = cfg.Sequence(
     bjets, 
     higgses, 
     tree,
-    display
+    # display
 )   
 
 # Specifics to read FCC events 
