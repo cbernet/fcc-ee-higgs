@@ -55,8 +55,8 @@ jet_correction = True
 # mode = 'pythia/ee_to_ZH_Oct30'
 # mode = 'pythia/ee_to_ZZ_Sep12_A_2'
 mode = 'all'
-nfiles = sys.maxint
-# nfiles = 1
+# nfiles = sys.maxint
+nfiles = 1
 # mode = 'test'
 min_gen_z = 0
 min_rec_z = 1
@@ -105,7 +105,7 @@ zhtautau = cfg.Component(
 )
 
 cpslist = [
-    zhtautau, 
+    zh, zz, ww, ffbar2l 
 ]
 
 cps = dict( (c.name, c) for c in cpslist)
@@ -368,6 +368,10 @@ if jet_correction:
     )
     jets = cfg.Sequence(jets, jets_cor)
 
+# b tagging 
+from heppy.test.btag_parametrized_cfg import btag_parametrized, btag
+btag.roc = None
+
 higgses = cfg.Analyzer(
     ResonanceBuilder,
     output = 'higgses',
@@ -414,9 +418,10 @@ sequence = cfg.Sequence(
     second_zeds, 
     particles_not_zed,
     jets,
+    btag_parametrized, 
     higgses, 
     tree,
-    display
+    # display
 )   
 
 # Specifics to read FCC events 

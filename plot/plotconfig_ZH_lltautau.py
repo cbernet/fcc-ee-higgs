@@ -50,7 +50,7 @@ cuts = Cuts([
     ('cut_z_flavour', cut_z_flavour), 
     ('cut_rad2', cut_rad2), 
     ('cut_rad', cut_rad),
-    ('cut_htautau', cut_htautau), 
+    # ('cut_htautau', cut_htautau), 
     # ('cut_htautau_or', cut_htautau_or),  
     # gain in precision! to investigate: try an or- nice but contamination is large of course...
     ('cut_rm4l', cut_rm4l)
