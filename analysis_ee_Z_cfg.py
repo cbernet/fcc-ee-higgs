@@ -12,7 +12,7 @@ import copy
 import heppy.framework.config as cfg
 
 from heppy.framework.event import Event
-Event.print_patterns=['sum*']
+Event.print_patterns=['rec_particles']
 
 import logging
 # next 2 lines necessary to deal with reimports from ipython
@@ -31,14 +31,14 @@ Collider.SQRTS = 91.
 
 # input definition
 import glob
-ee_ffbar = cfg.Component(
-    'ee_ffbar',
-    files = ['ee_ffbar.root'] 
+ee_Z = cfg.Component(
+    'ee_Z',
+    files = ['ee_Z.root'] 
     )
-ee_ffbar.splitFactor = len(ee_ffbar.files)
+ee_Z.splitFactor = len(ee_Z.files)
 
 
-selectedComponents = [ee_ffbar]
+selectedComponents = [ee_Z]
 
 # read FCC EDM events from the input root file(s)
 # do help(Reader) for more information
