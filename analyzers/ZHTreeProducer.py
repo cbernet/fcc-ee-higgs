@@ -31,7 +31,9 @@ class ZHTreeProducer(Analyzer):
         bookResonanceWithLegs(self.tree, 'genboson1')
         bookResonanceWithLegs(self.tree, 'genboson2')
         for label in self.cfg_ana.misenergy:
-            bookParticle(self.tree, label)        
+            bookParticle(self.tree, label)
+##        bookParticle(self.tree, 'otherptc')
+##        var(self.tree, 'n_otherptcs')
         var(self.tree, 'n_nu')
         var(self.tree, 'beta4_chi2')
        
@@ -73,6 +75,10 @@ class ZHTreeProducer(Analyzer):
             fill(self.tree, 'n_nu', len(neutrinos))
         for i, boson in enumerate(event.gen_bosons[:2]):
             fillResonanceWithLegs(self.tree, 'genboson{i}'.format(i=i+1), boson)
+##        otherptcs = event.particles_not_zed
+##        fill(self.tree, 'n_otherptcs', len(otherptcs))
+##        if len(otherptcs):
+##            fillParticle(self.tree, 'otherptc', otherptcs[0])
         if hasattr(event, 'beta4_chi2'):
             fill(self.tree, 'beta4_chi2', event.beta4_chi2)
         self.tree.tree.Fill()

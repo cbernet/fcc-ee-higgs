@@ -86,10 +86,10 @@ ww = FCCComponent(
     splitFactor=1
 )
 
-ffbar = FCCComponent(
-    'pythia/ee_to_ffbar_Sep12_B_4',
-    splitFactor=1
-)
+##ffbar = FCCComponent(
+##    'pythia/ee_to_ffbar_Sep12_B_4',
+##    splitFactor=1
+##)
 
 ffbar2l = FCCComponent( 
     'pythia/ee_to_2l_Mar8',
@@ -97,15 +97,15 @@ ffbar2l = FCCComponent(
 )
 
 import glob
-test_files=glob.glob('Out_pythia_Zll_orsel/Job*/*.root')
-test = cfg.Component(
-    'zzll',
+test_files=glob.glob('ee_ZH_Htautau.root')
+zhtautau = cfg.Component(
+    'zhtautau',
     files=test_files, 
     splitFactor=len(test_files)
 )
 
 cpslist = [
-    ffbar2l, 
+    zhtautau, 
 ]
 
 cps = dict( (c.name, c) for c in cpslist)
@@ -384,7 +384,7 @@ tree = cfg.Analyzer(
     jet_collections = ['jets'],
     resonances=['higgses', 'zeds', 'second_zeds'], 
     misenergy = ['missing_energy', 'gen_missing_energy'],
-    particles =['otherptcs'], 
+    particles=['particles_not_zed'], 
     recoil='recoil'
 )
 
