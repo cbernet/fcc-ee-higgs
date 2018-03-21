@@ -1,6 +1,7 @@
 import os 
 from fcc_datasets.fcc_component import FCCComponent
 
+# For ZH, ZZ, WW, there is a cut E>10 on reconstructed leptons! 
 ZH = FCCComponent(
     'heppy/ee_to_ZH_Z_to_lltautau/CLD/Mar7/ee_to_ZH_Oct30', 
     xSection=2.e-10,  
@@ -22,14 +23,8 @@ WW = FCCComponent(
     uncertainty=0.05    
 )
 
-##ll = FCCComponent(
-##    'heppy/ee_to_ZH_Z_to_lltautau/CLD/Mar7/ee_to_ffbar_2l_Mar6',
-##    xSection=9.3e-9,  
-##    nGenEvents=10000*97,
-##    uncertainty=0.05    
-##)
-
 ll = FCCComponent(
+    # cut on lepton energy ok
     'heppy/ee_to_ZH_Z_to_lltautau/CLD/Mar8/ee_to_2l_Mar8',
     xSection=9.3e-9,  
     nGenEvents=20000*499,
