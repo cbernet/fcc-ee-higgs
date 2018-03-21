@@ -14,7 +14,7 @@ bins = 50, 50, 150
 ##ZH.name =  'ZH'
 ##ZZ.name =  'ZZ'
 
-from fcc_ee_higgs.components.ZH_qqtautau_clic_Mar15 import ZH, ZZ, WW
+from fcc_ee_higgs.components.ZH_qqtautau_clic_Mar16 import ZH, ZZ, WW
 comps = [ZZ, ZH, WW]
 ZH.name =  'ZH'
 ZZ.name =  'ZZ'
