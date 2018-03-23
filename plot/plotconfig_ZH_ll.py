@@ -46,6 +46,7 @@ cut_missm = 'missing_energy_m/recoil_m<0.8'
 cut_rm4l = '!((second_zeds_1_pdgid==-second_zeds_2_pdgid) && (abs(second_zeds_1_pdgid)==13 || abs(second_zeds_1_pdgid)==11))'
 cut_leppt = '(zeds_1_pt>10 && zeds_2_pt>10)'
 cut_hbb = get_cut_hbb(b_wp[0], b_wp[1], ' || ')
+cut_w_misse = '(missing_energy_e<70)'
 
 cuts = Cuts([
     ('cut_lepiso', cut_lepiso),
@@ -58,6 +59,7 @@ cuts = Cuts([
     # ('cut_htautau_or', cut_htautau_or),  
     # gain in precision! to investigate: try an or- nice but contamination is large of course...
     ('cut_rm4l', cut_rm4l),
+    # ('cut_w_misse', cut_w_misse)
 ])
 
 if var == 'zeds_m':
@@ -70,6 +72,6 @@ elif channel == 'tautau':
 
 cut = str(cuts)
 
-from cuts_gen import signal_contamination
+from cuts_gen import signal_contamination, cut_gen_htautau, cut_gen_hww
 signal_contamination(ZH.tree, cut)
 
