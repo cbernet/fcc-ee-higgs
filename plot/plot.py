@@ -59,7 +59,7 @@ if __name__ == '__main__':
         tfitter.draw_data()
         tfitter.print_result()
 
-        h = TH1F('h', 'uncertainty', 200, 0, 10)
+        h = TH1F('h', 'uncertainty', 100, 0.4, 0.6)
         for i in range(100):
             tfitter = TemplateFitter(plotter.plot)
             unc = tfitter.print_result()

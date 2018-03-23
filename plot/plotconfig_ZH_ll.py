@@ -7,7 +7,7 @@ xtitle = 'm_{H} (GeV)'
 channel = 'tautau'
 
 detector = 'CLD'
-lumi = 500e12
+lumi = 5000e12
 
 bins = 50, 50, 150
 
@@ -57,7 +57,7 @@ cuts = Cuts([
     # ('cut_htautau', cut_htautau), 
     # ('cut_htautau_or', cut_htautau_or),  
     # gain in precision! to investigate: try an or- nice but contamination is large of course...
-    ('cut_rm4l', cut_rm4l)
+    ('cut_rm4l', cut_rm4l),
 ])
 
 if var == 'zeds_m':
@@ -70,6 +70,6 @@ elif channel == 'tautau':
 
 cut = str(cuts)
 
-cut_gen_htautau = 'abs(genboson2_1_pdgid)==15'
-cut_gen_hww = 'abs(genboson2_1_pdgid)==24'
-cut_gen_hbb = 'abs(genboson2_1_pdgid)==5'
+from cuts_gen import signal_contamination
+signal_contamination(ZH.tree, cut)
+

@@ -84,3 +84,7 @@ cuts = Cuts([
 
 cut = str(cuts)
 
+from cuts_gen import signal_contamination
+signal_contamination(ZH.tree, cut)
+
+
