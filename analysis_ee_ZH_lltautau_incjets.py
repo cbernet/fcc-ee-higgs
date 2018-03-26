@@ -41,7 +41,7 @@ from EventStore import EventStore as Events
 from heppy.framework.event import Event
 # comment the following line to see all the collections stored in the event 
 # if collection is listed then print loop.event.papasevent will include the collections
-Event.print_patterns=['gen_bosons', '*zeds*', 'higgs*', 'jets*', 'bquarks', 'recoil*', 'collections']
+Event.print_patterns=['gen_bosons','gen_particles_stable', 'rec_particles', 'sel_iso_leptons','*zeds*', 'higgs*', 'jets*', 'taus', 'recoil*', 'collections']
 
 # definition of the collider
 # help(Collider) for more information
@@ -108,7 +108,7 @@ zhww = cfg.Component(
 )
 
 cpslist = [
-    zhww
+    zh, zz, ww, ffbar2l
 ]
 
 cps = dict( (c.name, c) for c in cpslist)
@@ -144,6 +144,18 @@ source = cfg.Analyzer(
     gen_vertices = 'GenVertex'
 )
 
+from heppy.analyzers.EventByNumber import EventByNumber
+event_by_number = cfg.Analyzer(
+    EventByNumber,
+    event_numbers=[30]
+)
+
+from heppy.analyzers.EventSkipper import EventSkipper
+event_skipper = cfg.Analyzer(
+    EventSkipper,
+    first_event=58
+)
+
 
 # gen Z
 
@@ -164,6 +176,22 @@ source = cfg.Analyzer(
 ##    min_number = min_gen_z,
 ##    veto = False
 ##)
+
+# gen taus
+from fcc_ee_higgs.analyzers.GenTauSelector import GenTauSelector
+gen_taus = cfg.Analyzer(
+    GenTauSelector, 
+    gen_particles = 'gen_particles',
+)
+
+from heppy.analyzers.EventFilter import EventFilter
+two_gen_taus_in_acceptance = cfg.Analyzer(
+    EventFilter,
+    'gen_taus_acc', 
+    input_objects='gen_taus_acc',
+    min_number=2, 
+    veto=False    
+)
 
 # gen bosons
 
@@ -254,20 +282,13 @@ iso_leptons = cfg.Analyzer(
     iso_area = EtaPhiCircle(0.4)
 )
 
-# Select isolated leptons with a Selector
-# one can pass a function like this one to the filter:
-def relative_isolation(lepton):
-    sumpt = lepton.iso_211.sumpt + lepton.iso_22.sumpt + lepton.iso_130.sumpt
-    sumpt /= lepton.pt()
-    return sumpt
-# ... or use a lambda statement as done below. 
 sel_iso_leptons = cfg.Analyzer(
     Selector,
     'sel_iso_leptons',
     output = 'sel_iso_leptons',
     input_objects = 'leptons',
     # filter_func = relative_isolation
-    filter_func = lambda lep : lep.iso.sumpt/lep.pt()< 0.5
+    filter_func = lambda lep : (lep.iso_211.sumpt + lep.iso_22.sumpt + lep.iso_130.sumpt) / lep.pt() < 0.5
 )
 
 # Building Zeds
@@ -370,6 +391,14 @@ jets = cfg.Analyzer(
     verbose=False
 )
 
+from fcc_ee_higgs.analyzers.TauSelector import TauSelector
+taus = cfg.Analyzer(
+    TauSelector,
+    output='taus', 
+    jets='jets',
+    verbose=False
+)
+
 from heppy.analyzers.EventFilter import EventFilter
 two_jets = cfg.Analyzer(
     EventFilter,
@@ -433,8 +462,12 @@ tree = cfg.Analyzer(
 # the analyzers will process each event in this order
 sequence = cfg.Sequence(
     source,
+    # event_by_number,
+    # event_skipper, 
     ##    gen_zeds_ll,
     ##    gen_zeds_ll_counter,
+    # gen_taus,
+    # two_gen_taus_in_acceptance, 
     gen_bosons, 
     gen_eles,
     gen_mus,
@@ -455,6 +488,7 @@ sequence = cfg.Sequence(
     second_zeds, 
     particles_not_zed,
     jets,
+    taus, 
     two_jets,
     less_three_jets, 
     btag_parametrized,
