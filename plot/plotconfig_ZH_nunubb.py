@@ -20,11 +20,15 @@ load(comps)
 
 from fcc_ee_higgs.plot.cuts import Cuts
 
-cut_missmass= 'missing_energy_m>85 && missing_energy_m<125' 
+cut_missmass= 'missing_energy_m>80 && missing_energy_m<135' 
 cut_h_pz = 'abs(missing_energy_pz)<50'
-cut_h_pt = 'missing_energy_pt>15'
+cut_h_pt = 'missing_energy_pt>10'
 cut_h_acol = 'higgses_acol>100.'
 cut_h_cross = 'higgses_cross>10'
+cut_ffbar_gamma = '(jets_1_22_e/jets_1_e<0.9 && jets_2_22_e/jets_2_e<0.9)'
+cut_ffbar_e = '(jets_1_11_e/jets_1_e<0.9 && jets_2_11_e/jets_2_e<0.9)'
+cut_ffbar_mu = '(jets_1_13_e/jets_1_e<0.9 && jets_2_13_e/jets_2_e<0.9)'
+
 
 cuts = Cuts([
     ('cut_hbb', cut_hbb), 
@@ -33,6 +37,9 @@ cuts = Cuts([
     ('cut_h_acol', cut_h_acol), 
     ('cut_h_cross', cut_h_cross),
     ('cut_missmass', cut_missmass),
+    ('cut_ffbar_gamma', cut_ffbar_gamma), 
+    ('cut_ffbar_e', cut_ffbar_e), 
+    ('cut_ffbar_mu', cut_ffbar_mu), 
 ]
 )
 

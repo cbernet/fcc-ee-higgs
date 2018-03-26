@@ -49,17 +49,19 @@ if __name__ == '__main__':
     if options.cutflow:
         effs = {}
         for comp in comps:
+            print comp.name, '-' * 20
             effs[comp.name] = Efficiencies(comp.tree, cuts)
             eff = effs[comp.name]
             eff.fill_cut_flow(comp.name)
             eff.print_cut_flow()
+            eff.marginal()
 
     if options.fit:
         tfitter = TemplateFitter(plotter.plot)
         tfitter.draw_data()
         tfitter.print_result()
 
-        h = TH1F('h', 'uncertainty', 1000, 0., 10)
+        h = TH1F('h', 'uncertainty', 500, 0., 15)
         for i in range(100):
             tfitter = TemplateFitter(plotter.plot)
             unc = tfitter.print_result()
