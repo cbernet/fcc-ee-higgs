@@ -2,9 +2,8 @@ var = 'recoil_m'
 # var = 'zeds_m'
 xtitle = 'm_{H} (GeV)'
 
-# channel = 'inclusive'
-# channel = 'bb'
-channel = 'tautau'
+channel = 'inclusive'
+# channel = 'bb' ### NEED BTAGGING!
 
 detector = 'CLD'
 lumi = 5000e12
@@ -72,6 +71,6 @@ elif channel == 'tautau':
 
 cut = str(cuts)
 
-from cuts_gen import signal_contamination, cut_gen_htautau, cut_gen_hww
-signal_contamination(ZH.tree, cut)
+##from cuts_gen import signal_contamination, cut_gen_htautau, cut_gen_hww
+##signal_contamination(ZH.tree, cut)
 
