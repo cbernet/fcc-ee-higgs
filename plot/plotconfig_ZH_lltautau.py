@@ -1,5 +1,7 @@
 var = 'recoil_m'
 # var = 'sel_zeds_m'
+# var = 'higgses_r_m - recoil_m'
+
 xtitle = 'm_{H} (GeV)'
 
 channel = 'tautau'
@@ -15,11 +17,11 @@ def get_cut_hbb(eff, fake, operator='||'):
 
 b_wp = (0.8, 4e-3)
 
-from fcc_ee_higgs.components.ZH_lltautau_clic_Mar7 import ZH, ZZ, WW, ll
-comps = [ZZ, ZH, WW, ll]
+from fcc_ee_higgs.components.ZH_lltautau_clic_Mar26 import ZH, ZZ, ll
+comps = [ZZ, ZH, ll]
 ZH.name =  'ZH'
 ZZ.name =  'ZZ'
-WW.name = 'WW'
+# WW.name = 'WW'
 ll.name = 'll'
 # ffbar.name = 'ffbar'
 
@@ -45,15 +47,18 @@ cut_rm4l = '!((second_zeds_1_pdgid==-second_zeds_2_pdgid) && (abs(second_zeds_1_
 cut_leppt = '(sel_zeds_1_pt>10 && sel_zeds_2_pt>10)'
 cut_hbb = get_cut_hbb(b_wp[0], b_wp[1], ' || ')
 cut_w_misse = '(missing_energy_e<70)'
-cut_w_3body = 'abs(higgses_r_m - recoil_m)<20'
+cut_w_3body = 'abs(higgses_r_m - recoil_m)<10'
+
+from fcc_ee_higgs.plot.cuts_gen import cut_gen_htautau
 
 cuts = Cuts([
+    # ('cut_gen_htautau', cut_gen_htautau), 
     ('cut_lepiso', cut_lepiso),
     ('cut_z_mass', cut_z_mass),
     ('cut_z_kine', cut_z_kine),
     ('cut_z_flavour', cut_z_flavour), 
     ('cut_rad2', cut_rad2), 
-    ('cut_rad', cut_rad),
+    # ('cut_rad', cut_rad),
     ('cut_htautau', cut_htautau), 
     # ('cut_htautau_or', cut_htautau_or),  
     # gain in precision! to investigate: try an or- nice but contamination is large of course...
@@ -64,14 +69,10 @@ cuts = Cuts([
 
 if var == 'sel_zeds_m':
     del cuts['cut_z_mass']
-
-if channel == 'bb':
-    cuts['cut_hbb'] = cut_hbb
-elif channel == 'tautau':
-    cuts['cut_htautau'] = cut_htautau
+elif var == 'higgses_r_m - recoil_m':
+    del cuts['cut_w_3body']
+    bins = 50, -200, 200
 
 cut = str(cuts)
 
-##from cuts_gen import signal_contamination, cut_gen_htautau, cut_gen_hww
-##signal_contamination(ZH.tree, cut)
 

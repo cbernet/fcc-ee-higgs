@@ -59,7 +59,7 @@ if __name__ == '__main__':
         tfitter.draw_data()
         tfitter.print_result()
 
-        h = TH1F('h', 'uncertainty', 100, 0.4, 0.6)
+        h = TH1F('h', 'uncertainty', 1000, 0., 10)
         for i in range(100):
             tfitter = TemplateFitter(plotter.plot)
             unc = tfitter.print_result()
@@ -68,3 +68,5 @@ if __name__ == '__main__':
         print h.GetMean()
         h.Draw()
 
+    from cuts_gen import signal_contamination, cut_gen_htautau, cut_gen_hww
+    signal_contamination(ZH.tree, cut)
