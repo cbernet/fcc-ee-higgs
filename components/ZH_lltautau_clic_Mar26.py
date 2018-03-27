@@ -16,12 +16,12 @@ ZZ = FCCComponent(
     uncertainty=0.05    
 )
 
-##WW = FCCComponent(
-##    'heppy/ee_to_ZH_Z_to_lltautau/CLD/Mar26/ee_to_WW_Dec6_large',
-##    xSection=1.64e-8,  
-##    nGenEvents=20000*200.,
-##    uncertainty=0.05    
-##)
+WW = FCCComponent(
+    'heppy/ee_to_ZH_Z_to_lltautau/CLD/Mar26/ee_to_WW_Dec6_large',
+    xSection=1.64e-8,  
+    nGenEvents=20000*200.,
+    uncertainty=0.05    
+)
 
 ll = FCCComponent(
     # cut on lepton energy ok

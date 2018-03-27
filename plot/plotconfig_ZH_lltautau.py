@@ -17,11 +17,11 @@ def get_cut_hbb(eff, fake, operator='||'):
 
 b_wp = (0.8, 4e-3)
 
-from fcc_ee_higgs.components.ZH_lltautau_clic_Mar26 import ZH, ZZ, ll
-comps = [ZZ, ZH, ll]
+from fcc_ee_higgs.components.ZH_lltautau_clic_Mar26 import ZH, ZZ, ll, WW
+comps = [ZZ, ZH, ll, WW]
 ZH.name =  'ZH'
 ZZ.name =  'ZZ'
-# WW.name = 'WW'
+WW.name = 'WW'
 ll.name = 'll'
 # ffbar.name = 'ffbar'
 
