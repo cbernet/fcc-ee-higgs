@@ -7,7 +7,7 @@ xtitle = 'm_{H} (GeV)'
 channel = 'tautau'
 
 detector = 'CLD'
-lumi = 500e12
+lumi = 5000e12
 
 bins = 50, 50, 150
 

@@ -11,8 +11,15 @@ cuts_gen = Cuts([
     ('cut_gen_hzz', cut_gen_hzz), 
 ])
 
-def signal_contamination(tree, cut):
+def signal_contamination(tree, cut, filename=None):
     nsel = float(tree.GetEntries(cut))
+    the_file = None
+    results = []
     for cutname, dmode in cuts_gen.iteritems():
         nseldmode = tree.GetEntries('&&'.join([cut, dmode]) )
-        print cutname, nseldmode / nsel
+        contamination = nseldmode / nsel * 100.
+        the_str = '{} : {} %'.format(cutname, contamination)
+        results.append(the_str)
+    if filename:
+        with open(filename, 'w') as the_file:
+            the_file.write('\n'.join(results))

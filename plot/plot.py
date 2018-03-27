@@ -112,4 +112,4 @@ if __name__ == '__main__':
         
     if options.contamination:
         from cuts_gen import signal_contamination, cut_gen_htautau, cut_gen_hww
-        signal_contamination(ZH.tree, cut)
+        signal_contamination(ZH.tree, cut, '/'.join([odir, 'contamination.txt']))
