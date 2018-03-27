@@ -55,8 +55,8 @@ jet_correction = True
 # mode = 'pythia/ee_to_ZH_Oct30'
 # mode = 'pythia/ee_to_ZZ_Sep12_A_2'
 mode = 'all'
-# nfiles = sys.maxint
-nfiles = 1
+nfiles = sys.maxint
+# nfiles = 1
 # mode = 'test'
 min_gen_z = 0
 min_rec_z = 1
@@ -251,20 +251,13 @@ iso_leptons = cfg.Analyzer(
     iso_area = EtaPhiCircle(0.4)
 )
 
-# Select isolated leptons with a Selector
-# one can pass a function like this one to the filter:
-def relative_isolation(lepton):
-    sumpt = lepton.iso_211.sumpt + lepton.iso_22.sumpt + lepton.iso_130.sumpt
-    sumpt /= lepton.pt()
-    return sumpt
-# ... or use a lambda statement as done below. 
 sel_iso_leptons = cfg.Analyzer(
     Selector,
     'sel_iso_leptons',
     output = 'sel_iso_leptons',
     input_objects = 'leptons',
     # filter_func = relative_isolation
-    filter_func = lambda lep : lep.iso.sumpt/lep.pt()< 0.5
+    filter_func = lambda lep : (lep.iso_211.sumpt + lep.iso_22.sumpt + lep.iso_130.sumpt) / lep.pt() < 0.5
 )
 
 # Building Zeds
