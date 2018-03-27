@@ -8,7 +8,7 @@ from cpyroot.tools.style import *
 from cpyroot.tools.DataMC.DataMCPlot import DataMCPlot
 
 sZZ = Style(lineColor=4, fillColor=kBlue-9, fillStyle=3344)
-sZH= Style(lineColor=2, fillColor=10, fillStyle=0)
+sZH= Style(lineColor=2, fillColor=5, fillStyle=0)
 sWW= Style(lineColor=6, fillStyle=3003)
 sffbar = Style(lineColor=1, fillStyle=3003)
 
@@ -49,7 +49,7 @@ class Plotter(object):
         return hist
 
     def _prepare_plot(self, var, cut, bins):
-        plot = DataMCPlot('recoil', histPref)
+        plot = DataMCPlot('var', histPref)
         for comp in self.comps:
             hist = self._project(comp, var, cut, *bins)    
             plot.AddHistogram(comp.name, hist)
@@ -71,7 +71,11 @@ class Plotter(object):
         print 'cut:'
         print cut
         
-        
+    def write(self, fname):
+        the_file = open(fname, 'w')
+        the_file.write(str(self.plot))
+        the_file.close()
+    
     def print_info(self, detector, xmin=None, ymin=None):
         lumitext = ''
         lumi = self.lumi

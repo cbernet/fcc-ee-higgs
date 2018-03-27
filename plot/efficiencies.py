@@ -9,6 +9,7 @@ class Efficiencies(object):
         """"""
         self.cuts = cuts
         self.tree = tree
+        self.cut_flow = None
 
     def fill_cut_flow(self, cutflowname='Cuts', nevts=sys.maxint):
         self.cut_flow = Counter(cutflowname)
@@ -24,10 +25,17 @@ class Efficiencies(object):
             self.cut_flow.inc(cutname, nsel)
             nlast = nsel
     
-    def print_cut_flow(self):
+    def str_cut_flow(self):
+        the_str = []
         for cutname, cutstr in self.cuts.iteritems():
-            print '{:<20} {}'.format(cutname, cutstr)
-        print self.cut_flow
+            the_str.append('{:<20} {}'.format(cutname, cutstr))
+        the_str.append(str(self.cut_flow))
+        return '\n'.join(the_str)
+        
+    def write(self, fname):
+        the_file = open(fname, 'w')
+        the_file.write(self.str_cut_flow())
+        the_file.close()
         
     def marginal(self):
         all_cuts =  ' && '.join(self.cuts.values())

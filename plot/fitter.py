@@ -87,7 +87,6 @@ class BaseFitter(object):
         self.pframe.Draw()
         
     def draw_data(self):
-        self.canvas_data = TCanvas()
         self.mframe = self.xvar.frame()
         self.data.plotOn(self.mframe)
         self.underlying_model.plotOn(self.mframe)

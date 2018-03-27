@@ -2,6 +2,8 @@ if __name__ == '__main__':
 
     import sys
     import imp
+    import time
+    import shutil
     from optparse import OptionParser
     
     from cpyroot import *
@@ -25,6 +27,12 @@ if __name__ == '__main__':
                       dest='cutflow',
                       action="store_true", default=False, 
                       help="show the cutflow")
+    parser.add_option('-s', '--contamination',
+                      dest='contamination',
+                      action="store_true", default=False, 
+                      help="show the signal contamination")
+    parser.add_option('-o', '--output',
+                      dest='output', default=None)
     options, args = parser.parse_args(sys.argv)
     
     config_fname = args[1]
@@ -34,6 +42,25 @@ if __name__ == '__main__':
         
     TGaxis.SetMaxDigits(3)
 
+    odir = None
+    if options.output:
+        odir = options.output
+    else:
+        odir = '{var}_zh_{channel}_{detector}_{time}'.format(
+            var=var, channel=channel, detector=detector,
+            time=time.strftime("%Y%m%d-%H%M%S", time.localtime())
+        )
+    if os.path.isdir(odir):
+        answer = None
+        while answer not in ['y', 'n']:
+            answer = raw_input('remove directory {}?'.format(odir))
+            if answer == 'y':
+                shutil.rmtree(odir)
+                break
+            elif answer == 'n':
+                sys.exit(1)
+    os.mkdir(odir)
+
     c = TCanvas()
     plotter = Plotter(comps, lumi)
     nbins, xmin, xmax = bins
@@ -41,8 +68,7 @@ if __name__ == '__main__':
     plotter.draw(var, cut, bins, xtitle=xtitle, ytitle='Events/{} GeV'.format(gevperbin))
     plotter.print_info(detector)
     
-    gPad.SaveAs('{var}_zh_{channel}_{detector}.png'.format(
-        var=var, channel=channel, detector=detector))
+    gPad.SaveAs('/'.join([odir, 'stack.png']))
 
     pdf = PDF(comps)
 
@@ -53,22 +79,37 @@ if __name__ == '__main__':
             effs[comp.name] = Efficiencies(comp.tree, cuts)
             eff = effs[comp.name]
             eff.fill_cut_flow(comp.name)
-            eff.print_cut_flow()
-            eff.marginal()
+            print eff.str_cut_flow()
+            eff.write('{}/cutflow_{}.txt'.format(odir, comp.name))
+            # eff.marginal()
 
+    fit_canvas = TCanvas("fit_canvas", "fit")
+    tfitter = TemplateFitter(plotter.plot)
+    fit_canvas.cd()
+    tfitter.draw_data()
+    tfitter.print_result()
+    fit_canvas.SaveAs('/'.join([odir, 'fit.png']))
+
+    unc_canvas = None
     if options.fit:
-        tfitter = TemplateFitter(plotter.plot)
-        tfitter.draw_data()
-        tfitter.print_result()
-
+        unc_canvas = TCanvas('unc_canvas', 'uncertainty')
         h = TH1F('h', 'uncertainty', 500, 0., 15)
         for i in range(100):
-            tfitter = TemplateFitter(plotter.plot)
-            unc = tfitter.print_result()
+            tmpfitter = TemplateFitter(plotter.plot)
+            unc = tmpfitter.print_result()
             h.Fill(unc)
-        c_unc = TCanvas()
-        print h.GetMean()
         h.Draw()
-
-    from cuts_gen import signal_contamination, cut_gen_htautau, cut_gen_hww
-    signal_contamination(ZH.tree, cut)
+        unc_canvas.SaveAs('/'.join([odir, 'uncertainties.png']))
+        unc = h.GetMean()
+        h.Draw()
+        print unc
+        unctxtfile = open('/'.join([odir, 'uncertainties.txt']), 'w')
+        unctxtfile.write('signal yield uncertainty = {}%'.format(unc))
+        unctxtfile.close()
+    
+    print plotter.plot
+    plotter.write('/'.join([odir, 'stack.txt']))
+        
+    if options.contamination:
+        from cuts_gen import signal_contamination, cut_gen_htautau, cut_gen_hww
+        signal_contamination(ZH.tree, cut)
