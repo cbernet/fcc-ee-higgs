@@ -1,0 +1,20 @@
+cut_lepiso           ((sel_zeds_1_iso_e/sel_zeds_1_e<0.2) && (sel_zeds_2_iso_e/sel_zeds_2_e<0.2) && sel_zeds_1_e>0 && sel_zeds_2_e>0)
+cut_z_mass           (abs(sel_zeds_m-91)<15)
+cut_z_kine           (sel_zeds_pt>10 && sel_zeds_pz<50 && sel_zeds_acol>100 && sel_zeds_cross>10)
+cut_z_flavour        (sel_zeds_1_pdgid==-sel_zeds_2_pdgid)
+cut_rad2             (jets_1_e>0 || (jets_1_e<0 && n_particles_not_zed==0))
+cut_htautau          (((jets_1_211_num+jets_1_11_num+jets_1_13_num)==1 || (jets_1_211_num+jets_1_11_num+jets_1_13_num)==3) &&  ((jets_2_211_num+jets_2_11_num+jets_2_13_num)==1 || (jets_2_211_num+jets_2_11_num+jets_2_13_num)==3))
+cut_rm4l             !((second_zeds_1_pdgid==-second_zeds_2_pdgid) && (abs(second_zeds_1_pdgid)==13 || abs(second_zeds_1_pdgid)==11))
+cut_w_3body          abs(higgses_r_m - recoil_m)<15
+cut_not_hbb          !((((jets_1_bmatch==1 && rndm<0.8) || (jets_1_bmatch==0 && rndm<0.004))  ||  ((jets_2_bmatch==1 && rndm<0.8) || (jets_2_bmatch==0 && rndm<0.004))))
+Counter WW :
+	 Preselection             932 	 1.00 	 1.0000
+	 cut_lepiso               469 	 0.50 	 0.5032
+	 cut_z_mass                82 	 0.17 	 0.0880
+	 cut_z_kine                43 	 0.52 	 0.0461
+	 cut_z_flavour             43 	 1.00 	 0.0461
+	 cut_rad2                  43 	 1.00 	 0.0461
+	 cut_htautau                0 	 0.00 	 0.0000
+	 cut_rm4l                   0 	 -1.00 	 0.0000
+	 cut_w_3body                0 	 -1.00 	 0.0000
+	 cut_not_hbb                0 	 -1.00 	 0.0000

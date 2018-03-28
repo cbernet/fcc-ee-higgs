@@ -1,0 +1,4 @@
+cut_gen_htautau : 88.2793812789 %
+cut_gen_hbb : 3.12549832563 %
+cut_gen_hww : 7.71806729389 %
+cut_gen_hzz : 0.510285440919 %

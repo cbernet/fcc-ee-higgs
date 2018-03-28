@@ -1,0 +1,6 @@
+DataMCPlot:  var
+Histograms:
+	 ZH         / ZH                                                ,	 Layer =    11.0, w =  69742.0, u =  34871.0
+	 ZZ         / ZZ                                                ,	 Layer =    10.0, w =  81999.0, u =  24296.0
+	 ffbar      / ffbar                                             ,	 Layer =     4.0, w =   5404.4, u =     68.0
+Stack yield = 157145.4

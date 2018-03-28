@@ -1,0 +1,20 @@
+cut_zqq              (zedqq2_r_m>75 && zedqq2_r_m<110)
+cut_htautau          (((besttaus_1_211_num+besttaus_1_11_num+besttaus_1_13_num)==1 || (besttaus_1_211_num+besttaus_1_11_num+besttaus_1_13_num)==3) &&  ((besttaus_2_211_num+besttaus_2_11_num+besttaus_2_13_num)==1 || (besttaus_2_211_num+besttaus_2_11_num+besttaus_2_13_num)==3))
+cut_htautau_1prong   (((besttaus_1_211_num+besttaus_1_11_num+besttaus_1_13_num)==1) &&  ((besttaus_2_211_num+besttaus_2_11_num+besttaus_2_13_num)==1))
+cut_zqq_acol         zedqq2_r_acol>110
+cut_zqq_acol_2       zedqq2_acol>110
+cut_zqq_2_WW         zedqq2_m>80
+cut_zqq_jets         (bestjets_1_m>1.5 && bestjets_2_m>1.5)
+cut_zedll_2          (!(besttaus_1_11_num==1 && besttaus_2_11_num==1) && !(besttaus_1_13_num==1 && besttaus_2_13_num==1))
+cut_tau_iso          ((besttaus_1_iso_e/besttaus_1_e<0.05) && (besttaus_2_iso_e/besttaus_2_e<0.05))
+Counter WW :
+	 Preselection              1195237 	 1.00 	 1.0000
+	 cut_zqq                    193492 	 0.16 	 0.1619
+	 cut_htautau                193492 	 1.00 	 0.1619
+	 cut_htautau_1prong          48116 	 0.25 	 0.0403
+	 cut_zqq_acol                13144 	 0.27 	 0.0110
+	 cut_zqq_acol_2               7790 	 0.59 	 0.0065
+	 cut_zqq_2_WW                 4192 	 0.54 	 0.0035
+	 cut_zqq_jets                 3675 	 0.88 	 0.0031
+	 cut_zedll_2                  3673 	 1.00 	 0.0031
+	 cut_tau_iso                   798 	 0.22 	 0.0007

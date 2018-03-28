@@ -2,8 +2,8 @@ var = 'recoil_m'
 # var = 'zeds_m'
 xtitle = 'm_{H} (GeV)'
 
-channel = 'inclusive'
-# channel = 'bb' ### NEED BTAGGING!
+# channel = 'inclusive'
+channel = 'bb' ### NEED BTAGGING!
 
 detector = 'CLD'
 lumi = 5000e12
@@ -16,7 +16,7 @@ def get_cut_hbb(eff, fake, operator='||'):
 
 b_wp = (0.8, 4e-3)
 
-from fcc_ee_higgs.components.ZH_lltautau_clic_Mar7 import ZH, ZZ, WW, ll
+from fcc_ee_higgs.components.ZH_ll_CLD_Mar28 import ZH, ZZ, WW, ll
 comps = [ZZ, ZH, WW, ll]
 ZH.name =  'ZH'
 ZZ.name =  'ZZ'
@@ -35,7 +35,7 @@ cut_z_kine = '(zeds_pt>10 && zeds_pz<50 && zeds_acol>100 && zeds_cross>10)'
 cut_z_flavour = '(zeds_1_pdgid==-zeds_2_pdgid)'
 cut_rad = '(((jets_1_e<0 || jets_1_22_e/jets_1_e<0.8) && \
 (jets_2_e<0 || jets_2_22_e/jets_2_e<0.8)))'
-cut_rad2 = '(jets_1_e>0 || (jets_1_e<0 && notherptcs==0))'
+cut_rad2 = '(jets_1_e>0 || (jets_1_e<0 && n_particles_not_zed==0))'
 cut_htautau = '(((jets_1_211_num+jets_1_11_num+jets_1_13_num)==1 || (jets_1_211_num+jets_1_11_num+jets_1_13_num)==3) && \
  ((jets_2_211_num+jets_2_11_num+jets_2_13_num)==1 || (jets_2_211_num+jets_2_11_num+jets_2_13_num)==3))'
 cut_htautau_or = '(((jets_1_211_num+jets_1_11_num+jets_1_13_num)==1 || (jets_1_211_num+jets_1_11_num+jets_1_13_num)==3) || \

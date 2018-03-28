@@ -1,0 +1,16 @@
+cut_hbb              (((jets_1_bmatch==1 && rndm<0.8) || (jets_1_bmatch==0 && rndm<0.004))  ||  ((jets_2_bmatch==1 && rndm<0.8) || (jets_2_bmatch==0 && rndm<0.004)))
+cut_h_pz             (abs(missing_energy_pz)<50.)
+cut_h_pt             (missing_energy_pt>10.)
+cut_h_acol           (higgses_acol>100.)
+cut_h_cross          (higgses_cross>10.)
+cut_missmass         (missing_energy_m>80. && missing_energy_m<135.)
+cut_ffbar_hpm        (jets_1_211_num>3. && jets_2_211_num>3.)
+Counter ffbar :
+	 Preselection         4893855 	 1.00 	 1.0000
+	 cut_hbb               639762 	 0.13 	 0.1307
+	 cut_h_pz              281141 	 0.44 	 0.0574
+	 cut_h_pt               78388 	 0.28 	 0.0160
+	 cut_h_acol             76920 	 0.98 	 0.0157
+	 cut_h_cross             1443 	 0.02 	 0.0003
+	 cut_missmass             105 	 0.07 	 0.0000
+	 cut_ffbar_hpm             66 	 0.63 	 0.0000
