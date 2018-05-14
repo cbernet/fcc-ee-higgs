@@ -1,7 +1,7 @@
 from cpyroot.tools.DataMC import DataMCPlot, Histogram
 from ROOT import RooRealVar, RooPolynomial, RooConstVar, RooDataSet, RooDataHist, RooHistPdf, RooGaussian, RooArgSet, RooAddPdf, RooArgList, RooFit, SetOwnership, RooAbsArg
 from ROOT import RooMsgService
-from ROOT import TCanvas
+from ROOT import TCanvas, gPad
 
 
 RooMsgService.instance().setSilentMode(True)
@@ -9,8 +9,9 @@ RooMsgService.instance().setGlobalKillBelow(RooFit.ERROR)
 
 class BaseFitter(object):
 
-    def __init__(self, histos):
+    def __init__(self, histos, uncertainty):
         self._histos = histos
+        self._uncertainty = uncertainty
         self._make_underlying_model()
         self._make_dataset()
         self._make_fit_model()
@@ -45,7 +46,7 @@ class BaseFitter(object):
             # self.pdfs[compname].Print()
             pdfs.add(pdf)
             nevts = histo.Integral()
-            uncertainty = 0.5
+            uncertainty = self._uncertainty
             nmin = min(0, nevts * (1 - uncertainty))
             nmax = nevts * (1 + uncertainty)
             theyield = RooRealVar('n{}'.format(compname),
@@ -73,14 +74,20 @@ class BaseFitter(object):
             RooFit.PrintEvalErrors(-1)
         )
 
-    def print_result(self):
+    def print_result(self, comps):
+        print 'input background uncertainty:', self._uncertainty
         self.tresult.Print()
-        yzh = self.ryields['ZH']
-        zh_val = yzh.getVal()
-        zh_err = yzh.getError()
-        percent_unc = zh_err / zh_val * 100.
-        print 'ZH yield  = {:8.2f}'.format(zh_val)
-        print 'ZH uncert = {:8.2f}%'.format(percent_unc)
+        signal_percent_unc = None
+        for comp in comps:        
+            yzh = self.ryields[comp]
+            zh_val = yzh.getVal()
+            zh_err = yzh.getError()
+            percent_unc = zh_err / zh_val * 100.
+            if signal_percent_unc is None:
+                signal_percent_unc = percent_unc
+            print '{} yield  = {:8.2f}'.format(comp, zh_val)
+            print '{} uncert = {:8.2f}%'.format(comp, percent_unc)
+            print '{} abs uncert = {:8.2f}'.format(comp, zh_err)
         return percent_unc
 
     def draw_pdfs(self):
@@ -90,7 +97,6 @@ class BaseFitter(object):
         self.pframe.Draw()
         
     def draw_data(self):
-        self.canvas_data = TCanvas()
         self.mframe = self.xvar.frame()
         self.data.plotOn(self.mframe)
         self.underlying_model.plotOn(self.mframe)
@@ -99,6 +105,8 @@ class BaseFitter(object):
                               RooFit.Components(compname),
                               RooFit.LineColor(icomp+1))
         self.mframe.Draw()
+        gPad.Modified()
+        gPad.Update()
  
         
 class TemplateFitter(BaseFitter):

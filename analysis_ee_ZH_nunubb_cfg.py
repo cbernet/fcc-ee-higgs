@@ -89,10 +89,10 @@ ww = FCCComponent(
 
 
 cpslist = [
-    # zz,
+    zz,
     # zh,
     # ffbar,
-    ww, 
+    # ww, 
 ]
 
 cps = dict( (c.name, c) for c in cpslist)

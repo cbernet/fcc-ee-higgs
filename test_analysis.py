@@ -6,7 +6,7 @@ import shutil
 
 import heppy.framework.context as context
 
-from analysis_ee_ZH_lltautau_incjets import config, test_filename
+from analysis_ee_ZH_qqbb import config, test_filename
 from heppy.framework.looper import Looper
 from ROOT import TFile
 
@@ -38,7 +38,7 @@ class TestAnalysis(unittest.TestCase):
 ##                s.detector = cms
         self.looper = Looper( self.outdir,
                               config,
-                              nEvents=1000,
+                              nEvents=10,
                               nPrint=10 )
         self.looper.loop()
         self.looper.write()

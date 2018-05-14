@@ -3,7 +3,7 @@ var = 'recoil_m'
 xtitle = 'm_{H} (GeV)'
 
 # channel = 'inclusive'
-channel = 'bb' ### NEED BTAGGING!
+channel = 'bb' 
 
 detector = 'CLD'
 lumi = 5000e12

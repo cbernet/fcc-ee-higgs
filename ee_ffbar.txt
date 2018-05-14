@@ -34,5 +34,5 @@ WeakSingleBoson:ffbar2ffbar(s:gmZ) = on
 
 23:onMode = off
 23:onIfAny = 1 2 3 4 5
-! 25:onMode = off
-! 25:onIfMatch = 5 5
+25:onMode = off
+25:onIfMatch = 5 5
