@@ -55,7 +55,7 @@ jet_correction = True
 # mode = 'pythia/ee_to_ZZ_Sep12_A_2'
 nfiles = sys.maxint
 # mode = 'debug'
-mode = 'all'
+mode = 'test'
 from heppy.papas.detectors.CLIC import clic
 from heppy.papas.detectors.CMS import cms
 detector = cms
@@ -101,10 +101,8 @@ selectedComponents = cps.values()
 for comp in selectedComponents:
     comp.splitFactor = min(len(comp.files),nfiles)
 
-test_filename = os.path.abspath('samples/test/ee_ZZ_nunu.root')
 if mode == 'test':
     comp = cps['pythia/ee_to_ZZ_Sep12_A_2']
-    comp.files = [test_filename]
     comp.splitFactor = 1
     selectedComponents = [comp]
 elif mode == 'debug':
@@ -130,11 +128,15 @@ source = cfg.Analyzer(
     gen_vertices = 'GenVertex'
 )
 
+# gen bosons
+
 from fcc_ee_higgs.analyzers.GenResonanceAnalyzer import GenResonanceAnalyzer
-gen_ana = cfg.Analyzer(
+gen_bosons = cfg.Analyzer(
     GenResonanceAnalyzer,
     pdgids=[23, 25],
-    statuses=[62]
+    statuses=[62],
+    # decay_pdgids=[11, 13],
+    verbose=False
 )
 
 # importing the papas simulation and reconstruction sequence,
@@ -259,6 +261,7 @@ selection = cfg.Analyzer(
 from fcc_ee_higgs.analyzers.ZHTreeProducer import ZHTreeProducer
 tree = cfg.Analyzer(
     ZHTreeProducer,
+    particles=[],
     jet_collections = ['jets', 'jets_rescaled'],
     resonances=['higgses', 'higgses_rescaled'], 
     misenergy = ['missing_energy', 'missing_energy_rescaled']
@@ -275,6 +278,7 @@ debug_filename = os.getcwd()+'/python_physics_debug.log' #optional argument
 # the analyzers will process each event in this order
 sequence = cfg.Sequence(
     source,
+    gen_bosons, 
     papas_sequence,
     jets,
     missing_energy,

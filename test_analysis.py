@@ -6,7 +6,7 @@ import shutil
 
 import heppy.framework.context as context
 
-from analysis_ee_ZH_qqbb import config, test_filename
+from analysis_ee_ZH_nunubb_cfg import config
 from heppy.framework.looper import Looper
 from ROOT import TFile
 
@@ -36,6 +36,8 @@ class TestAnalysis(unittest.TestCase):
 ##        for s in config.sequence:
 ##            if hasattr( s,'detector'):
 ##                s.detector = cms
+        config.components = config.components[:1]
+        config.components[0].files = config.components[0].files[:1]
         self.looper = Looper( self.outdir,
                               config,
                               nEvents=10,
