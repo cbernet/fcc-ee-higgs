@@ -55,10 +55,10 @@ jet_correction = True
 # mode = 'pythia/ee_to_ZZ_Sep12_A_2'
 nfiles = sys.maxint
 # mode = 'debug'
-mode = 'test'
+mode = 'all'
 from heppy.papas.detectors.CLIC import clic
 from heppy.papas.detectors.CMS import cms
-detector = cms
+detector = clic
 
 ### definition of input samples                                                                                                   
 ### from components.ZH_Znunu import components as cps
