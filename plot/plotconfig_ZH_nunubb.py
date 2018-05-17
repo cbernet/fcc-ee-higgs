@@ -10,17 +10,18 @@ if detector == 'CMS':
     WW.name = 'WW'
     comps = [ZZ, ZH]
 elif detector == 'CLD':
-    from fcc_ee_higgs.components.ZH_nunubb_clic import ZH, ZZ, ffbar
-    comps = [ZZ, ZH, ffbar]
+    from fcc_ee_higgs.components.ZH_nunubb_CLD_May17 import ZH, ZZ, ffbar, WW
+    comps = [ZZ, ZH, ffbar, WW]
 ZH.name =  'ZH' 
 ZZ.name =  'ZZ'
-ffbar.name =  'ffbar'    
+ffbar.name =  'ffbar'
+WW.name = 'WW'
 from fcc_ee_higgs.components.tools import load
 load(comps)
 
 from fcc_ee_higgs.plot.cuts import Cuts
 
-cut_missmass= '(missing_energy_m>80. && missing_energy_m<135.)' 
+cut_missmass= '(missing_energy_m>87. && missing_energy_m<130.)' 
 cut_h_pz = '(abs(missing_energy_pz)<50.)'
 cut_h_pt = '(missing_energy_pt>10.)'
 cut_h_acol = '(higgses_acol>100.)'
