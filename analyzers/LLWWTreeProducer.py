@@ -79,6 +79,8 @@ class LLWWTreeProducer(Analyzer):
                 fillJet(self.tree, '{label}_{ijet}'.format(label=label, ijet=ijet+1),
                         jet, self.taggers)
                 
+        fillJet(self.tree, 'sumjet_notzed', event.sum_particles_not_zed)
+                             
         for label in self.cfg_ana.resonances:
             resonances = getattr(event, label)
             if len(resonances)>0:  
