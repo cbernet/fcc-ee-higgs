@@ -102,7 +102,8 @@ ffbar2l = FCCComponent(
 )
 
 cpslist = [
-    zh_mumuww
+    # zh_mumuww
+    zh
     # zh, zz, ww, ffbar2l
 ]
 

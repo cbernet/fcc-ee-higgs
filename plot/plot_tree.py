@@ -23,3 +23,6 @@ if __name__ == '__main__':
     eff = Efficiencies(tree, cuts)
     eff.fill_cut_flow('tree')
     print eff.str_cut_flow()
+
+    from cuts_gen import signal_contamination
+    signal_contamination(tree, cut, 'contamination.txt')
