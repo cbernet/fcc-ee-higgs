@@ -54,7 +54,7 @@ jet_correction = True
 # import pdb; pdb.set_trace()
 # mode = 'pythia/ee_to_ZH_Oct30'
 # mode = 'pythia/ee_to_ZZ_Sep12_A_2'
-mode = 'test'
+mode = 'all'
 # nfiles = sys.maxint
 nfiles = 4
 # mode = 'test'
@@ -86,6 +86,11 @@ ww = FCCComponent(
     splitFactor=1
 )
 
+zh_mumuww = FCCComponent(
+    'pythia/ee_to_ZH_Zmumu_HWW',
+    splitFactor=4
+)
+
 ##ffbar = FCCComponent(
 ##    'pythia/ee_to_ffbar_Sep12_B_4',
 ##    splitFactor=1
@@ -96,20 +101,9 @@ ffbar2l = FCCComponent(
     splitFactor=1
 )
 
-zhtautau = cfg.Component(
-    'zhtautau',
-    files=['ee_ZH_Htautau.root'], 
-    # splitFactor=len(test_files)
-)
-zhww = cfg.Component(
-    'zhww',
-    files=['ee_ZH_Hww.root'], 
-    # splitFactor=len(test_files)
-)
-
 cpslist = [
-    zh,
-    # zz, ww, ffbar2l
+    zh_mumuww
+    # zh, zz, ww, ffbar2l
 ]
 
 cps = dict( (c.name, c) for c in cpslist)
