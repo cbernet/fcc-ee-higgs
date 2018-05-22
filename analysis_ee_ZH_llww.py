@@ -41,7 +41,9 @@ from EventStore import EventStore as Events
 from heppy.framework.event import Event
 # comment the following line to see all the collections stored in the event 
 # if collection is listed then print loop.event.papasevent will include the collections
-Event.print_patterns=['gen_bosons','gen_particles_stable', 'rec_particles', 'sel_iso_leptons','*zeds*', 'jets*', 'sum_particles_not_zed', 'collections']
+Event.print_patterns=['gen_bosons', 'gen_ws', 'gen_particles_stable',
+                      'rec_particles', 'sel_iso_leptons','*zeds*', 'jets*',
+                      'sum_particles_not_zed', 'collections']
 
 # definition of the collider
 # help(Collider) for more information
@@ -54,7 +56,7 @@ jet_correction = True
 # import pdb; pdb.set_trace()
 # mode = 'pythia/ee_to_ZH_Oct30'
 # mode = 'pythia/ee_to_ZZ_Sep12_A_2'
-mode = 'all'
+mode = 'test'
 nfiles = sys.maxint
 # nfiles = 4
 # mode = 'test'
@@ -114,7 +116,8 @@ for comp in selectedComponents:
     comp.splitFactor = min(len(comp.files),nfiles)
 
 if mode == 'test':
-    comp = cps['pythia/ee_to_ZH_Oct30']
+    # comp = cps['pythia/ee_to_ZH_Oct30']
+    comp = zh_mumuww
     comp.splitFactor = 1
     selectedComponents = [comp]
 elif mode == 'all':
@@ -192,10 +195,19 @@ two_gen_taus_in_acceptance = cfg.Analyzer(
 from fcc_ee_higgs.analyzers.GenResonanceAnalyzer import GenResonanceAnalyzer
 gen_bosons = cfg.Analyzer(
     GenResonanceAnalyzer,
+    output='gen_bosons', 
     pdgids=[23, 25],
     statuses=[62],
     # decay_pdgids=[11, 13],
     verbose=False
+)
+
+gen_ws = cfg.Analyzer(
+    GenResonanceAnalyzer,
+    output='gen_ws', 
+    pdgids=[24],
+    statuses=[22],
+    verbose=False    
 )
 
 # gen level filtering
@@ -428,7 +440,8 @@ sequence = cfg.Sequence(
     ##    gen_zeds_ll_counter,
     # gen_taus,
     # two_gen_taus_in_acceptance, 
-    gen_bosons, 
+    gen_bosons,
+    gen_ws, 
     gen_eles,
     gen_mus,
     gen_nus,

@@ -13,23 +13,28 @@ class GenResonanceAnalyzer(Analyzer):
         if not hasattr(event, 'genbrowser'):
             event.genbrowser = GenBrowser(event.gen_particles,
                                           event.gen_vertices)
-        event.gen_bosons = []
+        output = []
         for b in bosons:
             assert(len(b.daughters) == 2)
             if hasattr(self.cfg_ana, 'decay_pdgids') and \
                not ( abs(b.daughters[0].pdgid()) in self.cfg_ana.decay_pdgids and \
                      abs(b.daughters[1].pdgid()) in self.cfg_ana.decay_pdgids ):
                 continue
-            resonance = Resonance2(b.daughters[0], b.daughters[1],
+            resonance = Resonance2(b.daughters[0],
+                                   b.daughters[1],
                                    b.pdgid(), b.status())
-            event.gen_bosons.append(resonance)
-        event.gen_bosons.sort(key=lambda x: x.pdgid())
+            output.append(resonance)
+        output.sort(key=lambda x: x.pdgid())
+        output_name = 'genbosons'
+        if hasattr(self.cfg_ana, 'output'):
+            output_name = self.cfg_ana.output
+        setattr(event, output_name, output)
         if self.verbose:
             print self
-            if not len(event.gen_bosons):
+            if not len(output):
                 print 'no boson found'
             else:
-                for gb in event.gen_bosons:
+                for gb in output:
                     print gb
                     pprint.pprint(gb.legs)
             print

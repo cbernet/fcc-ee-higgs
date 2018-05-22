@@ -42,6 +42,8 @@ class LLWWTreeProducer(Analyzer):
             bookResonanceWithLegs(self.tree, label, iso)
         bookResonanceWithLegs(self.tree, 'genboson1')
         bookResonanceWithLegs(self.tree, 'genboson2')
+        bookResonanceWithLegs(self.tree, 'genw1')
+        bookResonanceWithLegs(self.tree, 'genw2')
 
         var(self.tree, 'n_nu')
 ##        var(self.tree, 'beta4_chi2')
@@ -94,8 +96,8 @@ class LLWWTreeProducer(Analyzer):
             fill(self.tree, 'n_nu', len(neutrinos))
         for i, boson in enumerate(event.gen_bosons[:2]):
             fillResonanceWithLegs(self.tree, 'genboson{i}'.format(i=i+1), boson)
-##        if hasattr(event, 'beta4_chi2'):
-##            fill(self.tree, 'beta4_chi2', event.beta4_chi2)
+        for i, boson in enumerate(event.gen_ws[:2]):
+            fillResonanceWithLegs(self.tree, 'genw{i}'.format(i=i+1), boson)
         self.tree.tree.Fill()
         
     def write(self, setup):
