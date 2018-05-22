@@ -207,7 +207,7 @@ gen_ws = cfg.Analyzer(
     output='gen_ws', 
     pdgids=[24],
     statuses=[22],
-    verbose=False    
+    verbose=True    
 )
 
 # gen level filtering

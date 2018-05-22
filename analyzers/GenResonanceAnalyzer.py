@@ -14,15 +14,16 @@ class GenResonanceAnalyzer(Analyzer):
             event.genbrowser = GenBrowser(event.gen_particles,
                                           event.gen_vertices)
         output = []
-        for b in bosons:
-            assert(len(b.daughters) == 2)
+        for boson in bosons:
+            daughters = event.genbrowser.decay_daughters(boson)
+            assert(len(daughters) == 2)
             if hasattr(self.cfg_ana, 'decay_pdgids') and \
-               not ( abs(b.daughters[0].pdgid()) in self.cfg_ana.decay_pdgids and \
-                     abs(b.daughters[1].pdgid()) in self.cfg_ana.decay_pdgids ):
+               not ( abs(daughters[0].pdgid()) in self.cfg_ana.decay_pdgids and \
+                     abs(daughters[1].pdgid()) in self.cfg_ana.decay_pdgids ):
                 continue
-            resonance = Resonance2(b.daughters[0],
-                                   b.daughters[1],
-                                   b.pdgid(), b.status())
+            resonance = Resonance2(daughters[0],
+                                   daughters[1],
+                                   boson.pdgid(), boson.status())
             output.append(resonance)
         output.sort(key=lambda x: x.pdgid())
         output_name = 'genbosons'
