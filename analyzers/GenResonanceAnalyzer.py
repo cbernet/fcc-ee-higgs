@@ -21,8 +21,14 @@ class GenResonanceAnalyzer(Analyzer):
                not ( abs(daughters[0].pdgid()) in self.cfg_ana.decay_pdgids and \
                      abs(daughters[1].pdgid()) in self.cfg_ana.decay_pdgids ):
                 continue
-            resonance = Resonance2(daughters[0],
-                                   daughters[1],
+            d0, d1 = daughters[0], daughters[1]
+            # putting particle before anti particle
+            if d1.pdgid() > d0.pdgid():
+                d0, d1 = d1, d0
+            # but if the 1st particle is neutral, put it at the end (W->lnu)
+            if d0.q() == 0:
+                d0, d1 = d1, d0
+            resonance = Resonance2(d0, d1, 
                                    boson.pdgid(), boson.status())
             output.append(resonance)
         output.sort(key=lambda x: x.pdgid())
