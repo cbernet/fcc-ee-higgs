@@ -38,7 +38,25 @@ def signal_contamination(tree, cut, filename=None):
 
 cut_gen_w1_lep = '(abs(genw1_1_pdgid)==11 || abs(genw1_1_pdgid)==13)'
 cut_gen_w2_lep = '(abs(genw2_1_pdgid)==11 || abs(genw2_1_pdgid)==13)'
-cut_gen_ww_lep = '({} && {})'.format(cut_gen_w1_lep, cut_gen_w2_lep)
-cut_gen_ww_had = '(!{} && !{})'.format(cut_gen_w1_lep, cut_gen_w2_lep)
-cut_gen_ww_semilep = '(!{} && !{})'.format(cut_gen_ww_lep, cut_gen_ww_had)
+cut_gen_ww_2lep = '({} && {})'.format(cut_gen_w1_lep, cut_gen_w2_lep)
+cut_gen_ww_1lep = '(({} || {}) && !{})'.format(cut_gen_w1_lep, cut_gen_w2_lep,
+                                             cut_gen_ww_2lep)
+cut_gen_w1_tau = '(abs(genw1_1_pdgid)==15)'
+cut_gen_w2_tau = '(abs(genw2_1_pdgid)==15)'
+cut_gen_ww_1tau = '(({} || {}) && !{} && !{})'.format(
+    cut_gen_w1_tau, cut_gen_w2_tau, cut_gen_ww_1lep, cut_gen_ww_2lep
+)
+cut_gen_w1_had = '(abs(genw1_1_pdgid)<5)'
+cut_gen_w2_had = '(abs(genw2_1_pdgid)<5)'
+cut_gen_ww_had = '({} && {})'.format(cut_gen_w1_had, cut_gen_w2_had)
 
+cut_gen_ww_other = '(!{} && !{} && !{} && !{})'.format(
+    cut_gen_ww_2lep, cut_gen_ww_1lep, cut_gen_ww_1tau, cut_gen_ww_had
+)
+
+cuts_gen_ww = Cuts([
+    ('cut_gen_ww_2lep', cut_gen_ww_2lep), 
+    ('cut_gen_ww_1lep', cut_gen_ww_1lep), 
+    ('cut_gen_ww_1tau', cut_gen_ww_1tau), 
+    ('cut_gen_ww_had', cut_gen_ww_had), 
+])
