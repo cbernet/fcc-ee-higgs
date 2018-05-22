@@ -48,7 +48,7 @@ cut_tau = '(n_jets==2 && missing_energy_e>50 && n_iso_leptons_not_zed==0)'
 cut_hww = '({} || {} || {})'.format(cut_hadr, cut_lep, cut_tau)
 ##cut_w_3body = 'abs(higgses_r_m - recoil_m)<15'
 
-from fcc_ee_higgs.plot.cuts_gen import cut_gen_hww
+from fcc_ee_higgs.plot.cuts_gen import * 
 
 cuts = Cuts([
     # ('cut_gen_htautau', cut_gen_htautau), 

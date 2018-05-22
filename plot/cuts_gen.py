@@ -1,5 +1,7 @@
 import pprint 
 
+# higgs
+
 cut_gen_htautau = 'abs(genboson2_1_pdgid)==15'
 cut_gen_hww = 'abs(genboson2_1_pdgid)==24'
 cut_gen_hzz = 'abs(genboson2_1_pdgid)==23'
@@ -31,3 +33,12 @@ def signal_contamination(tree, cut, filename=None):
     if filename:
         with open(filename, 'w') as the_file:
             the_file.write('\n'.join(results))
+
+# W
+
+cut_gen_w1_lep = '(abs(genw1_1_pdgid)==11 || abs(genw1_1_pdgid)==13)'
+cut_gen_w2_lep = '(abs(genw2_1_pdgid)==11 || abs(genw2_1_pdgid)==13)'
+cut_gen_ww_lep = '({} && {})'.format(cut_gen_w1_lep, cut_gen_w2_lep)
+cut_gen_ww_had = '(!{} && !{})'.format(cut_gen_w1_lep, cut_gen_w2_lep)
+cut_gen_ww_semilep = '(!{} && !{})'.format(cut_gen_ww_lep, cut_gen_ww_had)
+
