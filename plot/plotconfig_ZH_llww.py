@@ -1,6 +1,4 @@
-# var = 'missing_energy_e'
-var = 'sel_zeds_m'
-# var = 'higgses_r_m - recoil_m'
+var = 'recoil_m'
 
 xtitle = 'm_{H} (GeV)'
 
