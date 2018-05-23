@@ -393,7 +393,7 @@ jets = cfg.Analyzer(
     JetClusterizer,
     output = 'jets',
     particles = 'particles_not_zed',
-    fastjet_args = dict( R=0.4, p=-1, emin=5),
+    fastjet_args = dict( R=0.4, p=-1, emin=1),
     verbose=False
 )
 
