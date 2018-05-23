@@ -20,7 +20,8 @@ class Efficiencies(object):
         self.cut_flow.inc('Preselection', ntot)
         for cutname, cutstr in self.cuts.iteritems():
             cut = ' && '.join([cut, cutstr])
-            nsel = self.tree.GetEntries(cut)
+            self.tree.Draw('1', cut, 'goff', nevts)
+            nsel = self.tree.GetSelectedRows()
             self.cut_flow.register(cutname)
             self.cut_flow.inc(cutname, nsel)
             nlast = nsel

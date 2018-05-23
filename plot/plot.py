@@ -11,6 +11,17 @@ from fcc_ee_higgs.plot.plotter import Plotter
 from fcc_ee_higgs.plot.efficiencies import Efficiencies
 from fcc_ee_higgs.plot.pdf import PDF
 
+def cut_flow(comp, nevts=sys.maxint):
+    print comp.name, '-' * 20
+    eff = Efficiencies(comp.tree, cuts)
+    eff.fill_cut_flow(comp.name, nevts=nevts)
+    print eff.str_cut_flow()
+    eff.write('{}/cutflow_{}.txt'.format(odir, comp.name))
+    
+def contamination(self):
+    from cuts_gen import signal_contamination, cut_gen_htautau, cut_gen_hww
+    signal_contamination(ZH.tree, cut, '/'.join([odir, 'contamination.txt']))
+
 if __name__ == '__main__':
 
     import sys
@@ -80,15 +91,8 @@ if __name__ == '__main__':
     pdf = PDF(comps)
 
     if options.cutflow:
-        effs = {}
         for comp in comps:
-            print comp.name, '-' * 20
-            effs[comp.name] = Efficiencies(comp.tree, cuts)
-            eff = effs[comp.name]
-            eff.fill_cut_flow(comp.name)
-            print eff.str_cut_flow()
-            eff.write('{}/cutflow_{}.txt'.format(odir, comp.name))
-            # eff.marginal()
+            cut_flow(comp)
 
     fit_canvas = TCanvas("fit_canvas", "fit")
     tfitter = TemplateFitter(plotter.plot)

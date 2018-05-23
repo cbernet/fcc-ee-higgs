@@ -1,4 +1,5 @@
 var = 'recoil_m'
+# var = 'sel_zeds_m'
 
 xtitle = 'm_{H} (GeV)'
 
@@ -10,8 +11,11 @@ lumi = 5000e12
 bins = 50, 50, 150
 
 def get_cut_hbb(eff, fake, operator='||'):
-    return '(((jets_1_bmatch==1 && rndm<{eff}) || (jets_1_bmatch==0 && rndm<{fake})) {op} \
-((jets_2_bmatch==1 && rndm<{eff}) || (jets_2_bmatch==0 && rndm<{fake})))'.format(eff=eff, fake=fake, op=operator)
+    return '( \
+((jets_1_bmatch==1 && rndm<{eff}) || (jets_1_bmatch==0 && rndm<{fake})) || \
+((jets_2_bmatch==1 && rndm<{eff}) || (jets_2_bmatch==0 && rndm<{fake})) || \
+((jets_3_bmatch==1 && rndm<{eff}) || (jets_3_bmatch==0 && rndm<{fake})) || \
+((jets_4_bmatch==1 && rndm<{eff}) || (jets_4_bmatch==0 && rndm<{fake})))'.format(eff=eff, fake=fake, op=operator)
 
 b_wp = (0.8, 4e-3)
 
@@ -32,33 +36,53 @@ cut_z_mass =  '(abs(sel_zeds_m-91)<15)'  # try opening this
 # cut_z_kine = '(sel_zeds_pt>10 && sel_zeds_pz<50 && sel_zeds_acol>100 && sel_zeds_cross>10)'
 cut_z_kine = 'sel_zeds_acol>110'
 cut_z_flavour = '(sel_zeds_1_pdgid==-sel_zeds_2_pdgid)'
-cut_hadr = 'sumjet_notzed_211_num>=10'
 ##cut_rad = '(((jets_1_e<0 || jets_1_22_e/jets_1_e<0.8) && \
 ##(jets_2_e<0 || jets_2_22_e/jets_2_e<0.8)))'
 ##cut_rad2 = '(jets_1_e>0 || (jets_1_e<0 && n_particles_not_zed==0))'
 ##cut_rm4l = '!((second_zeds_1_pdgid==-second_zeds_2_pdgid) && (abs(second_zeds_1_pdgid)==13 || abs(second_zeds_1_pdgid)==11))'
 cut_hbb = get_cut_hbb(b_wp[0], b_wp[1], ' || ')
+
+# my cuts
+cut_hadr_njets = '(n_jets>=3)'
+cut_hadr_nptcs = '(sumjet_notzed_211_num>=10)'
+cut_hadr_nolep = '(n_iso_leptons_not_zed==0)'
 cut_not_hbb = '!({})'.format(cut_hbb)
-cut_hadr = '(n_jets>=4 && sumjet_notzed_211_num>=10)'
-cut_lep = '(n_iso_leptons_not_zed>=1 && missing_energy_e>30)'
+
+# lep3 cuts
+cut_hadr_njets_lep3 = '(n_jets>=4)'
+
+cut_lep_nleps = '(n_iso_leptons_not_zed>=1)'
+cut_lep_missinge = '(missing_energy_e>30)'
 cut_tau = '(n_jets==2 && missing_energy_e>50 && n_iso_leptons_not_zed==0)'
-cut_hww = '({} || {} || {})'.format(cut_hadr, cut_lep, cut_tau)
+## cut_hww = '({} || {} || {})'.format(cut_hadr, cut_lep, cut_tau)
 ##cut_w_3body = 'abs(higgses_r_m - recoil_m)<15'
 
 from fcc_ee_higgs.plot.cuts_gen import * 
 
-cuts = Cuts([
-    # ('cut_gen_htautau', cut_gen_htautau), 
+cuts_had = Cuts([
+    # ('cut_gen_ww_had', cut_gen_ww_had), 
     ('cut_lepiso', cut_lepiso),
     ('cut_z_mass', cut_z_mass),
     ('cut_z_kine', cut_z_kine),
     ('cut_z_flavour', cut_z_flavour),
-##    ('cut_hadr', cut_hadr),
-##    ('cut_rad2', cut_rad2), 
-##    ('cut_rm4l', cut_rm4l),
-    ('cut_hww', cut_hww), 
-    ('cut_not_hbb', cut_not_hbb),
+    ('cut_hadr_njets', cut_hadr_njets),
+    ('cut_hadr_nptcs', cut_hadr_nptcs),
+    ('cut_hadr_nolep', cut_hadr_nolep),
+    ('cut_not_hbb', cut_not_hbb)
 ])
+
+cuts_had_lep3 = Cuts([
+    ('cut_lepiso', cut_lepiso),
+    ('cut_z_mass', cut_z_mass),
+    ('cut_z_kine', cut_z_kine),
+    ('cut_z_flavour', cut_z_flavour),    
+    ('cut_hadr_njets', cut_hadr_njets_lep3),
+    ('cut_hadr_nptcs', cut_hadr_nptcs),
+    ('cut_hadr_nolep', cut_hadr_nolep),
+    ('cut_not_hbb', cut_not_hbb)    
+])
+
+cuts = cuts_had
 
 if var == 'sel_zeds_m':
     del cuts['cut_z_mass']
