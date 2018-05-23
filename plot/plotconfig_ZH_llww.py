@@ -31,7 +31,7 @@ load(comps)
 
 from fcc_ee_higgs.plot.cuts import Cuts
 
-cut_lepiso = '((sel_zeds_1_iso_e/sel_zeds_1_e<0.2) && (sel_zeds_2_iso_e/sel_zeds_2_e<0.2) && sel_zeds_1_e>0 && sel_zeds_2_e>0)'
+cut_lepiso = '((sel_zeds_1_iso_e/sel_zeds_1_e<0.4) && (sel_zeds_2_iso_e/sel_zeds_2_e<0.4) && sel_zeds_1_e>0 && sel_zeds_2_e>0)'
 cut_z_mass =  '(abs(sel_zeds_m-91)<15)'  # try opening this 
 # cut_z_kine = '(sel_zeds_pt>10 && sel_zeds_pz<50 && sel_zeds_acol>100 && sel_zeds_cross>10)'
 cut_z_kine = 'sel_zeds_acol>110'
@@ -42,14 +42,29 @@ cut_z_flavour = '(sel_zeds_1_pdgid==-sel_zeds_2_pdgid)'
 ##cut_rm4l = '!((second_zeds_1_pdgid==-second_zeds_2_pdgid) && (abs(second_zeds_1_pdgid)==13 || abs(second_zeds_1_pdgid)==11))'
 cut_hbb = get_cut_hbb(b_wp[0], b_wp[1], ' || ')
 
+cut_nophoton = '((jets_1_e<0 || jets_1_22_e/jets_1_e<0.95) && \
+(jets_2_e<0 || jets_2_22_e/jets_2_e<0.95) && \
+(jets_3_e<0 || jets_3_22_e/jets_3_e<0.95) && \
+(jets_4_e<0 || jets_4_22_e/jets_4_e<0.95))'
+
+alias_njets_nophoton = '(jets_1_e>0 && jets_1_22_e/jets_1_e<0.95) + \
+(jets_2_e>0 && jets_2_22_e/jets_2_e<0.95) + \
+(jets_3_e>0 && jets_3_22_e/jets_3_e<0.95) + \
+(jets_4_e>0 && jets_4_22_e/jets_4_e<0.95)'
+
+for comp in comps:
+    comp.tree.SetAlias('njets_nophoton', alias_njets_nophoton)
+
+
 # my cuts
-cut_hadr_njets = '(n_jets>=3)'
+cut_hadr_njets = '(njets_nophoton>=3)'
 cut_hadr_nptcs = '(sumjet_notzed_211_num>=10)'
 cut_hadr_nolep = '(n_iso_leptons_not_zed==0)'
 cut_not_hbb = '!({})'.format(cut_hbb)
 
 # lep3 cuts
-cut_hadr_njets_lep3 = '(n_jets>=4)'
+cut_hadr_njets_lep3 = '(njets_nophoton>=4)'
+
 
 cut_lep_nleps = '(n_iso_leptons_not_zed>=1)'
 cut_lep_missinge = '(missing_energy_e>30)'
@@ -68,10 +83,12 @@ cuts_had = Cuts([
     ('cut_hadr_njets', cut_hadr_njets),
     ('cut_hadr_nptcs', cut_hadr_nptcs),
     ('cut_hadr_nolep', cut_hadr_nolep),
-    ('cut_not_hbb', cut_not_hbb)
+    ('cut_not_hbb', cut_not_hbb),
+    ('cut_nophoton', cut_nophoton)
 ])
 
 cuts_had_lep3 = Cuts([
+    # ('cut_gen_ww_had', cut_gen_ww_had), 
     ('cut_lepiso', cut_lepiso),
     ('cut_z_mass', cut_z_mass),
     ('cut_z_kine', cut_z_kine),
@@ -82,7 +99,7 @@ cuts_had_lep3 = Cuts([
     ('cut_not_hbb', cut_not_hbb)    
 ])
 
-cuts = cuts_had
+cuts = cuts_had_lep3
 
 if var == 'sel_zeds_m':
     del cuts['cut_z_mass']
