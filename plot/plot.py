@@ -11,7 +11,37 @@ from fcc_ee_higgs.plot.plotter import Plotter
 from fcc_ee_higgs.plot.efficiencies import Efficiencies
 from fcc_ee_higgs.plot.pdf import PDF
 
-def plot_main(config_fname, options):
+if __name__ == '__main__':
+
+    import sys
+    from optparse import OptionParser
+    
+    parser = OptionParser()
+    parser.usage = """plot.py <plotconfig file>
+    do the stack plot.
+    """
+    parser.add_option('-n', '--nothing',
+                      dest='nothing',
+                      action="store_true", default=False, 
+                      help="just load the components and do nothing")
+    parser.add_option('-f', '--fit',
+                      dest='fit',
+                      action="store_true", default=False, 
+                      help="perform the template fit")
+    parser.add_option('-c', '--cutflow',
+                      dest='cutflow',
+                      action="store_true", default=False, 
+                      help="show the cutflow")
+    parser.add_option('-s', '--contamination',
+                      dest='contamination',
+                      action="store_true", default=False, 
+                      help="show the signal contamination")
+    parser.add_option('-o', '--output',
+                      dest='output', default=None)
+    options, args = parser.parse_args(sys.argv)
+    
+    config_fname = args[1]
+    
     cfgfile = open(config_fname)
     cfgmod = imp.load_source('config', config_fname, cfgfile)
     globals().update(cfgmod.__dict__)
@@ -91,38 +121,5 @@ def plot_main(config_fname, options):
         from cuts_gen import signal_contamination, cut_gen_htautau, cut_gen_hww
         signal_contamination(ZH.tree, cut, '/'.join([odir, 'contamination.txt']))
     
-
-if __name__ == '__main__':
-
-    import sys
-    from optparse import OptionParser
-    
-    parser = OptionParser()
-    parser.usage = """plot.py <plotconfig file>
-    do the stack plot.
-    """
-    parser.add_option('-n', '--nothing',
-                      dest='nothing',
-                      action="store_true", default=False, 
-                      help="just load the components and do nothing")
-    parser.add_option('-f', '--fit',
-                      dest='fit',
-                      action="store_true", default=False, 
-                      help="perform the template fit")
-    parser.add_option('-c', '--cutflow',
-                      dest='cutflow',
-                      action="store_true", default=False, 
-                      help="show the cutflow")
-    parser.add_option('-s', '--contamination',
-                      dest='contamination',
-                      action="store_true", default=False, 
-                      help="show the signal contamination")
-    parser.add_option('-o', '--output',
-                      dest='output', default=None)
-    options, args = parser.parse_args(sys.argv)
-    
-    config_fname = args[1]
-    
-    plot_main(config_fname, options)
     
  

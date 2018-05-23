@@ -1,4 +1,5 @@
 from collections import OrderedDict
+import copy
 
 class Cuts(OrderedDict):
 
@@ -9,6 +10,11 @@ class Cuts(OrderedDict):
         for key, value in self.iteritems():
             print key, value
     
+    def marginal(self, cutname):
+        marg_cuts = copy.copy(self)
+        del marg_cuts[cutname]
+        return marg_cuts
+
     def __str__(self):
         return ' && '.join(self.values())
    

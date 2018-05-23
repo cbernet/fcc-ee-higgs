@@ -427,7 +427,9 @@ tree = cfg.Analyzer(
     jet_collections = ['jets'],
     resonances=['sel_zeds', 'second_zeds'], 
     misenergy = ['missing_energy', 'gen_missing_energy'],
-    leptons=['iso_leptons_not_zed'], 
+    leptons=['iso_leptons_not_zed'],
+    particles=['particles_not_zed'],
+    recoil='recoil'
 )
 
 # definition of a sequence of analyzers,

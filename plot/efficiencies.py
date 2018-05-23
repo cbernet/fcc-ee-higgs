@@ -49,9 +49,7 @@ class Efficiencies(object):
             return
         for cutname, cutstr in self.cuts.iteritems():
             # print cutname, cutstr
-            cuts_nm1 = copy.copy(self.cuts)
-            del cuts_nm1[cutname]
-            the_cut = ' && '.join(cuts_nm1.values())
+            the_cut = self.cuts.marginal(cutname).__str__()
             # print the_cut
             self.tree.Draw("1", the_cut, "goff")
             nmarg = self.tree.GetSelectedRows()
@@ -60,5 +58,5 @@ class Efficiencies(object):
             if nmarg:
                 eff = float(nall) / nmarg
             print form.format(cutname=cutname, eff=eff)
-        
-            
+
+

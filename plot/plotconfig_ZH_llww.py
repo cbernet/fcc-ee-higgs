@@ -1,5 +1,5 @@
-var = 'recoil_m'
-# var = 'sel_zeds_m'
+# var = 'missing_energy_e'
+var = 'sel_zeds_m'
 # var = 'higgses_r_m - recoil_m'
 
 xtitle = 'm_{H} (GeV)'
@@ -17,16 +17,15 @@ def get_cut_hbb(eff, fake, operator='||'):
 
 b_wp = (0.8, 4e-3)
 
-##from fcc_ee_higgs.components.ZH_lltautau_clic_Mar26 import ZH, ZZ, ll, WW
-##comps = [ZZ, ZH, ll, WW]
-##ZH.name =  'ZH'
-##ZZ.name =  'ZZ'
-##WW.name = 'WW'
-##ll.name = 'll'
-# ffbar.name = 'ffbar'
+from fcc_ee_higgs.components.ZH_llww_CLD_May23 import ZH, ZZ, ll, WW
+comps = [ZZ, ZH, ll, WW]
+ZH.name =  'ZH'
+ZZ.name =  'ZZ'
+WW.name = 'WW'
+ll.name = 'll'
 
-##from fcc_ee_higgs.components.tools import load
-##load(comps)
+from fcc_ee_higgs.components.tools import load
+load(comps)
 
 from fcc_ee_higgs.plot.cuts import Cuts
 
