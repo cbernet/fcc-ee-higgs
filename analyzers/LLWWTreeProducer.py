@@ -45,6 +45,13 @@ class LLWWTreeProducer(Analyzer):
         bookResonanceWithLegs(self.tree, 'genw1')
         bookResonanceWithLegs(self.tree, 'genw2')
 
+        if hasattr(self.cfg_ana, 'recoil'):
+            bookParticle(self.tree, 'recoil')
+
+        for label in self.cfg_ana.particles:
+            bookParticle(self.tree, label)
+            var(self.tree, 'n_'+label)
+            
         var(self.tree, 'n_nu')
 ##        var(self.tree, 'beta4_chi2')
        
@@ -98,6 +105,17 @@ class LLWWTreeProducer(Analyzer):
             fillResonanceWithLegs(self.tree, 'genboson{i}'.format(i=i+1), boson)
         for i, boson in enumerate(event.gen_ws[:2]):
             fillResonanceWithLegs(self.tree, 'genw{i}'.format(i=i+1), boson)
+            
+        if hasattr(self.cfg_ana, 'recoil'):
+            recoil = getattr(event, self.cfg_ana.recoil)    
+            fillParticle(self.tree, 'recoil', recoil)
+        
+        for label in self.cfg_ana.particles:
+            ptcs = getattr(event, label)
+            fill(self.tree, 'n_'+label, len(ptcs))
+            if len(ptcs):
+                fillParticle(self.tree, label, ptcs[0])
+                    
         self.tree.tree.Fill()
         
     def write(self, setup):
