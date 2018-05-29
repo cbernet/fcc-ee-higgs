@@ -13,6 +13,7 @@ from analysis_ee_ZH_had_cfg import *
 '''
 PTMIN = 8
 import os
+import sys
 import copy
 import heppy.framework.config as cfg
 
@@ -35,6 +36,8 @@ from heppy.configuration import Collider
 Collider.BEAMS = 'ee'
 Collider.SQRTS = 240.
 
+mode = 'pythia/ee_to_ZH_Oct30'
+nfiles = 1
 
 from fcc_datasets.fcc_component import FCCComponent
 
@@ -43,7 +46,8 @@ zh = FCCComponent(
     splitFactor=4
 )
 
-selectedComponents = [zh]
+from fcc_ee_higgs.components.tools import get_components
+selectedComponents = get_components(mode, [zh], nfiles)
 
 # read FCC EDM events from the input root file(s)
 # do help(Reader) for more information

@@ -64,11 +64,6 @@ from heppy.papas.detectors.CLIC import clic
 from heppy.papas.detectors.CMS import cms
 detector = clic
 
-### definition of input samples                                                                                                   
-### from components.ZH_Znunu import components as cps
-##from fcc_ee_higgs.components.all import load_components
-##cps = load_components(mode='pythia')
-
 from fcc_datasets.fcc_component import FCCComponent
 
 zh = FCCComponent( 
@@ -108,27 +103,9 @@ cpslist = [
     zh, zz, ww, ffbar2l 
 ]
 
-cps = dict( (c.name, c) for c in cpslist)
-
-selectedComponents = cps.values()                                                                                      
-for comp in selectedComponents:
-    comp.splitFactor = min(len(comp.files),nfiles)
-
-test_filename = os.path.abspath('samples/test/ee_ZH_Hbb.root')
-if mode == 'test':
-    comp = cps['pythia/ee_to_ZH_Oct30']
-    comp.files = [test_filename]
-    comp.splitFactor = 1
-    selectedComponents = [comp]
-elif mode == 'all':
-    selectedComponents = cps.values()                      
-else:
-    selectedComponents = [cps[mode]]
-
-if nfiles: 
-    for cp in cps.values():
-        cp.files = cp.files[:nfiles]
- 
+from fcc_ee_higgs.components.tools import get_components
+selectedComponents = get_components(mode, cpslist, nfiles)
+    
 ##zh.files = 'ee_ZH_Zmumu_Htautau.root'
 ##zh.splitFactor = 1 
     
