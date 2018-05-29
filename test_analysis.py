@@ -6,7 +6,7 @@ import shutil
 
 import heppy.framework.context as context
 
-from analysis_ee_ZH_llww import config
+from zh_fourjet.analysis_ee_ZH_fourjet import config
 from heppy.framework.looper import Looper
 from ROOT import TFile
 
@@ -31,17 +31,12 @@ class TestAnalysis(unittest.TestCase):
     def test_1(self):
         '''Check that the ZH->nunubb analysis runs
         '''
-##        # from heppy.papas.detectors.CMS import cms
-##        # config.components[0].files = [test_filename]
-##        for s in config.sequence:
-##            if hasattr( s,'detector'):
-##                s.detector = cms
         config.components = config.components[:1]
         config.components[0].files = config.components[0].files[:1]
         self.looper = Looper( self.outdir,
                               config,
-                              nEvents=200,
-                              nPrint=100 )
+                              nEvents=50,
+                              nPrint=3)
         self.looper.loop()
         self.looper.write()
 
