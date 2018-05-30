@@ -17,6 +17,10 @@ if __name__ == '__main__':
     
     tfile = TFile(root_fname)
     tree = tfile.Get('events')
+
+    if aliases:
+        for name, alias in aliases.iteritems():
+            tree.SetAlias(name, alias)
     
     c = TCanvas()
     
