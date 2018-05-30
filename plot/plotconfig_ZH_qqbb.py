@@ -36,6 +36,7 @@ hadjet1_n_charged_hadrons>0 && hadjet2_n_constituents >= 5 && \
 hadjet2_n_charged_hadrons>0 && hadjet3_n_constituents >= 5 && \
 hadjet3_n_charged_hadrons>0 && hadjet4_n_constituents >= 5)'
 vismass = '(vismass>=180)'
+# vismass = '(vismass>=200)'
 chi2 = '(chi2>=0)'
 deltaWW = '(deltaWW>10)'
 deltaZZ = '(deltaZZ>10)'

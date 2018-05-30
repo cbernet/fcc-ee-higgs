@@ -58,6 +58,17 @@ source = cfg.Analyzer(
     gen_vertices = 'GenVertex'
 )
 
+# gen bosons
+from fcc_ee_higgs.analyzers.GenResonanceAnalyzer import GenResonanceAnalyzer
+gen_bosons = cfg.Analyzer(
+    GenResonanceAnalyzer,
+    pdgids=[23, 25],
+    statuses=[62],
+    # decay_pdgids=[11, 13],
+    verbose=False
+)
+
+
 # the papas simulation and reconstruction sequence
 from heppy.test.papas_cfg import papas, pfreconstruct, papas_sequence
 # from heppy.papas.detectors.FCCHiggsDetectors.config.cfg_CLIC import papas_sequence, detector, papas, gen_particles_stable
@@ -429,6 +440,7 @@ tree = cfg.Analyzer(
 # the analyzers will process each event in this order
 sequence = cfg.Sequence(
     source,
+    gen_bosons, 
     papas_sequence,
     #gen_particles_stable, # need to include this only if papas_sequence is excluded
 #    partons,
