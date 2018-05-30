@@ -36,7 +36,7 @@ class TestAnalysis(unittest.TestCase):
         self.looper = Looper( self.outdir,
                               config,
                               nEvents=50,
-                              nPrint=20)
+                              nPrint=3)
         self.looper.loop()
         self.looper.write()
 
