@@ -36,8 +36,9 @@ from heppy.configuration import Collider
 Collider.BEAMS = 'ee'
 Collider.SQRTS = 240.
 
-mode = 'pythia/ee_to_ZH_Oct30'
-nfiles = 1
+# mode = 'pythia/ee_to_ZH_Oct30'
+mode = 'all'
+nfiles = None
 
 from fcc_datasets.fcc_component import FCCComponent
 

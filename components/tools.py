@@ -12,7 +12,7 @@ def load(comps):
             '''.format(str(comp))
             raise ValueError(msg)
 
-def get_components(mode, components, nfiles=None):
+def get_components(mode, components, nfiles=None, split=None):
     cps = []
     if mode == 'all':
         cps = list(components)
@@ -27,4 +27,9 @@ def get_components(mode, components, nfiles=None):
     if nfiles:
         for cp in cps:
             cp.files = cp.files[:nfiles]
+    for cp in cps:
+        if split:
+            cp.splitFactor = split
+        else:
+            cp.splitFactor = len(cp.files)
     return cps
