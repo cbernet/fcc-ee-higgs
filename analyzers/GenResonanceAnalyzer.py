@@ -32,7 +32,7 @@ class GenResonanceAnalyzer(Analyzer):
                                    boson.pdgid(), boson.status())
             output.append(resonance)
         output.sort(key=lambda x: x.pdgid())
-        output_name = 'genbosons'
+        output_name = 'gen_bosons'
         if hasattr(self.cfg_ana, 'output'):
             output_name = self.cfg_ana.output
         setattr(event, output_name, output)

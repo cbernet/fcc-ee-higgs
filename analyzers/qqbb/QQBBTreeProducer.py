@@ -70,7 +70,7 @@ class QQBBTreeProducer(Analyzer):
                             'lepton{ilep}'.format(ilep=ilep+1), 
                             lepton)  
         
-        for i, boson in enumerate(event.genbosons[:2]):
+        for i, boson in enumerate(event.gen_bosons[:2]):
             fillResonanceWithLegs(self.tree, 'genboson{i}'.format(i=i+1), boson)
 
         fill( self.tree, 'n_jets', len(event.jets_inclusive) ) 
