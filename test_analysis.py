@@ -6,7 +6,7 @@ import shutil
 
 import heppy.framework.context as context
 
-from zh_fourjet.analysis_ee_ZH_fourjet import config
+from analysis_ee_ZH_llww import config
 from heppy.framework.looper import Looper
 from ROOT import TFile
 
@@ -36,7 +36,7 @@ class TestAnalysis(unittest.TestCase):
         self.looper = Looper( self.outdir,
                               config,
                               nEvents=50,
-                              nPrint=3)
+                              nPrint=20)
         self.looper.loop()
         self.looper.write()
 

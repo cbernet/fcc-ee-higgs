@@ -41,9 +41,13 @@ from EventStore import EventStore as Events
 from heppy.framework.event import Event
 # comment the following line to see all the collections stored in the event 
 # if collection is listed then print loop.event.papasevent will include the collections
-Event.print_patterns=['gen_bosons', 'gen_ws', 'gen_particles_stable',
-                      'rec_particles', 'sel_iso_leptons','*zeds*', 'jets*',
-                      'sum_particles_not_zed', 'collections']
+Event.print_patterns=[  # 'gen_bosons', 'gen_ws', 'gen_particles_stable',
+                      'jets', 'ijets',
+                      'ws', 
+                      'iso_photons', 
+                      'sum_particles_not_zed',
+                      'particles_not_zed*', 
+                      'collections']
 
 # definition of the collider
 # help(Collider) for more information
@@ -56,8 +60,8 @@ jet_correction = True
 # import pdb; pdb.set_trace()
 # mode = 'pythia/ee_to_ZH_Oct30'
 # mode = 'pythia/ee_to_ZZ_Sep12_A_2'
-mode = 'test'
-nfiles = sys.maxint
+mode = 'pythia/ee_to_ZZ_Sep12_A_2'
+nfiles = 1
 # nfiles = 4
 # mode = 'test'
 min_gen_z = 0
@@ -93,44 +97,13 @@ zh_mumuww = FCCComponent(
     splitFactor=4
 )
 
-##ffbar = FCCComponent(
-##    'pythia/ee_to_ffbar_Sep12_B_4',
-##    splitFactor=1
-##)
-
 ffbar2l = FCCComponent( 
     'pythia/ee_to_2l_Mar8',
     splitFactor=1
 )
 
-cpslist = [
-    # zh_mumuww
-    zh
-    # zh, zz, ww, ffbar2l
-]
-
-cps = dict( (c.name, c) for c in cpslist)
-
-selectedComponents = cps.values()                                                                                      
-for comp in selectedComponents:
-    comp.splitFactor = min(len(comp.files),nfiles)
-
-if mode == 'test':
-    # comp = cps['pythia/ee_to_ZH_Oct30']
-    comp = zh_mumuww
-    comp.splitFactor = 1
-    selectedComponents = [comp]
-elif mode == 'all':
-    selectedComponents = cps.values()                      
-else:
-    selectedComponents = [cps[mode]]
-
-if nfiles: 
-    for cp in cps.values():
-        cp.files = cp.files[:nfiles]
- 
-##zh.files = 'ee_ZH_Zmumu_Htautau.root'
-##zh.splitFactor = 1 
+from fcc_ee_higgs.components.tools import get_components
+selectedComponents = get_components(mode, [zz], nfiles)
     
 # read FCC EDM events from the input root file(s)
 # do help(Reader) for more information
@@ -332,6 +305,33 @@ leg_extractor = cfg.Analyzer(
     resonances = 'sel_zeds'
 )
 
+# isolated photons
+photons = cfg.Analyzer(
+    Selector,
+    'photons',
+    output = 'photons',
+    input_objects = 'rec_particles',
+    filter_func = lambda ptc: ptc.e() > 5. and ptc.pdgid() == 22
+)
+
+iso_photons = cfg.Analyzer(
+    IsolationAnalyzer,
+    'iso_photons', 
+    candidates = 'photons',
+    particles = 'rec_particles',
+    iso_area = EtaPhiCircle(0.4)
+)
+
+sel_iso_photons = cfg.Analyzer(
+    Selector,
+    'sel_iso_photons',
+    output = 'iso_photons',
+    input_objects = 'photons',
+    # filter_func = relative_isolation
+    filter_func = lambda lep : (lep.iso_211.sumpt + lep.iso_22.sumpt + lep.iso_130.sumpt) / lep.pt() < 0.2
+)
+
+
 # Computing the recoil p4 (here, p_initial - p_zed)
 # help(RecoilBuilder) for more information
 sqrts = Collider.SQRTS 
@@ -363,6 +363,15 @@ particles_not_zed = cfg.Analyzer(
     mask = 'sel_zeds_legs',
 )
 
+# now exclude isolated photons
+
+particles_not_zed_nophoton = cfg.Analyzer(
+    Masker,
+    output = 'particles_not_zed_nophoton',
+    input = 'particles_not_zed',
+    mask = 'iso_photons',
+)
+
 iso_leptons_not_zed = cfg.Analyzer(
     Masker,
     output = 'iso_leptons_not_zed',
@@ -389,12 +398,19 @@ from heppy.analyzers.fcc.JetClusterizer import JetClusterizer
 ##    njets_required=False
 ##)
 
+ijets = cfg.Analyzer(
+    JetClusterizer,
+    output = 'ijets',
+    particles = 'particles_not_zed_nophoton',
+    fastjet_args = dict( R=0.4, p=-1, emin=5),
+    verbose=False
+)
+
 jets = cfg.Analyzer(
     JetClusterizer,
-    output = 'jets',
-    particles = 'particles_not_zed',
-    fastjet_args = dict( R=0.4, p=-1, emin=1),
-    verbose=False
+    output='jets', 
+    particles='particles_not_zed_nophoton',
+    fastjet_args = dict(njets=4),    
 )
 
 if jet_correction:
@@ -405,6 +421,14 @@ if jet_correction:
         detector=detector 
     )
     jets = cfg.Sequence(jets, jets_cor)
+
+# best W
+ws = cfg.Analyzer(
+    ResonanceBuilder,
+    output = 'ws',
+    leg_collection = 'jets',
+    pdgid = 24
+)
 
 from heppy.analyzers.SingleJetBuilder import SingleJetBuilder
 sum_particles_not_zed = cfg.Analyzer(
@@ -424,11 +448,11 @@ btag.roc = None
 from fcc_ee_higgs.analyzers.LLWWTreeProducer import LLWWTreeProducer
 tree = cfg.Analyzer(
     LLWWTreeProducer,
-    jet_collections = ['jets'],
-    resonances=['sel_zeds', 'second_zeds'], 
+    jet_collections = ['jets', 'ijets'],
+    resonances=['sel_zeds', 'second_zeds', 'ws'], 
     misenergy = ['missing_energy', 'gen_missing_energy'],
-    leptons=['iso_leptons_not_zed'],
-    particles=['particles_not_zed'],
+    leptons=['iso_leptons_not_zed', 'iso_photons'],
+    particles=['particles_not_zed', 'particles_not_zed_nophoton'],
     recoil='recoil'
 )
 
@@ -456,17 +480,20 @@ sequence = cfg.Sequence(
     zeds,
     zed_selector, 
     zed_counter,
-    leg_extractor, 
+    leg_extractor,
+    photons,
+    iso_photons,
+    sel_iso_photons, 
     recoil,
     missing_energy,
     iso_leptons_not_zed,
     second_zeds, 
     particles_not_zed,
-    jets,
-##    taus, 
-##    two_jets,
-##    less_three_jets, 
+    particles_not_zed_nophoton, 
+    ijets,
+    jets, 
     btag_parametrized,
+    ws, 
     sum_particles_not_zed, 
     tree,
     # display

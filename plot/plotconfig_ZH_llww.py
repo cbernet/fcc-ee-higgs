@@ -87,6 +87,7 @@ cuts_had = Cuts([
     ('cut_nophoton', cut_nophoton)
 ])
 
+# the best one so far.
 cuts_had_lep3 = Cuts([
     # ('cut_gen_ww_had', cut_gen_ww_had), 
     ('cut_lepiso', cut_lepiso),
