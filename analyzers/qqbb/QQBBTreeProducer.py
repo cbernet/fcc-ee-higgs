@@ -1,6 +1,6 @@
 from heppy.framework.analyzer import Analyzer
 from heppy.statistics.tree import Tree
-from heppy.analyzers.ntuple import *
+from fcc_ee_higgs.analyzers.ntuple import *
 
 from ROOT import TFile
 
@@ -24,8 +24,8 @@ class QQBBTreeProducer(Analyzer):
         bookJet(self.tree, 'hadjet4', self.taggers)
 
         bookParticle(self.tree, 'misenergy')
-        bookLepton(self.tree, 'lepton1')
-        bookLepton(self.tree, 'lepton2')
+        bookIsoParticle(self.tree, 'lepton1')
+        bookIsoParticle(self.tree, 'lepton2')
        
         bookResonanceWithLegs(self.tree, 'genboson1')
         bookResonanceWithLegs(self.tree, 'genboson2')
@@ -66,11 +66,11 @@ class QQBBTreeProducer(Analyzer):
         for ilep, lepton in enumerate(reversed(leptons)):
             if ilep == 2:
                 break
-            fillLepton(self.tree,
-                       'lepton{ilep}'.format(ilep=ilep+1), 
-                       lepton)
+            fillIsoParticle(self.tree,
+                            'lepton{ilep}'.format(ilep=ilep+1), 
+                            lepton)  
         
-        for i, boson in enumerate(event.gen_bosons[:2]):
+        for i, boson in enumerate(event.genbosons[:2]):
             fillResonanceWithLegs(self.tree, 'genboson{i}'.format(i=i+1), boson)
 
         fill( self.tree, 'n_jets', len(event.jets_inclusive) ) 

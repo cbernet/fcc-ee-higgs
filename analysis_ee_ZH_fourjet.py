@@ -18,7 +18,7 @@ import copy
 import heppy.framework.config as cfg
 
 from heppy.framework.event import Event
-Event.print_patterns=['*jet*', 'bquarks', '*higgs*',
+Event.print_patterns=['*jet*', 'bquarks', '*higgs*',  
                       '*zed*', '*lep*']
 
 import logging
