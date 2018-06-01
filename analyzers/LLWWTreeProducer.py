@@ -34,6 +34,9 @@ class LLWWTreeProducer(Analyzer):
                 bookJet(self.tree, '{}_{}'.format(label, i), self.taggers)
         bookJet(self.tree, 'sumjet_notzed')
 
+        # global jet
+        bookJet(self.tree, self.cfg_ana.globaljet)
+
         # resonances
         for label in self.cfg_ana.resonances:
             iso = False
@@ -45,8 +48,8 @@ class LLWWTreeProducer(Analyzer):
         bookResonanceWithLegs(self.tree, 'genw1')
         bookResonanceWithLegs(self.tree, 'genw2')
 
-        if hasattr(self.cfg_ana, 'recoil'):
-            bookParticle(self.tree, 'recoil')
+##        if hasattr(self.cfg_ana, 'recoil'):
+##            bookParticle(self.tree, 'recoil')
 
         for label in self.cfg_ana.particles:
             bookParticle(self.tree, label)
@@ -79,6 +82,7 @@ class LLWWTreeProducer(Analyzer):
                                                         ilep=ilep+1),
                                 lep)     
       
+        # jets
         for label in self.cfg_ana.jet_collections:  
             jets = getattr(event, label)
             fill(self.tree, 'n_{}'.format(label), len(jets))
@@ -87,9 +91,10 @@ class LLWWTreeProducer(Analyzer):
                     break
                 fillJet(self.tree, '{label}_{ijet}'.format(label=label, ijet=ijet+1),
                         jet, self.taggers)
-                
-        fillJet(self.tree, 'sumjet_notzed', event.sum_particles_not_zed)
-                             
+        
+        # global jet  
+        fillJet(self.tree, self.cfg_ana.globaljet, getattr(event, self.cfg_ana.globaljet))
+        
         for label in self.cfg_ana.resonances:
             resonances = getattr(event, label)
             if len(resonances)>0:  
@@ -98,6 +103,7 @@ class LLWWTreeProducer(Analyzer):
                 if 'zed' in label and not 'qq' in label:
                     iso = True                
                 fillResonanceWithLegs(self.tree, label, resonance, iso)
+
         neutrinos = getattr(event, 'neutrinos', None)
         if neutrinos:
             fill(self.tree, 'n_nu', len(neutrinos))
@@ -106,15 +112,21 @@ class LLWWTreeProducer(Analyzer):
         for i, boson in enumerate(event.gen_ws[:2]):
             fillResonanceWithLegs(self.tree, 'genw{i}'.format(i=i+1), boson)
             
-        if hasattr(self.cfg_ana, 'recoil'):
-            recoil = getattr(event, self.cfg_ana.recoil)    
-            fillParticle(self.tree, 'recoil', recoil)
+##        if hasattr(self.cfg_ana, 'recoil'):
+##            recoil = getattr(event, self.cfg_ana.recoil)    
+##            fillParticle(self.tree, 'recoil', recoil)
         
         for label in self.cfg_ana.particles:
             ptcs = getattr(event, label)
-            fill(self.tree, 'n_'+label, len(ptcs))
-            if len(ptcs):
-                fillParticle(self.tree, label, ptcs[0])
+            try:                
+                fill(self.tree, 'n_'+label, len(ptcs))
+                if len(ptcs):
+                    fillParticle(self.tree, label, ptcs[0])
+            except TypeError:
+                # ptcs is a particle, not a list of ptcs
+                fill(self.tree, 'n_'+label, 1)
+                fillParticle(self.tree, label, ptcs)
+                
                     
         self.tree.tree.Fill()
         

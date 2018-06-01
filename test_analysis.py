@@ -6,7 +6,7 @@ import shutil
 
 import heppy.framework.context as context
 
-from analysis_ee_ZH_fourjet import config
+from analysis_ee_ZH_qqwwll import config
 from heppy.framework.looper import Looper
 from ROOT import TFile
 
