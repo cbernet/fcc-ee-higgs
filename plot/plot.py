@@ -64,10 +64,13 @@ if __name__ == '__main__':
     if options.output:
         odir = options.output
     else:
-        odir = '{var}_zh_{channel}_{detector}_{time}'.format(
+        basedir = os.environ['HOME'] + '/Plots'
+        odir = '{basedir}/{var}_zh_{channel}_{detector}_{time}'.format(
+            basedir=basedir, 
             var=var, channel=channel, detector=detector,
             time=time.strftime("%Y%m%d-%H%M%S", time.localtime())
         )
+        
     if os.path.isdir(odir):
         answer = None
         while answer not in ['y', 'n']:
@@ -125,5 +128,5 @@ if __name__ == '__main__':
         from cuts_gen import signal_contamination, cut_gen_htautau, cut_gen_hww
         signal_contamination(ZH.tree, cut, '/'.join([odir, 'contamination.txt']))
     
-    
+    print 'Results saved in', odir
  
