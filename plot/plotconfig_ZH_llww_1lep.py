@@ -1,9 +1,9 @@
 var = 'recoil_m'
-# var = 'sel_zeds_m'
+# var = 'missing_energy_e'
 
 xtitle = 'm_{H} (GeV)'
 
-channel = 'ww'
+channel = 'ww_1lep'
 
 detector = 'CLD'
 lumi = 5000e12
@@ -77,7 +77,7 @@ cuts_lep = Cuts([
     ('cut_z_flavour', cut_z_flavour),
     ('cut_lep_nleps', cut_lep_nleps),
     ('cut_lep_njets', cut_lep_njets),
-    ('cut_lep_missinge', cut_lep_missinge),
+    # ('cut_lep_missinge', cut_lep_missinge),
     ('cut_nophoton', cut_nophoton), 
     ('cut_lep_nptcsnotzed', cut_lep_nptcsnotzed), 
     ('cut_not_hbb', cut_not_hbb),
@@ -88,7 +88,9 @@ cuts = cuts_lep
 
 if var == 'sel_zeds_m':
     del cuts['cut_z_mass']
-
+elif var == 'missing_energy_e':
+    bins = (50, 0, 100)
+    del cuts['cut_lep_missinge']
 cut = str(cuts)
 
 

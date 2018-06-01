@@ -3,7 +3,7 @@ var = 'recoil_m'
 
 xtitle = 'm_{H} (GeV)'
 
-channel = 'ww'
+channel = 'ww_had'
 
 detector = 'CLD'
 lumi = 5000e12
