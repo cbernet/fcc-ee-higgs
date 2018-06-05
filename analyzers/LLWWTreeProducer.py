@@ -61,10 +61,14 @@ class LLWWTreeProducer(Analyzer):
     def process(self, event):
         self.tree.reset()
 
+##        if len(event.sel_iso_leptons) == 2:
+##            print event
+##            print 
+##
         if hasattr(self.cfg_ana, 'zeds'):  
             zeds = getattr(event, self.cfg_ana.zeds)
             if len(zeds)>0:
-                zed = zeds[0]
+                zed = zeds[0].p
                 fillZed(self.tree, 'zed', zed)
                 
         for label in self.cfg_ana.misenergy:        

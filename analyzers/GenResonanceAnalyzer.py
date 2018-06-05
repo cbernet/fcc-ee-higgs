@@ -7,6 +7,8 @@ import pprint
 class GenResonanceAnalyzer(Analyzer):
 
     def process(self, event):
+        
+        print event
         bosons = [ptc for ptc in event.gen_particles
                   if abs(ptc.pdgid()) in self.cfg_ana.pdgids
                   and ptc.status() in self.cfg_ana.statuses]

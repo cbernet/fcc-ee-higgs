@@ -7,7 +7,7 @@
 ! The settings here are illustrative, not always physics-motivated.
 
 ! 1) Settings used in the main program.
-Main:numberOfEvents = 1000        ! number of events to generate
+Main:numberOfEvents = 100        ! number of events to generate
 Main:timesAllowErrors = 3          ! how many aborts before run stops
 
 Random:setSeed = on
@@ -18,7 +18,7 @@ Init:showChangedSettings = on      ! list changed settings
 Init:showChangedParticleData = off ! list changed particle data
 Next:numberCount = 100             ! print message every n events
 Next:numberShowInfo = 1            ! print event information n times
-Next:numberShowProcess = 20         ! print process record n times
+Next:numberShowProcess = 100         ! print process record n times
 Next:numberShowEvent = 0           ! print event record n times
 
 ! 3) Beam parameter settings. Values below agree with default ones.
@@ -35,3 +35,5 @@ HiggsSM:ffbar2HZ = on
 23:onIfAny = 1 2 3 4 5
 25:onMode = off
 25:onIfMatch = 24 24
+24:onMode = off
+24:onIfAny = 11 13

@@ -35,7 +35,7 @@ class TestAnalysis(unittest.TestCase):
         config.components[0].files = config.components[0].files[:1]
         self.looper = Looper( self.outdir,
                               config,
-                              nEvents=50,
+                              nEvents=500,
                               nPrint=3)
         self.looper.loop()
         self.looper.write()

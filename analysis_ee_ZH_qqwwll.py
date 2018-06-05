@@ -41,7 +41,7 @@ from EventStore import EventStore as Events
 from heppy.framework.event import Event
 # comment the following line to see all the collections stored in the event 
 # if collection is listed then print loop.event.papasevent will include the collections
-Event.print_patterns=['gen_bosons', 'gen_ws', 'gen_particles_stable',
+Event.print_patterns=['gen_bosons', 'gen_ws', 'gen_particles*',
                       'rec_particles', 'sel_iso_leptons','*zeds*', 'jets*',
                       'sum_particles_not_leptons', 'collections']
 
@@ -53,8 +53,11 @@ Collider.SQRTS = 240.
 
 jet_correction = True
 
-mode = 'pythia/ee_to_ZH_Oct30'
-nfiles = 1
+##mode = 'pythia/ee_to_ZH_Zqq_HWW'
+##nfiles = 1
+
+mode = 'all'
+nfiles = None
 
 from heppy.papas.detectors.CLIC import clic
 from heppy.papas.detectors.CMS import cms
@@ -68,6 +71,12 @@ zh = FCCComponent(
     'pythia/ee_to_ZH_Oct30',
     splitFactor=4
 )
+
+zh_qqww = FCCComponent( 
+    'pythia/ee_to_ZH_Zqq_HWW_Wll',
+    splitFactor=4
+)
+
 
 zz = FCCComponent( 
     'pythia/ee_to_ZZ_Sep12_A_2',
@@ -85,8 +94,10 @@ ffbar2l = FCCComponent(
 )
 
 from fcc_ee_higgs.components.tools import get_components
-selectedComponents = get_components(mode, [zh], nfiles)
-    
+selectedComponents = get_components(mode, [zh_qqww], nfiles)
+
+zh_qqww.files = ['ee_ZH_Zqq_HWW_Wll.root']
+
 # read FCC EDM events from the input root file(s)
 # do help(Reader) for more information
 from heppy.analyzers.fcc.Reader import Reader
@@ -154,7 +165,8 @@ from fcc_ee_higgs.analyzers.GenDiLeptonFilter import GenDiLeptonFilter
 gen_ll_filter = cfg.Analyzer(
     GenDiLeptonFilter,
     eles='gen_eles',
-    mus='gen_mus'
+    mus='gen_mus',
+    same_flavour=False
 )
 
 gen_nus = cfg.Analyzer(
@@ -230,14 +242,6 @@ zeds_lep = cfg.Analyzer(
 sqrts = Collider.SQRTS 
 
 from heppy.analyzers.RecoilBuilder import RecoilBuilder
-recoil_lep = cfg.Analyzer(
-    RecoilBuilder,
-    instance_label = 'recoil_lep',
-    output = 'recoil_lep',
-    sqrts = sqrts,
-    to_remove = 'sel_iso_leptons'
-) 
-
 missing_energy = cfg.Analyzer(
     RecoilBuilder,
     instance_label = 'missing_energy',
@@ -275,12 +279,21 @@ if jet_correction:
     )
     jets = cfg.Sequence(jets, jets_cor)
 
+from heppy.analyzers.RecoilBuilder import RecoilBuilder
 recoil_had = cfg.Analyzer(
     RecoilBuilder,
     instance_label = 'recoil_had',
     output = 'recoil_had',
     sqrts = sqrts,
     to_remove = 'jets'
+)
+
+from heppy.analyzers.ResonanceBuilder import ResonanceBuilder
+zeds = cfg.Analyzer(
+    ResonanceBuilder,
+    output = 'zeds',
+    leg_collection = 'jets',
+    pdgid = 23    
 )
     
 from heppy.analyzers.SingleJetBuilder import SingleJetBuilder
@@ -302,11 +315,12 @@ from fcc_ee_higgs.analyzers.LLWWTreeProducer import LLWWTreeProducer
 tree = cfg.Analyzer(
     LLWWTreeProducer,
     jet_collections = ['jets'],
-    resonances=[], 
+    resonances=['zeds_lep'], 
     misenergy = ['missing_energy', 'gen_missing_energy'],
     leptons=['sel_iso_leptons'],
     particles=['particles_not_leptons',
-               'recoil_lep','recoil_had'],
+               'recoil_had',
+               'zeds'],
     globaljet='sum_particles_not_leptons', 
 )
 
@@ -332,11 +346,12 @@ sequence = cfg.Sequence(
     iso_leptons,
     sel_iso_leptons,
     zeds_lep,
-    recoil_lep,
+##    recoil_lep,
     missing_energy,
     particles_not_leptons,
     jets,
-    recoil_had, 
+    recoil_had,
+    zeds, 
     btag_parametrized,
     sum_particles_not_leptons, 
     tree,
