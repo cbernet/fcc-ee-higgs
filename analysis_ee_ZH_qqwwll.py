@@ -96,8 +96,6 @@ ffbar2l = FCCComponent(
 from fcc_ee_higgs.components.tools import get_components
 selectedComponents = get_components(mode, [zh_qqww], nfiles)
 
-zh_qqww.files = ['ee_ZH_Zqq_HWW_Wll.root']
-
 # read FCC EDM events from the input root file(s)
 # do help(Reader) for more information
 from heppy.analyzers.fcc.Reader import Reader

@@ -109,28 +109,8 @@ cpslist = [
     # zh, zz, ww, ffbar2l
 ]
 
-cps = dict( (c.name, c) for c in cpslist)
-
-selectedComponents = cps.values()                                                                                      
-for comp in selectedComponents:
-    comp.splitFactor = min(len(comp.files),nfiles)
-
-if mode == 'test':
-    # comp = cps['pythia/ee_to_ZH_Oct30']
-    comp = zh_mumuww
-    comp.splitFactor = 1
-    selectedComponents = [comp]
-elif mode == 'all':
-    selectedComponents = cps.values()                      
-else:
-    selectedComponents = [cps[mode]]
-
-if nfiles: 
-    for cp in cps.values():
-        cp.files = cp.files[:nfiles]
- 
-##zh.files = 'ee_ZH_Zmumu_Htautau.root'
-##zh.splitFactor = 1 
+from fcc_ee_higgs.components.tools import get_components
+selectedComponents = get_components(mode, [zh_qqww], nfiles)
     
 # read FCC EDM events from the input root file(s)
 # do help(Reader) for more information
