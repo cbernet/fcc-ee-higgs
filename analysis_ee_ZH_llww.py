@@ -110,7 +110,7 @@ cpslist = [
 ]
 
 from fcc_ee_higgs.components.tools import get_components
-selectedComponents = get_components(mode, [zh_qqww], nfiles)
+selectedComponents = get_components(mode, [zh], nfiles)
     
 # read FCC EDM events from the input root file(s)
 # do help(Reader) for more information
