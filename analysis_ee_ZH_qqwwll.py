@@ -73,7 +73,12 @@ zh = FCCComponent(
 )
 
 zh_qqww = FCCComponent( 
-    'pythia/ee_to_ZH_Zqq_HWW_Wll',
+    'pythia/ee_ZH_Zqq_HWW_Wll',
+    splitFactor=4
+)
+
+zh_qqtt = FCCComponent( 
+    'pythia/ee_ZH_Zqq_Htt_tll',
     splitFactor=4
 )
 
@@ -94,7 +99,7 @@ ffbar2l = FCCComponent(
 )
 
 from fcc_ee_higgs.components.tools import get_components
-selectedComponents = get_components(mode, [zh_qqww], nfiles)
+selectedComponents = get_components(mode, [zh_qqtt, zh_qqww], nfiles)
 
 # read FCC EDM events from the input root file(s)
 # do help(Reader) for more information
@@ -225,6 +230,16 @@ sel_iso_leptons = cfg.Analyzer(
     filter_func = lambda lep : (lep.iso_211.sumpt + lep.iso_22.sumpt + lep.iso_130.sumpt) / lep.pt() < 0.5
 )
 
+from heppy.analyzers.EventFilter import EventFilter
+two_leptons = cfg.Analyzer(
+    EventFilter,
+    'two_leptons', 
+    input_objects='sel_iso_leptons',
+    min_number=2, 
+    veto=False    
+)
+
+
 # Building Zeds
 # help(ResonanceBuilder) for more information
 from heppy.analyzers.ResonanceBuilder import ResonanceBuilder
@@ -306,6 +321,14 @@ sum_particles_not_leptons = cfg.Analyzer(
 from heppy.test.btag_parametrized_cfg import btag_parametrized, btag
 btag.roc = None
 
+# qqtautau hypothesis for H->tautau rejection
+from fcc_ee_higgs.analyzers.QQTauTauAnalyzer2 import QQTauTauAnalyzer2
+qqtautau = cfg.Analyzer(
+    QQTauTauAnalyzer2,
+    jets='jets',
+    taus='sel_iso_leptons',
+)
+
 # Analysis-specific ntuple producer
 # please have a look at the code of the ZHTreeProducer class,
 # in heppy/analyzers/examples/zh/ZHTreeProducer.py
@@ -313,7 +336,7 @@ from fcc_ee_higgs.analyzers.LLWWTreeProducer import LLWWTreeProducer
 tree = cfg.Analyzer(
     LLWWTreeProducer,
     jet_collections = ['jets'],
-    resonances=['zeds_lep'], 
+    resonances=['zeds_lep', 'higgs_r', 'zedqq2_r'], 
     misenergy = ['missing_energy', 'gen_missing_energy'],
     leptons=['sel_iso_leptons'],
     particles=['particles_not_leptons',
@@ -343,6 +366,7 @@ sequence = cfg.Sequence(
     leptons,
     iso_leptons,
     sel_iso_leptons,
+    two_leptons, 
     zeds_lep,
 ##    recoil_lep,
     missing_energy,
@@ -351,7 +375,8 @@ sequence = cfg.Sequence(
     recoil_had,
     zeds, 
     btag_parametrized,
-    sum_particles_not_leptons, 
+    sum_particles_not_leptons,
+    qqtautau, 
     tree,
 )   
 

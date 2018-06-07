@@ -23,6 +23,8 @@ class EventHypothesis(object):
         self.zed = Resonance(qqjetsp, 23, 1)  
         self.higgs = Resonance2(taus[0], taus[1], 25, 1)
         self.taus = taus
+        self.jets2 = qqjetsp
+        self.zed2 = self.zed
         
     def force_2_jets(self, particles):
         self.__class__.clusterizer.clear()
@@ -80,7 +82,9 @@ class QQTauTauAnalyzer2(Analyzer):
     def process(self, event):
         jets = getattr(event, self.cfg_ana.jets)
         taus = getattr(event, self.cfg_ana.taus)
-        particles = getattr(event, self.cfg_ana.particles)
+        particles = None
+        if hasattr(self.cfg_ana, 'particles'):
+            particles = getattr(event, self.cfg_ana.particles)
         self.counters['cutflow'].inc('All events')
         if len(taus) < 2:
             return False
@@ -95,9 +99,10 @@ class QQTauTauAnalyzer2(Analyzer):
             if taus[0].q() * taus[1].q() > 0:
                 continue
             hypo = EventHypothesis(taus, jets)
-            forced = hypo.force_2_jets(particles)
-            if not forced:
-                continue
+            if particles:
+                forced = hypo.force_2_jets(particles)
+                if not forced:
+                    continue    
             hypo.beta4_rescale()
             event_hypos.append(hypo)
         if len(event_hypos) == 0:
