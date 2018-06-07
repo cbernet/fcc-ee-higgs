@@ -53,8 +53,8 @@ Collider.SQRTS = 240.
 
 jet_correction = True
 
-##mode = 'pythia/ee_to_ZH_Zqq_HWW'
-##nfiles = 1
+mode = 'pythia/ee_to_ZH_Oct30'
+nfiles = 1
 
 mode = 'all'
 nfiles = None
@@ -191,7 +191,7 @@ gen_missing_energy = cfg.Analyzer(
 # importing the papas simulation and reconstruction sequence,
 # as well as the detector used in papas
 # check papas_cfg.py for more information
-from heppy.test.papas_cfg import papas, pfreconstruct, papas_sequence
+from heppy.test.papas_cfg import papas_sequence, papas, pfreconstruct
 from heppy.test.papas_cfg import papasdisplaycompare as display 
 
 papas.detector = detector    
@@ -355,15 +355,15 @@ sequence = cfg.Sequence(
     ##    gen_zeds_ll,
     ##    gen_zeds_ll_counter,
     # gen_taus,
-    # two_gen_taus_in_acceptance, 
+    # two_gen_taus_in_acceptance,
     gen_bosons,
     gen_ws, 
     gen_eles,
     gen_mus,
     gen_nus,
     gen_missing_energy, 
-    gen_ll_filter, 
-    papas_sequence,
+    gen_ll_filter,
+    papas_sequence, 
     leptons,
     iso_leptons,
     sel_iso_leptons,
