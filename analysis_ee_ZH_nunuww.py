@@ -141,9 +141,9 @@ n_leptons.veto = True
 
 # taus, for veto
 from fcc_ee_higgs.taus_cfg import isolated_taus_sequence, sel_iso_taus, n_taus
-sel_iso_taus.filter_func = lambda lep : lep.iso.sumpt/lep.pt()< 0.2
-n_taus.min_number = 1
-n_taus.veto = True
+sel_iso_taus.filter_func = lambda lep : lep.iso.sumpt/lep.pt()< 0.5
+n_taus.min_number = 0
+n_taus.veto = False
 
 from heppy.analyzers.fcc.JetClusterizer import JetClusterizer
 jets_inclusive = cfg.Analyzer(
@@ -255,6 +255,7 @@ tree = cfg.Analyzer(
     ZHTreeProducer2,
     particles=[('missing_energy', 1),
                ('missing_energy_rescaled', 1)],
+    iso_particles=[('sel_iso_taus', 4), ('sel_iso_leptons', 1)], 
     jets=[('jets4', 4), 
           ('jets2', 2), 
           ('jets2_rescaled', 2)],

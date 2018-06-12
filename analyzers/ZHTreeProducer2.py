@@ -43,6 +43,7 @@ class ZHTreeProducer2(Analyzer):
         self._book(bookJet, self.cfg_ana.jets, self.taggers)
         self.iso = False
         self._book(bookResonanceWithLegs, self.cfg_ana.resonances, self.iso)
+        self._book(bookIsoParticle, self.cfg_ana.iso_particles)
                 
        
     def process(self, event):
@@ -52,6 +53,7 @@ class ZHTreeProducer2(Analyzer):
         self._fill(fillJet, self.cfg_ana.jets, event, self.taggers)
         self._fill(fillResonanceWithLegs, self.cfg_ana.resonances, event,
                    self.iso)
+        self._fill(fillIsoParticle, self.cfg_ana.iso_particles, event)
         self.tree.tree.Fill()
         
     def write(self, setup):
