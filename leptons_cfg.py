@@ -43,7 +43,7 @@ n_leptons = cfg.Analyzer(
     veto = False
 )
 
-isolated_leptons = [
+isolated_leptons_sequence = [
     leptons,
     iso_leptons,
     sel_iso_leptons,

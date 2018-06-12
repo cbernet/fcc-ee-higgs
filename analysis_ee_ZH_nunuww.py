@@ -52,8 +52,9 @@ Collider.SQRTS = 240.
 
 jet_correction = True
 
-mode = 'pythia/ee_to_ZH_Oct30'
-nfiles = 1
+# mode = 'pythia/ee_to_ZH_Oct30'
+mode =  'pythia/ee_ZH_Znunu_HWW_Wqq'
+nfiles = 4
 
 from heppy.papas.detectors.CLIC import clic
 from heppy.papas.detectors.CMS import cms
@@ -85,9 +86,13 @@ ww = FCCComponent(
     splitFactor=1
 )
 
+zh_nunuwwqq = FCCComponent( 
+    'pythia/ee_ZH_Znunu_HWW_Wqq',
+    splitFactor=1
+)   
 
 from fcc_ee_higgs.components.tools import get_components
-selectedComponents = get_components(mode, [zh], nfiles)
+selectedComponents = get_components(mode, [zh_nunuwwqq], nfiles)
 
 # read FCC EDM events from the input root file(s)
 # do help(Reader) for more information
@@ -130,34 +135,77 @@ pfreconstruct.detector = detector
 sqrts = Collider.SQRTS 
 
 # leptons, for veto
-from fcc_ee_higgs.leptons_cfg import isolated_leptons
+from fcc_ee_higgs.leptons_cfg import isolated_leptons_sequence, n_leptons
+n_leptons.min_number = 1
+n_leptons.veto = True
+
+# taus, for veto
+from fcc_ee_higgs.taus_cfg import isolated_taus_sequence, sel_iso_taus, n_taus
+sel_iso_taus.filter_func = lambda lep : lep.iso.sumpt/lep.pt()< 0.2
+n_taus.min_number = 1
+n_taus.veto = True
+
+from heppy.analyzers.fcc.JetClusterizer import JetClusterizer
+jets_inclusive = cfg.Analyzer(
+    JetClusterizer,
+    output = 'jets_inclusive',
+    particles = 'rec_particles',
+    #particles = 'gen_particles_stable',
+    fastjet_args = dict(R=0.4, p=-1, emin=5),  ##Colin replaced by lower E cut
+)
+
+# veto events with a jet with < 3 charged hadrons
+from heppy.analyzers.Selector import Selector
+jets_inclusive_small = cfg.Analyzer(
+    Selector,
+    'jets_inclusive_small',
+    output = 'jets_inclusive_small',
+    input_objects = 'jets_inclusive',
+    filter_func = lambda j: j.constituents[211].num < 3
+)
+
+from heppy.analyzers.EventFilter   import EventFilter  
+n_jets_small = cfg.Analyzer(
+    EventFilter,
+    'n_jets_small',
+    input_objects = 'jets_inclusive_small',
+    min_number = 1,
+    veto =True
+)
+
 
 # Make jets from the particles not used to build the best zed.
 # Here the event is forced into 2 jets to target ZH, H->b bbar)
 # help(JetClusterizer) for more information
 from heppy.analyzers.fcc.JetClusterizer import JetClusterizer
-jets = cfg.Analyzer(
+jets4 = cfg.Analyzer(
     JetClusterizer,
-    output = 'jets',
+    output = 'jets4',
+    particles = 'rec_particles',
+    fastjet_args = dict( njets = 4 ),
+    njets_required=False
+)
+
+from fcc_ee_higgs.analyzers.NuNuWWAnalyzer import NuNuWWAnalyzer
+nunuww = cfg.Analyzer(
+    NuNuWWAnalyzer,
+    jets='jets4'
+)
+
+jets2 = cfg.Analyzer(
+    JetClusterizer,
+    output = 'jets2',
     particles = 'rec_particles',
     fastjet_args = dict( njets = 2 ),
     njets_required=False
 )
 
-if jet_correction:
-    from heppy.analyzers.JetEnergyCorrector import JetEnergyCorrector
-    jets_cor = cfg.Analyzer(
-        JetEnergyCorrector,
-        input_jets='jets',
-        detector=detector 
-    )
-    jets = cfg.Sequence(jets, jets_cor)
 
 from fcc_ee_higgs.analyzers.ZHnunubbJetRescaler import ZHnunubbJetRescaler
 jet_rescaling = cfg.Analyzer(
     ZHnunubbJetRescaler,
-    output='jets_rescaled', 
-    jets='jets',
+    output='jets2_rescaled', 
+    jets='jets2',
     verbose=False
 )
 
@@ -167,7 +215,7 @@ missing_energy = cfg.Analyzer(
     instance_label = 'missing_energy',
     output = 'missing_energy',
     sqrts = sqrts,
-    to_remove = 'jets'
+    to_remove = 'jets2'
 ) 
 
 missing_energy_rescaled = cfg.Analyzer(
@@ -175,11 +223,12 @@ missing_energy_rescaled = cfg.Analyzer(
     instance_label = 'missing_energy_rescaled',
     output = 'missing_energy_rescaled',
     sqrts = sqrts,
-    to_remove = 'jets_rescaled'
+    to_remove = 'jets2_rescaled'
 ) 
 
 # b tagging 
 from heppy.test.btag_parametrized_cfg import btag_parametrized, btag
+btag.input_jets = 'jets4'
 
 # Build Higgs candidates from pairs of jets.
 from heppy.analyzers.ResonanceBuilder import ResonanceBuilder
@@ -187,27 +236,32 @@ from heppy.analyzers.ResonanceBuilder import ResonanceBuilder
 higgses = cfg.Analyzer(
     ResonanceBuilder,
     output = 'higgses',
-    leg_collection = 'jets',
+    leg_collection = 'jets2',
     pdgid = 25
 )
 
 higgses_rescaled = cfg.Analyzer(
     ResonanceBuilder,
     output = 'higgses_rescaled',
-    leg_collection = 'jets_rescaled',
+    leg_collection = 'jets2_rescaled',
     pdgid = 25
 )
 
 # Analysis-specific ntuple producer
 # please have a look at the code of the ZHTreeProducer class,
 # in heppy/analyzers/examples/zh/ZHTreeProducer.py
-from fcc_ee_higgs.analyzers.ZHTreeProducer import ZHTreeProducer
+from fcc_ee_higgs.analyzers.ZHTreeProducer2 import ZHTreeProducer2
 tree = cfg.Analyzer(
-    ZHTreeProducer,
-    particles=[],
-    jet_collections = ['jets', 'jets_rescaled'],
-    resonances=['higgses', 'higgses_rescaled'], 
-    misenergy = ['missing_energy', 'missing_energy_rescaled']
+    ZHTreeProducer2,
+    particles=[('missing_energy', 1),
+               ('missing_energy_rescaled', 1)],
+    jets=[('jets4', 4), 
+          ('jets2', 2), 
+          ('jets2_rescaled', 2)],
+    resonances=[('higgses', 1),
+                ('higgses_rescaled', 1),
+                ('w', 1),
+                ('wstar', 1)], 
 )
 
 # definition of a sequence of analyzers,
@@ -217,8 +271,14 @@ sequence = cfg.Sequence(
     gen_bosons,
     gen_ws, 
     papas_sequence,
-    isolated_leptons, 
-    jets,
+    isolated_leptons_sequence,
+    isolated_taus_sequence,
+    jets_inclusive,
+    jets_inclusive_small,
+    n_jets_small, 
+    jets4,
+    nunuww, 
+    jets2, 
     jet_rescaling, 
     btag_parametrized,
     missing_energy,
