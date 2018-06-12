@@ -21,6 +21,8 @@ class NuNuWWAnalyzer(Analyzer):
 
     def process(self, event):
         jets = getattr(event, self.cfg_ana.jets)
+        if len(jets) != 4:
+            return False
         hypos = []
         for hid, w_jets in enumerate(itertools.combinations(jets, 2)):
             wstar_jets = [jet for jet in jets if jet not in w_jets]
