@@ -1,5 +1,5 @@
 var = 'recoil_had_m'
-# var = 'zeds_lep_e'
+# var = 'higgs_r_m'
 
 xtitle = 'm_{H} (GeV)'
 
@@ -10,7 +10,7 @@ lumi = 500e12
 
 bins = 14, 80, 150
 
-from fcc_ee_higgs.components.ZH_qqwwll_CLD_Jun6 import ZH, ZZ, ll, WW
+from fcc_ee_higgs.components.ZH_qqwwll_CLD_Jun7 import ZH, ZZ, ll, WW
 comps = [ZZ, ZH, ll, WW]
 ZH.name =  'ZH'
 ZZ.name =  'ZZ'
@@ -76,12 +76,13 @@ cut_lepiso = '(sel_iso_leptons_1_iso_e/sel_iso_leptons_1_e<0.2 && \
 sel_iso_leptons_2_iso_e/sel_iso_leptons_2_e<0.2 )'
 cut_lepiso_comb = '((sel_iso_leptons_1_iso_e/sel_iso_leptons_1_e + \
 sel_iso_leptons_2_iso_e/sel_iso_leptons_2_e)<0.4 )'
+cut_tautau = '(abs(higgs_r_m-125)>15)'
 
 
 from fcc_ee_higgs.plot.cuts_gen import * 
 
 cuts = Cuts([
-    # ('cut_gen_htautau', cut_gen_htautau), 
+##    ('cut_gen', cut_gen_htautau), 
     ('cut_2leps', cut_2leps),
     ('cut_of', cut_of),
     ('cut_os', cut_os),
@@ -90,7 +91,8 @@ cuts = Cuts([
     ('cut_misse', cut_misse),
     ('cut_zedhad_m', cut_zedhad_m),
     ('cut_jetid', cut_jetid_2),
-    ('cut_lepiso', cut_lepiso_comb)
+    ('cut_lepiso', cut_lepiso_comb),
+    ('cut_tautau', cut_tautau)
 ])
 
 if var == 'zeds_m':
@@ -104,7 +106,9 @@ if var == 'zeds_lep_m':
     bins = 50, 0, 150
 if var == 'zeds_lep_e':
     bins = 50, 0, 100
-
+if var == 'higgs_r_m':
+    del cuts['cut_tautau']
+    
 cut = str(cuts)
 
 

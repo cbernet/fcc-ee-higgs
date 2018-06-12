@@ -1,0 +1,18 @@
+cut_lepiso           ((zeds_1_iso_e/zeds_1_e<0.2) && (zeds_2_iso_e/zeds_2_e<0.2) && zeds_1_e>0 && zeds_2_e>0)
+cut_z_mass           (abs(zeds_m-91)<10)
+cut_z_kine           (zeds_pt>10 && zeds_pz<50 && zeds_acol>100 && zeds_cross>10)
+cut_z_flavour        (zeds_1_pdgid==-zeds_2_pdgid)
+cut_rad2             (jets_1_e>0 || (jets_1_e<0 && n_particles_not_zed==0))
+cut_rad              (((jets_1_e<0 || jets_1_22_e/jets_1_e<0.8) && (jets_2_e<0 || jets_2_22_e/jets_2_e<0.8)))
+cut_rm4l             !((second_zeds_1_pdgid==-second_zeds_2_pdgid) && (abs(second_zeds_1_pdgid)==13 || abs(second_zeds_1_pdgid)==11))
+cut_hbb              (((jets_1_bmatch==1 && rndm<0.8) || (jets_1_bmatch==0 && rndm<0.004))  ||  ((jets_2_bmatch==1 && rndm<0.8) || (jets_2_bmatch==0 && rndm<0.004)))
+Counter ZZ :
+	 Preselection          284155 	 1.00 	 1.0000
+	 cut_lepiso            266559 	 0.94 	 0.9381
+	 cut_z_mass            171636 	 0.64 	 0.6040
+	 cut_z_kine             84104 	 0.49 	 0.2960
+	 cut_z_flavour          83162 	 0.99 	 0.2927
+	 cut_rad2               77406 	 0.93 	 0.2724
+	 cut_rad                72795 	 0.94 	 0.2562
+	 cut_rm4l               69071 	 0.95 	 0.2431
+	 cut_hbb                12031 	 0.17 	 0.0423

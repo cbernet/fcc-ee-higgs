@@ -135,8 +135,7 @@ def bookIsoParticle( tree, pName, pflow=True ):
         for pdgid in iso_pdgids:
             bookIso(tree, '{pName}_iso{pdgid:d}'.format(pName=pName, pdgid=pdgid))
     bookIso(tree, '{pName}_iso'.format(pName=pName))
-        
-        
+             
 def fillIsoParticle( tree, pName, lepton ):
     fillParticle(tree, pName, lepton )
     for pdgid in iso_pdgids:
