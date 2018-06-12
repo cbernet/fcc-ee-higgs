@@ -109,6 +109,14 @@ gen_bosons = cfg.Analyzer(
     verbose=False
 )
 
+gen_ws = cfg.Analyzer(
+    GenResonanceAnalyzer,
+    output='gen_ws', 
+    pdgids=[24],
+    statuses=[22],
+    verbose=False    
+)
+
 # importing the papas simulation and reconstruction sequence,
 # as well as the detector used in papas
 # check papas_cfg.py for more information
@@ -121,22 +129,8 @@ pfreconstruct.detector = detector
 
 sqrts = Collider.SQRTS 
 
-from heppy.analyzers.RecoilBuilder import RecoilBuilder
-missing_energy = cfg.Analyzer(
-    RecoilBuilder,
-    instance_label = 'missing_energy',
-    output = 'missing_energy',
-    sqrts = sqrts,
-    to_remove = 'jets'
-) 
-
-missing_energy_rescaled = cfg.Analyzer(
-    RecoilBuilder,
-    instance_label = 'missing_energy_rescaled',
-    output = 'missing_energy_rescaled',
-    sqrts = sqrts,
-    to_remove = 'jets_rescaled'
-) 
+# leptons, for veto
+from fcc_ee_higgs.leptons_cfg import isolated_leptons
 
 # Make jets from the particles not used to build the best zed.
 # Here the event is forced into 2 jets to target ZH, H->b bbar)
@@ -167,38 +161,28 @@ jet_rescaling = cfg.Analyzer(
     verbose=False
 )
 
+from heppy.analyzers.RecoilBuilder import RecoilBuilder
+missing_energy = cfg.Analyzer(
+    RecoilBuilder,
+    instance_label = 'missing_energy',
+    output = 'missing_energy',
+    sqrts = sqrts,
+    to_remove = 'jets'
+) 
+
+missing_energy_rescaled = cfg.Analyzer(
+    RecoilBuilder,
+    instance_label = 'missing_energy_rescaled',
+    output = 'missing_energy_rescaled',
+    sqrts = sqrts,
+    to_remove = 'jets_rescaled'
+) 
+
 # b tagging 
 from heppy.test.btag_parametrized_cfg import btag_parametrized, btag
 
-##from heppy.analyzers.roc import cms_roc
-##btag.roc = None
-##
-##def is_bjet(jet):
-##    return jet.tags['b'] == 1
-##bjets = cfg.Analyzer(
-##    Selector,
-##    'bjets',
-##    output = 'bjets',
-##    input_objects = 'jets',
-##    filter_func = lambda jet: jet.tags['b'] == 1
-##)
-##
-##onebjet = cfg.Analyzer(
-##    EventFilter  ,
-##    'onebjet',
-##    input_objects = 'bjets',
-##    min_number = 1,
-##    veto = False
-##)
-
 # Build Higgs candidates from pairs of jets.
 from heppy.analyzers.ResonanceBuilder import ResonanceBuilder
-higgses_rescaled = cfg.Analyzer(
-    ResonanceBuilder,
-    output = 'higgses_rescaled',
-    leg_collection = 'jets_rescaled',
-    pdgid = 25
-)
 
 higgses = cfg.Analyzer(
     ResonanceBuilder,
@@ -207,22 +191,11 @@ higgses = cfg.Analyzer(
     pdgid = 25
 )
 
-# Just a basic analysis-specific event Selection module.
-# this module implements a cut-flow counter
-# After running the example as
-#    heppy_loop.py Trash/ analysis_ee_ZH_cfg.py -f -N 100 
-# this counter can be found in:
-#    Trash/example/heppy.analyzers.examples.zh.selection.Selection_cuts/cut_flow.txt
-# Counter cut_flow :
-#         All events                                     100      1.00    1.0000
-#         At least 2 leptons                              87      0.87    0.8700
-#         Both leptons e>30                               79      0.91    0.7900
-# For more information, check the code of the Selection class
-# in heppy/analyzers/examples/zh/selection.py
-from heppy.analyzers.examples.zh.selection import Selection
-selection = cfg.Analyzer(
-    Selection,
-    instance_label='cuts'
+higgses_rescaled = cfg.Analyzer(
+    ResonanceBuilder,
+    output = 'higgses_rescaled',
+    leg_collection = 'jets_rescaled',
+    pdgid = 25
 )
 
 # Analysis-specific ntuple producer
@@ -237,31 +210,22 @@ tree = cfg.Analyzer(
     misenergy = ['missing_energy', 'missing_energy_rescaled']
 )
 
-from heppy.analyzers.PDebugger import PDebugger
-pdebug = cfg.Analyzer(
-PDebugger,
-output_to_stdout = False, #optional
-debug_filename = os.getcwd()+'/python_physics_debug.log' #optional argument
-)
-
 # definition of a sequence of analyzers,
 # the analyzers will process each event in this order
 sequence = cfg.Sequence(
     source,
-    gen_bosons, 
+    gen_bosons,
+    gen_ws, 
     papas_sequence,
+    isolated_leptons, 
     jets,
-    missing_energy,
     jet_rescaling, 
     btag_parametrized,
-    # bjets, 
-    # onebjet,
+    missing_energy,
     missing_energy_rescaled, 
     higgses,
     higgses_rescaled, 
-    # selection, 
     tree,
-    # display
 )   
 
 # Specifics to read FCC events 
