@@ -52,10 +52,10 @@ Collider.SQRTS = 240.
 
 jet_correction = True
 
-# mode = 'pythia/ee_to_ZH_Oct30'
-# mode =  'pythia/ee_ZH_Znunu_HWW_Wqq'
-mode = 'all'
+# mode = 'pythia/ee_to_ffbar_Sep12_B_4'
+mode =  'all'
 nfiles = None
+
 
 from heppy.papas.detectors.CLIC import clic
 from heppy.papas.detectors.CMS import cms
@@ -94,6 +94,7 @@ ww = FCCComponent(
 
 from fcc_ee_higgs.components.tools import get_components
 selectedComponents = get_components(mode, [zz,zh,ffbar,ww], nfiles)
+
 
 # read FCC EDM events from the input root file(s)
 # do help(Reader) for more information
@@ -172,6 +173,14 @@ n_jets_small = cfg.Analyzer(
     input_objects = 'jets_inclusive_small',
     min_number = 1,
     veto =True
+)
+
+n_jets_inclusive = cfg.Analyzer(
+    EventFilter,
+    'n_jets_inclusive',
+    input_objects = 'jets_inclusive',
+    min_number = 4,
+    veto =False
 )
 
 
@@ -276,6 +285,7 @@ sequence = cfg.Sequence(
     isolated_leptons_sequence,
     isolated_taus_sequence,
     jets_inclusive,
+    n_jets_inclusive, 
     jets_inclusive_small,
     n_jets_small, 
     jets4,
