@@ -55,8 +55,6 @@ alias_njets_nophoton = '(jets_1_e>0 && jets_1_22_e/jets_1_e<0.95) + \
 for comp in comps:
     comp.tree.SetAlias('njets_nophoton', alias_njets_nophoton)
 
-
-
 cut_lep_nleps = '(n_iso_leptons_not_zed>=1)'
 cut_not_hbb = '!({})'.format(cut_hbb)
 cut_lep_njets = '(njets_nophoton>=2)'

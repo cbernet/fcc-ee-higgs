@@ -48,7 +48,7 @@ cut_leppt = '(sel_zeds_1_pt>10 && sel_zeds_2_pt>10)'
 cut_hbb = get_cut_hbb(b_wp[0], b_wp[1], ' || ')
 cut_not_hbb = '!({})'.format(cut_hbb)
 cut_w_misse = '(missing_energy_e<70)'
-cut_w_3body = 'abs(higgses_r_m - recoil_m)<15'
+cut_w_4body = 'abs(higgses_r_m - recoil_m)<15'
 
 from fcc_ee_higgs.plot.cuts_gen import cut_gen_htautau
 
@@ -60,14 +60,14 @@ cuts = Cuts([
     ('cut_z_mass', cut_z_mass),
     ('cut_z_kine', cut_z_kine),
     ('cut_z_flavour', cut_z_flavour), 
-    ('cut_rad2', cut_rad2), 
+    # ('cut_rad2', cut_rad2), 
     # ('cut_rad', cut_rad),
     ('cut_htautau', cut_htautau), 
     # ('cut_htautau_or', cut_htautau_or),  
     # gain in precision! to investigate: try an or- nice but contamination is large of course...
     ('cut_rm4l', cut_rm4l),
     # ('cut_w_misse', cut_w_misse)
-    ('cut_w_3body', cut_w_3body),
+    ('cut_w_4body', cut_w_4body),
     ('cut_not_hbb', cut_not_hbb)
 ])
 

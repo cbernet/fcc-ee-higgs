@@ -1,3 +1,4 @@
+
 import imp
 import time
 import shutil
@@ -19,7 +20,7 @@ def cut_flow(comp, nevts=sys.maxint):
     eff.write('{}/cutflow_{}.txt'.format(odir, comp.name))
     
 def contamination(self):
-    from cuts_gen import signal_contamination, cut_gen_htautau, cut_gen_hww
+    from cuts_gen_2 import signal_contamination, cut_gen_htautau, cut_gen_hww
     signal_contamination(ZH.tree, cut, '/'.join([odir, 'contamination.txt']))
 
 if __name__ == '__main__':
@@ -49,6 +50,8 @@ if __name__ == '__main__':
                       help="show the signal contamination")
     parser.add_option('-o', '--output',
                       dest='output', default=None)
+    parser.add_option('-l', '--lumi',
+                      dest='lumi', type=float, default=None)
     options, args = parser.parse_args(sys.argv)
     
     config_fname = args[1]
@@ -57,6 +60,8 @@ if __name__ == '__main__':
     cfgmod = imp.load_source('config', config_fname, cfgfile)
     globals().update(cfgmod.__dict__)
         
+    if options.lumi:
+        lumi = options.lumi
     TGaxis.SetMaxDigits(3)
     print channel
     
@@ -125,7 +130,7 @@ if __name__ == '__main__':
     plotter.write('/'.join([odir, 'stack.txt']))
         
     if options.contamination:
-        from cuts_gen import signal_contamination, cut_gen_htautau, cut_gen_hww
+        from cuts_gen_2 import signal_contamination, cut_gen_htautau, cut_gen_hww
         signal_contamination(ZH.tree, cut, '/'.join([odir, 'contamination.txt']))
     
     print 'Results saved in', odir

@@ -27,6 +27,6 @@ WW = FCCComponent(
 ffbar = FCCComponent(
     'heppy/ee_to_ZH_to_nunuww/CLD/Jun13_B/ee_to_ffbar_Sep12_B_4',
     xSection=7.9e-8,
-    nGenEvents=10000*491.,
+    nGenEvents=10000*490.,
     uncertainty=1
 )

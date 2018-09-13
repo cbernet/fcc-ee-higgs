@@ -1,4 +1,4 @@
-var = 'recoil_had_m'
+var = 'higgs_r_m'
 # var = 'higgs_r_m'
 
 xtitle = 'm_{H} (GeV)'
@@ -6,7 +6,7 @@ xtitle = 'm_{H} (GeV)'
 channel = 'ww'
 
 detector = 'CLD'
-lumi = 500e12
+lumi = 5000e12
 
 bins = 14, 80, 150
 

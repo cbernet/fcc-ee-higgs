@@ -6,11 +6,11 @@ xtitle = 'm_{H} (GeV)'
 channel = 'nunuww'
 
 detector = 'CLD'
-lumi = 500e12
+lumi = 5000e12
 
 bins = 30, 80, 140
 
-from fcc_ee_higgs.components.ZH_nunuww_CLD_jun13 import ZH, ZZ, WW, ffbar
+from fcc_ee_higgs.components.ZH_nunuww_CLD_jun13_B import ZH, ZZ, WW, ffbar
 comps = [ZZ, ZH, WW, ffbar]
 ZH.name =  'ZH'
 ZZ.name =  'ZZ'
@@ -22,13 +22,13 @@ load(comps)
 
 from fcc_ee_higgs.plot.cuts import Cuts
 
-from fcc_ee_higgs.plot.cuts_gen import * 
+from fcc_ee_higgs.plot.cuts_gen_2 import * 
 
 cut_missmass = '(missing_energy_0_m>80)'
 cut_misse = '(missing_energy_0_e>80)'
 cut_theta = '(abs(missing_energy_0_theta*180/3.14) < 65)'
 cut_mwstar = '(wstar_0_m>10)'
-cut_jete = '(jets4_2_e)>15'
+cut_jete = '(jets4_3_e)>15'
 
 def get_cut_hbb(eff, fake, jets, n, operator=' && '):
     strings = []
