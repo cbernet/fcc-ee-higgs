@@ -56,8 +56,10 @@ jet_correction = True
 mode = 'pythia/ee_to_ZH_Oct30'
 nfiles = 1
 
-# mode = 'all'
-# nfiles = None
+mode = 'all'
+nfiles = None
+# mode = 'pythia/ee_to_ZH_Oct30'
+# nfiles = 1
 
 from heppy.papas.detectors.CLIC import clic
 from heppy.papas.detectors.CMS import cms
@@ -72,16 +74,15 @@ zh = FCCComponent(
     splitFactor=4
 )
 
-zh_qqww = FCCComponent( 
-    'pythia/ee_ZH_Zqq_HWW_Wll',
-    splitFactor=4
-)
+# zh_qqww = FCCComponent( 
+#     'pythia/ee_ZH_Zqq_HWW_Wll',
+#     splitFactor=4
+# )
 
-zh_qqtt = FCCComponent( 
-    'pythia/ee_ZH_Zqq_Htt_tll',
-    splitFactor=4
-)
-
+# zh_qqtt = FCCComponent( 
+#     'pythia/ee_ZH_Zqq_Htt_tll',
+#     splitFactor=4
+# )
 
 zz = FCCComponent( 
     'pythia/ee_to_ZZ_Sep12_A_2',
@@ -99,7 +100,7 @@ ffbar2l = FCCComponent(
 )
 
 from fcc_ee_higgs.components.tools import get_components
-selectedComponents = get_components(mode, [zh], nfiles)
+selectedComponents = get_components(mode, [zh,zz,ww,ffbar2l], nfiles)
 
 # read FCC EDM events from the input root file(s)
 # do help(Reader) for more information
