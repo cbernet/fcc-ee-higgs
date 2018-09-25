@@ -6,7 +6,7 @@ xtitle = 'm_{H} (GeV)'
 channel = 'ww'
 
 detector = 'CLD'
-lumi = 500e12
+lumi = 5000e12
 
 bins = 14, 80, 150
 
@@ -63,6 +63,16 @@ from fcc_ee_higgs.plot.cuts import Cuts
 #### cut_hww = '({} || {} || {})'.format(cut_hadr, cut_lep, cut_tau)
 ####cut_w_3body = 'abs(higgses_r_m - recoil_m)<15'
 
+def get_cut_hbb(eff, fake, operator='||'):
+    return '( \
+((jets_1_bmatch==1 && rndm<{eff}) || (jets_1_bmatch==0 && rndm<{fake})) && \
+((jets_2_bmatch==1 && rndm<{eff}) || (jets_2_bmatch==0 && rndm<{fake})))'.format(eff=eff, fake=fake, op=operator)
+
+b_wp = (0.8, 4e-3)
+
+cut_hbb = get_cut_hbb(b_wp[0], b_wp[1], ' || ')
+cut_not_hbb = '!({})'.format(cut_hbb)
+
 cut_2leps = '(n_sel_iso_leptons>=2)'
 cut_of = '(abs(sel_iso_leptons_1_pdgid)!=abs(sel_iso_leptons_2_pdgid))'
 cut_os = '(sel_iso_leptons_1_q*sel_iso_leptons_2_q<0)'
@@ -92,7 +102,8 @@ cuts = Cuts([
     ('cut_zedhad_m', cut_zedhad_m),
     ('cut_jetid', cut_jetid_2),
     ('cut_lepiso', cut_lepiso_comb),
-    ('cut_tautau', cut_tautau)
+    ('cut_tautau', cut_tautau),
+    # ('cut_not_hbb', cut_not_hbb)
 ])
 
 if var == 'zeds_m':

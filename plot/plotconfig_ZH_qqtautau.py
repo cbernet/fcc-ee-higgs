@@ -65,7 +65,7 @@ cut_gen_hbb = 'abs(genboson2_1_pdgid)==5'
 
 cuts = Cuts([
     ('cut_zqq', cut_zqq),
-    ('cut_htautau', cut_htautau), 
+    # ('cut_htautau', cut_htautau), 
     ('cut_htautau_1prong', cut_htautau_1prong),
     ('cut_zqq_acol', cut_zqq_acol), 
     ('cut_zqq_acol_2', cut_zqq_acol_2),

@@ -248,7 +248,7 @@ zeds_lep = cfg.Analyzer(
     ResonanceBuilder,
     output = 'zeds_lep',
     leg_collection = 'sel_iso_leptons',
-    pdgid = 23
+    pdgid = 23 #TODO we pick the combination closest to the Z mass... is that what we should do? 
 )
 
 # Computing the recoil p4 (here, p_initial - p_zed)

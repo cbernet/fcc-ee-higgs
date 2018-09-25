@@ -10,13 +10,13 @@ sWW= Style(markerColor=6, markerSize=1, lineColor=6, fillStyle=3003)
 sffbar = Style(markerColor=1, markerSize=1, lineColor=1, fillStyle=3003)
 
 histPref = {
-    'ZZ*': {'style':sZZ, 'layer':10, 'legend':'ZZ'},
-    'WW*': {'style':sWW, 'layer':5, 'legend':'WW'},
-    'ZH*': {'style':sZH, 'layer':11, 'legend':'ZH'},
-    'VBF*': {'style':sVBF, 'layer':12, 'legend':'VBF'},
-    'ffbar': {'style':sffbar, 'layer':4, 'legend':'ffbar'},
-    'qqbar': {'style':sffbar, 'layer':4, 'legend':'qqbar'},
-    'll': {'style':sffbar, 'layer':4, 'legend':'ll'},
+    'ZZ*': {'style':sZZ, 'layer':10, 'legend':'ZZ', 'stack':True},
+    'WW*': {'style':sWW, 'layer':5, 'legend':'WW', 'stack':True},
+    'ZH*': {'style':sZH, 'layer':11, 'legend':'ZH', 'stack':True},
+    'VBF*': {'style':sVBF, 'layer':12, 'legend':'VBF', 'stack': True},
+    'ffbar': {'style':sffbar, 'layer':4, 'legend':'ffbar', 'stack': True,},
+    'qqbar': {'style':sffbar, 'layer':4, 'legend':'qqbar', 'stack': True},
+    'll': {'style':sffbar, 'layer':4, 'legend':'ll', 'stack': True,},
 }
 
 def set_style(comp):

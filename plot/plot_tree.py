@@ -24,5 +24,5 @@ if __name__ == '__main__':
     eff.fill_cut_flow('tree')
     print eff.str_cut_flow()
 
-    from cuts_gen import signal_contamination
+    from cuts_gen_2 import * 
     signal_contamination(tree, cut, 'contamination.txt')

@@ -38,7 +38,7 @@ Collider.SQRTS = 240.
 
 # mode = 'pythia/ee_to_ZH_Oct30'
 mode = 'all'
-nfiles = None
+nfiles = 1
 
 from fcc_datasets.fcc_component import FCCComponent
 zh = FCCComponent( 
@@ -77,10 +77,11 @@ source = cfg.Analyzer(
 from fcc_ee_higgs.analyzers.GenResonanceAnalyzer import GenResonanceAnalyzer
 gen_bosons = cfg.Analyzer(
     GenResonanceAnalyzer,
+    output='gen_bosons', 
     pdgids=[23, 25],
     statuses=[62],
     # decay_pdgids=[11, 13],
-    verbose=False
+    verbose=False, 
 )
 
 
