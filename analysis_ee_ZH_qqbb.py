@@ -38,7 +38,7 @@ Collider.SQRTS = 240.
 
 # mode = 'pythia/ee_to_ZH_Oct30'
 mode = 'all'
-nfiles = None
+nfiles = 1
 
 from fcc_datasets.fcc_component import FCCComponent
 zh = FCCComponent( 

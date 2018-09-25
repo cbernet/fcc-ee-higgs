@@ -42,10 +42,10 @@ cut_z_flavour = '(sel_zeds_1_pdgid==-sel_zeds_2_pdgid)'
 ##cut_rm4l = '!((second_zeds_1_pdgid==-second_zeds_2_pdgid) && (abs(second_zeds_1_pdgid)==13 || abs(second_zeds_1_pdgid)==11))'
 cut_hbb = get_cut_hbb(b_wp[0], b_wp[1], ' || ')
 
-cut_nophoton = '((jets_1_e<0 || jets_1_22_e/jets_1_e<0.95) && \
-(jets_2_e<0 || jets_2_22_e/jets_2_e<0.95) && \
-(jets_3_e<0 || jets_3_22_e/jets_3_e<0.95) && \
-(jets_4_e<0 || jets_4_22_e/jets_4_e<0.95))'
+##cut_nophoton = '((jets_1_e<0 || jets_1_22_e/jets_1_e<0.95) && \
+##(jets_2_e<0 || jets_2_22_e/jets_2_e<0.95) && \
+##(jets_3_e<0 || jets_3_22_e/jets_3_e<0.95) && \
+##(jets_4_e<0 || jets_4_22_e/jets_4_e<0.95))'
 
 alias_njets_nophoton = '(jets_1_e>0 && jets_1_22_e/jets_1_e<0.95) + \
 (jets_2_e>0 && jets_2_22_e/jets_2_e<0.95) + \
@@ -58,13 +58,13 @@ for comp in comps:
 cut_lep_nleps = '(n_iso_leptons_not_zed>=1)'
 cut_not_hbb = '!({})'.format(cut_hbb)
 cut_lep_njets = '(njets_nophoton>=2)'
-cut_lep_missinge = '(missing_energy_e>15)'
-cut_lep_nptcsnotzed = '(n_particles_not_zed>6)'
+# cut_lep_missinge = '(missing_energy_e>15)'
+cut_lep_nptcsnotzed = '(n_particles_not_zed>7)'
 
-cut_nophoton = '((jets_1_e<0 || jets_1_22_e/jets_1_e<0.95) && \
-(jets_2_e<0 || jets_2_22_e/jets_2_e<0.95) && \
-(jets_3_e<0 || jets_3_22_e/jets_3_e<0.95) && \
-(jets_4_e<0 || jets_4_22_e/jets_4_e<0.95))'
+##cut_nophoton = '((jets_1_e<0 || jets_1_22_e/jets_1_e<0.95) && \
+##(jets_2_e<0 || jets_2_22_e/jets_2_e<0.95) && \
+##(jets_3_e<0 || jets_3_22_e/jets_3_e<0.95) && \
+##(jets_4_e<0 || jets_4_22_e/jets_4_e<0.95))'
 from fcc_ee_higgs.plot.cuts_gen import * 
 
 cuts_lep = Cuts([
@@ -76,7 +76,7 @@ cuts_lep = Cuts([
     ('cut_lep_nleps', cut_lep_nleps),
     ('cut_lep_njets', cut_lep_njets),
     # ('cut_lep_missinge', cut_lep_missinge),
-    ('cut_nophoton', cut_nophoton), 
+    # ('cut_nophoton', cut_nophoton), 
     ('cut_lep_nptcsnotzed', cut_lep_nptcsnotzed), 
     ('cut_not_hbb', cut_not_hbb),
 ##    ('cut_nophoton', cut_nophoton)

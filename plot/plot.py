@@ -20,7 +20,7 @@ def cut_flow(comp, nevts=sys.maxint):
     eff.write('{}/cutflow_{}.txt'.format(odir, comp.name))
     
 def contamination(self):
-    from cuts_gen_2 import signal_contamination, cut_gen_htautau, cut_gen_hww
+    # from cuts_gen_2 import signal_contamination, cut_gen_htautau, cut_gen_hww
     signal_contamination(ZH.tree, cut, '/'.join([odir, 'contamination.txt']))
 
 if __name__ == '__main__':
@@ -48,6 +48,10 @@ if __name__ == '__main__':
                       dest='contamination',
                       action="store_true", default=False, 
                       help="show the signal contamination")
+    parser.add_option('-g', '--new_cutgen',
+                      dest='new_cutgen',
+                      action="store_true", default=False, 
+                      help="use new ntuple format for cut_gen")
     parser.add_option('-o', '--output',
                       dest='output', default=None)
     parser.add_option('-l', '--lumi',
@@ -130,7 +134,10 @@ if __name__ == '__main__':
     plotter.write('/'.join([odir, 'stack.txt']))
         
     if options.contamination:
-        from cuts_gen_2 import signal_contamination, cut_gen_htautau, cut_gen_hww
+        if options.new_cutgen:
+            from cuts_gen_2 import signal_contamination, cut_gen_htautau, cut_gen_hww
+        else: 
+            from cuts_gen import signal_contamination, cut_gen_htautau, cut_gen_hww
         signal_contamination(ZH.tree, cut, '/'.join([odir, 'contamination.txt']))
     
     print 'Results saved in', odir
