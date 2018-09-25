@@ -77,10 +77,11 @@ source = cfg.Analyzer(
 from fcc_ee_higgs.analyzers.GenResonanceAnalyzer import GenResonanceAnalyzer
 gen_bosons = cfg.Analyzer(
     GenResonanceAnalyzer,
+    output='gen_bosons', 
     pdgids=[23, 25],
     statuses=[62],
     # decay_pdgids=[11, 13],
-    verbose=False
+    verbose=False, 
 )
 
 
