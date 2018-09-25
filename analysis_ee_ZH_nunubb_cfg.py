@@ -52,8 +52,8 @@ Collider.SQRTS = 240.
 
 jet_correction = True
 
-mode = 'pythia/ee_to_ZH_Oct30'
-nfiles = 1
+mode = 'all'
+nfiles = None
 
 from heppy.papas.detectors.CLIC import clic
 from heppy.papas.detectors.CMS import cms
@@ -75,6 +75,11 @@ zh = FCCComponent(
     splitFactor=1
 )
 
+wwh = FCCComponent(
+    'pythia/ee_WW_to_Hnunu_Sep25', 
+    splitFactor=1
+)
+
 ffbar = FCCComponent( 
     'pythia/ee_to_ffbar_Sep12_B_4',
     splitFactor=1
@@ -87,7 +92,7 @@ ww = FCCComponent(
 
 
 from fcc_ee_higgs.components.tools import get_components
-selectedComponents = get_components(mode, [zh], nfiles)
+selectedComponents = get_components(mode, [wwh], nfiles)
 
 # read FCC EDM events from the input root file(s)
 # do help(Reader) for more information
@@ -103,6 +108,7 @@ source = cfg.Analyzer(
 from fcc_ee_higgs.analyzers.GenResonanceAnalyzer import GenResonanceAnalyzer
 gen_bosons = cfg.Analyzer(
     GenResonanceAnalyzer,
+    output = 'gen_bosons',
     pdgids=[23, 25],
     statuses=[62],
     # decay_pdgids=[11, 13],
