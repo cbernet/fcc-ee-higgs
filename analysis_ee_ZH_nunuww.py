@@ -42,7 +42,7 @@ from EventStore import EventStore as Events
 from heppy.framework.event import Event
 # comment the following line to see all the collections stored in the event 
 # if collection is listed then print loop.event.papasevent will include the collections
-Event.print_patterns=['zeds*', 'higgs*', 'jets*', 'bquarks', 'recoil*', 'collections']
+Event.print_patterns=['gen_bosons*', 'gen_ws*', 'zeds*', 'higgs*', 'jets*', 'bquarks', 'recoil*', 'collections']
 
 # definition of the collider
 # help(Collider) for more information
@@ -52,7 +52,7 @@ Collider.SQRTS = 240.
 
 jet_correction = True
 
-# mode = 'pythia/ee_to_ffbar_Sep12_B_4'
+# mode = 'pythia/ee_to_ZH_Oct30'
 mode =  'all'
 nfiles = None
 
@@ -95,7 +95,6 @@ ww = FCCComponent(
 from fcc_ee_higgs.components.tools import get_components
 selectedComponents = get_components(mode, [zz,zh,ffbar,ww], nfiles)
 
-
 # read FCC EDM events from the input root file(s)
 # do help(Reader) for more information
 from heppy.analyzers.fcc.Reader import Reader
@@ -110,14 +109,15 @@ source = cfg.Analyzer(
 from fcc_ee_higgs.analyzers.GenResonanceAnalyzer import GenResonanceAnalyzer
 gen_bosons = cfg.Analyzer(
     GenResonanceAnalyzer,
+    output='gen_bosons', 
     pdgids=[23, 25],
     statuses=[62],
     # decay_pdgids=[11, 13],
-    verbose=False
+    verbose=False, 
 )
 
 gen_ws = cfg.Analyzer(
-    GenResonanceAnalyzer,
+    GenResonanceAnalyzer, 
     output='gen_ws', 
     pdgids=[24],
     statuses=[22],
@@ -272,7 +272,9 @@ tree = cfg.Analyzer(
     resonances=[('higgses', 1),
                 ('higgses_rescaled', 1),
                 ('w', 1),
-                ('wstar', 1)], 
+                ('wstar', 1),
+                ('gen_bosons', 2),
+                ('gen_ws', 2)], 
 )
 
 # definition of a sequence of analyzers,

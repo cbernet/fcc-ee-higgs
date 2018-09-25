@@ -33,7 +33,8 @@ class GenResonanceAnalyzer(Analyzer):
                                    boson.pdgid(), boson.status())
             output.append(resonance)
         output.sort(key=lambda x: x.pdgid())
-        output_name = 'gen_bosons'
+        idstring = '_'.join(map(str, self.cfg_ana.pdgids))
+        output_name = '_'.join(['gen_bosons', idstring])  # e.g. gen_bosons_23_25 
         if hasattr(self.cfg_ana, 'output'):
             output_name = self.cfg_ana.output
         setattr(event, output_name, output)
