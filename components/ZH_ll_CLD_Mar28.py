@@ -9,6 +9,15 @@ ZH = FCCComponent(
     uncertainty=0.2    
 )
 
+ZH_bs = FCCComponent(
+    'heppy/ee_to_ZH_Z_to_ll/CLD/Oct1/ee_to_ZH_Z_to_mumu_BS_Oct1', 
+    xSection=3.7e-12 * 2,  
+    nGenEvents=20000.,
+    uncertainty=0.2    
+)
+
+ZH = ZH_bs
+
 ZZ = FCCComponent(
     'heppy/ee_to_ZH_Z_to_ll/CLD/Mar28/ee_to_ZZ_Sep12_A_2', 
     xSection=1.35e-9,  

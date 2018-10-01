@@ -10,9 +10,10 @@ if detector == 'CMS':
     WW.name = 'WW'
     comps = [ZZ, ZH]
 elif detector == 'CLD':
-    from fcc_ee_higgs.components.ZH_nunubb_CLD_May17 import ZH, ZZ, ffbar, WW
-    comps = [ZZ, ZH, ffbar, WW]
-ZH.name =  'ZH' 
+    from fcc_ee_higgs.components.ZH_nunubb_CLD_May17 import ZH, ZZ, ffbar, WW, WWH
+    comps = [ZZ, ZH, ffbar, WW, WWH]
+ZH.name =  'ZH'
+WWH.name = 'WWH'
 ZZ.name =  'ZZ'
 ffbar.name =  'ffbar'
 WW.name = 'WW'

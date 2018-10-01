@@ -67,7 +67,8 @@ detector = clic
 from fcc_datasets.fcc_component import FCCComponent
 
 zh = FCCComponent( 
-    'pythia/ee_to_ZH_Oct30',
+    # 'pythia/ee_to_ZH_Oct30',
+    'pythia/ee_to_ZH_Z_to_mumu_noBS_Oct1', 
     splitFactor=4
 )
 
@@ -100,7 +101,8 @@ zhtautau = cfg.Component(
 )
 
 cpslist = [
-    zh, zz, ww, ffbar2l 
+    zh,
+    # zz, ww, ffbar2l 
 ]
 
 from fcc_ee_higgs.components.tools import get_components
@@ -144,6 +146,7 @@ source = cfg.Analyzer(
 from fcc_ee_higgs.analyzers.GenResonanceAnalyzer import GenResonanceAnalyzer
 gen_bosons = cfg.Analyzer(
     GenResonanceAnalyzer,
+    output='gen_bosons', 
     pdgids=[23, 25],
     statuses=[62],
     # decay_pdgids=[11, 13],
