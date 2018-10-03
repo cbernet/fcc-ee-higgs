@@ -68,12 +68,14 @@ from fcc_datasets.fcc_component import FCCComponent
 
 zh = FCCComponent( 
     # 'pythia/ee_to_ZH_Oct30',
-    'pythia/ee_to_ZH_Z_to_mumu_noBS_Oct1', 
+    # 'pythia/ee_to_ZH_Z_to_mumu_noBS_Oct1', 
+    'pythia/ee_to_ZH_BS_Oct2',
     splitFactor=4
 )
 
 zz = FCCComponent( 
-    'pythia/ee_to_ZZ_Sep12_A_2',
+    # 'pythia/ee_to_ZZ_Sep12_A_2',
+    'pythia/ee_to_ZZ_BS_Oct2',
     splitFactor=1
 )
 
@@ -101,8 +103,9 @@ zhtautau = cfg.Component(
 )
 
 cpslist = [
-    zh,
-    # zz, ww, ffbar2l 
+    # zh,
+    zz, 
+    # ww, ffbar2l 
 ]
 
 from fcc_ee_higgs.components.tools import get_components

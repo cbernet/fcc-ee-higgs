@@ -36,7 +36,7 @@ Beams:sigmaPzA = 0.198
 Beams:sigmaPzB = 0.198
 
 HiggsSM:ffbar2HZ = on
-23:onMode = off
-23:onIfMatch = 13 13
+! 23:onMode = off
+! 23:onIfMatch = 13 13
 ! 25:onMode = off
 ! 25:onIfMatch = 5 5
