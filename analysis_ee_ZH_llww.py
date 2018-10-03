@@ -53,13 +53,10 @@ Collider.SQRTS = 240.
 
 jet_correction = True
 
-# import pdb; pdb.set_trace()
-# mode = 'pythia/ee_to_ZH_Oct30'
-# mode = 'pythia/ee_to_ZZ_Sep12_A_2'
-mode = 'test'
-nfiles = sys.maxint
+mode = 'all'
+nfiles = 1
 # nfiles = 4
-# mode = 'test'
+
 min_gen_z = 0
 min_rec_z = 1
 from heppy.papas.detectors.CLIC import clic
@@ -74,23 +71,20 @@ detector = clic
 from fcc_datasets.fcc_component import FCCComponent
 
 zh = FCCComponent( 
-    'pythia/ee_to_ZH_Oct30',
+    # 'pythia/ee_to_ZH_Oct30',
+    'pythia/ee_to_ZH_BS_Oct2',
     splitFactor=4
 )
 
 zz = FCCComponent( 
-    'pythia/ee_to_ZZ_Sep12_A_2',
+    # 'pythia/ee_to_ZZ_Sep12_A_2',
+    'pythia/ee_to_ZZ_BS_Oct2',
     splitFactor=1
 )
 
 ww = FCCComponent( 
     'pythia/ee_to_WW_Dec6_large',
     splitFactor=1
-)
-
-zh_mumuww = FCCComponent(
-    'pythia/ee_to_ZH_Zmumu_HWW',
-    splitFactor=4
 )
 
 ##ffbar = FCCComponent(
@@ -103,14 +97,8 @@ ffbar2l = FCCComponent(
     splitFactor=1
 )
 
-cpslist = [
-    # zh_mumuww
-    zh
-    # zh, zz, ww, ffbar2l
-]
-
 from fcc_ee_higgs.components.tools import get_components
-selectedComponents = get_components(mode, [zh], nfiles)
+selectedComponents = get_components(mode, [zh,zz], nfiles)
     
 # read FCC EDM events from the input root file(s)
 # do help(Reader) for more information

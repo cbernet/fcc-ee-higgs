@@ -55,8 +55,8 @@ jet_correction = True
 # mode = 'pythia/ee_to_ZH_Oct30'
 # mode = 'pythia/ee_to_ZZ_Sep12_A_2'
 mode = 'all'
-# nfiles = sys.maxint
-nfiles = 4
+nfiles = sys.maxint
+# nfiles = 4
 # mode = 'test'
 min_gen_z = 0
 min_rec_z = 1
@@ -72,12 +72,14 @@ detector = clic
 from fcc_datasets.fcc_component import FCCComponent
 
 zh = FCCComponent( 
-    'pythia/ee_to_ZH_Oct30',
+    # 'pythia/ee_to_ZH_Oct30',
+    'pythia/ee_to_ZH_BS_Oct2',
     splitFactor=4
 )
 
 zz = FCCComponent( 
-    'pythia/ee_to_ZZ_Sep12_A_2',
+    # 'pythia/ee_to_ZZ_Sep12_A_2',
+    'pythia/ee_to_ZZ_BS_Oct2',
     splitFactor=1
 )
 
@@ -85,11 +87,6 @@ ww = FCCComponent(
     'pythia/ee_to_WW_Dec6_large',
     splitFactor=1
 )
-
-##ffbar = FCCComponent(
-##    'pythia/ee_to_ffbar_Sep12_B_4',
-##    splitFactor=1
-##)
 
 ffbar2l = FCCComponent( 
     'pythia/ee_to_2l_Mar8',
@@ -108,7 +105,8 @@ zhww = cfg.Component(
 )
 
 cpslist = [
-    zh, zz, ww, ffbar2l
+    zh, zz, 
+    # ww, ffbar2l
 ]
 
 cps = dict( (c.name, c) for c in cpslist)
@@ -198,6 +196,7 @@ two_gen_taus_in_acceptance = cfg.Analyzer(
 from fcc_ee_higgs.analyzers.GenResonanceAnalyzer import GenResonanceAnalyzer
 gen_bosons = cfg.Analyzer(
     GenResonanceAnalyzer,
+    output = 'gen_bosons',
     pdgids=[23, 25],
     statuses=[62],
     # decay_pdgids=[11, 13],
