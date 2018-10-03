@@ -408,8 +408,7 @@ tree = cfg.Analyzer(
     resonances=['sel_zeds', 'second_zeds'], 
     misenergy = ['missing_energy', 'gen_missing_energy'],
     leptons=['iso_leptons_not_zed'],
-    particles=['particles_not_zed'],
-    recoil='recoil', 
+    particles=['particles_not_zed', 'recoil'],
     globaljet='sum_particles_not_zed',     
 )
 
