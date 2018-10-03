@@ -47,10 +47,22 @@ cut_hbb = get_cut_hbb(b_wp[0], b_wp[1], ' || ')
 ##(jets_3_e<0 || jets_3_22_e/jets_3_e<0.95) && \
 ##(jets_4_e<0 || jets_4_22_e/jets_4_e<0.95))'
 
-alias_njets_nophoton = '(jets_1_e>0 && jets_1_22_e/jets_1_e<0.95) + \
-(jets_2_e>0 && jets_2_22_e/jets_2_e<0.95) + \
-(jets_3_e>0 && jets_3_22_e/jets_3_e<0.95) + \
-(jets_4_e>0 && jets_4_22_e/jets_4_e<0.95)'
+##alias_njets_nophoton = '(jets_1_e>5 && jets_1_22_e/jets_1_e<0.95) + \
+##(jets_2_e>5 && jets_2_22_e/jets_2_e<0.95) + \
+##(jets_3_e>5 && jets_3_22_e/jets_3_e<0.95) + \
+##(jets_4_e>5 && jets_4_22_e/jets_4_e<0.95)'
+
+emin = 5
+
+cut_nophoton = '((jets_1_e<{emin} || jets_1_22_e/jets_1_e<0.95) && \
+(jets_2_e<{emin} || jets_2_22_e/jets_2_e<0.95) && \
+(jets_3_e<{emin} || jets_3_22_e/jets_3_e<0.95) && \
+(jets_4_e<{emin} || jets_4_22_e/jets_4_e<0.95))'.format(emin=emin)
+
+alias_njets_nophoton = '(jets_1_e>{emin} && jets_1_22_e/jets_1_e<0.95) + \
+(jets_2_e>{emin} && jets_2_22_e/jets_2_e<0.95) + \
+(jets_3_e>{emin} && jets_3_22_e/jets_3_e<0.95) + \
+(jets_4_e>{emin} && jets_4_22_e/jets_4_e<0.95)'.format(emin=emin)
 
 for comp in comps:
     comp.tree.SetAlias('njets_nophoton', alias_njets_nophoton)

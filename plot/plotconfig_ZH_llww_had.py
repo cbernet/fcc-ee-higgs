@@ -42,23 +42,25 @@ cut_z_flavour = '(sel_zeds_1_pdgid==-sel_zeds_2_pdgid)'
 ##cut_rm4l = '!((second_zeds_1_pdgid==-second_zeds_2_pdgid) && (abs(second_zeds_1_pdgid)==13 || abs(second_zeds_1_pdgid)==11))'
 cut_hbb = get_cut_hbb(b_wp[0], b_wp[1], ' || ')
 
-cut_nophoton = '((jets_1_e<0 || jets_1_22_e/jets_1_e<0.95) && \
-(jets_2_e<0 || jets_2_22_e/jets_2_e<0.95) && \
-(jets_3_e<0 || jets_3_22_e/jets_3_e<0.95) && \
-(jets_4_e<0 || jets_4_22_e/jets_4_e<0.95))'
+emin = 5
 
-alias_njets_nophoton = '(jets_1_e>0 && jets_1_22_e/jets_1_e<0.95) + \
-(jets_2_e>0 && jets_2_22_e/jets_2_e<0.95) + \
-(jets_3_e>0 && jets_3_22_e/jets_3_e<0.95) + \
-(jets_4_e>0 && jets_4_22_e/jets_4_e<0.95)'
+cut_nophoton = '((jets_1_e<{emin} || jets_1_22_e/jets_1_e<0.95) && \
+(jets_2_e<{emin} || jets_2_22_e/jets_2_e<0.95) && \
+(jets_3_e<{emin} || jets_3_22_e/jets_3_e<0.95) && \
+(jets_4_e<{emin} || jets_4_22_e/jets_4_e<0.95))'.format(emin=emin)
+
+alias_njets_nophoton = '(jets_1_e>{emin} && jets_1_22_e/jets_1_e<0.95) + \
+(jets_2_e>{emin} && jets_2_22_e/jets_2_e<0.95) + \
+(jets_3_e>{emin} && jets_3_22_e/jets_3_e<0.95) + \
+(jets_4_e>{emin} && jets_4_22_e/jets_4_e<0.95)'.format(emin=emin)
 
 for comp in comps:
     comp.tree.SetAlias('njets_nophoton', alias_njets_nophoton)
-
+    comp.tree.SetAlias('sum_particles_not_zed_211_num', 'sumjet_notzed_211_num')
 
 # my cuts
 cut_hadr_njets = '(njets_nophoton>=3)'
-cut_hadr_nptcs = '(sumjet_notzed_211_num>=10)'
+cut_hadr_nptcs = '(sum_particles_not_zed_211_num>=10)'
 cut_hadr_nolep = '(n_iso_leptons_not_zed==0)'
 cut_not_hbb = '!({})'.format(cut_hbb)
 
