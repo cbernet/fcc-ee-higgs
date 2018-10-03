@@ -54,7 +54,7 @@ Collider.SQRTS = 240.
 jet_correction = True
 
 mode = 'all'
-nfiles = 1
+nfiles = sys.maxint
 # nfiles = 4
 
 min_gen_z = 0
@@ -361,7 +361,7 @@ jets = cfg.Analyzer(
     JetClusterizer,
     output = 'jets',
     particles = 'particles_not_zed',
-    fastjet_args = dict( R=0.4, p=-1, emin=1),
+    fastjet_args = dict( R=0.4, p=-1, emin=5),
     verbose=False
 )
 
