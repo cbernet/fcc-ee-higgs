@@ -30,6 +30,11 @@ Beams:idB = -11                   ! second beam, p = 2212, pbar = -2212
 
 Beams:eCM = 240.                 ! CM energy of collision
 
+Beams:allowMomentumSpread  = on
+! 120*0.00165
+Beams:sigmaPzA = 0.198 
+Beams:sigmaPzB = 0.198
+
 WeakDoubleBoson:ffbar2gmZgmZ = on 
 
 ! 23:onMode = off
