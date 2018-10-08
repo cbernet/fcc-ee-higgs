@@ -1,7 +1,7 @@
 import os 
 from fcc_datasets.fcc_component import FCCComponent
 
-beam_smearing = False
+beam_smearing = True
 
 # For ZH, ZZ, WW, there is a cut E>10 on reconstructed leptons! 
 ZH = FCCComponent(

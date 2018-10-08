@@ -2,7 +2,8 @@ import os
 from fcc_datasets.fcc_component import FCCComponent
 
 # mode = 'no_beam_smearing_new'
-mode = 'isofix'
+# mode = 'isofix'
+mode = 'isofix_bs' 
 
 # For ZH, ZZ, WW, there is a cut E>10 on reconstructed leptons! 
 ZH = FCCComponent(
@@ -33,6 +34,12 @@ ZH_isofix = FCCComponent(
     uncertainty=0.2    
 )
 
+ZH_isofix_bs = FCCComponent(
+    'heppy/ee_to_ZH_to_llww/CLD/IsoFix/ee_to_ZH_BS_Oct2', 
+    xSection=2.e-10,  
+    nGenEvents=5000*100.,
+    uncertainty=0.2    
+)
 
 ZZ = FCCComponent(
     'heppy/ee_to_ZH_to_llww/CLD/May23/ee_to_ZZ_Sep12_A_2', 
@@ -61,6 +68,14 @@ ZZ_isofix = FCCComponent(
     nGenEvents=10000*199.,
     uncertainty=0.2    
 )
+
+ZZ_isofix_bs = FCCComponent(
+    'heppy/ee_to_ZH_to_llww/CLD/IsoFix/ee_to_ZZ_BS_Oct2', 
+    xSection=1.35e-9,  
+    nGenEvents=10000*199.,
+    uncertainty=0.2    
+)
+
 
 WW = FCCComponent(
     'heppy/ee_to_ZH_to_llww/CLD/May23/ee_to_WW_Dec6_large',
@@ -105,3 +120,9 @@ elif mode == 'isofix':
     ZZ = ZZ_isofix
     WW = WW_isofix
     ll = ll_isofix
+elif mode == 'isofix_bs':
+    ZH = ZH_isofix_bs
+    ZZ = ZZ_isofix_bs
+    WW = WW_isofix
+    ll = ll_isofix
+    
