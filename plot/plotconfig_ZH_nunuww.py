@@ -16,6 +16,9 @@ ZH.name =  'ZH'
 ZZ.name =  'ZZ'
 WW.name = 'WW'
 ffbar.name = 'ffbar'
+ffbar.smooth = 1
+WW.smooth = 1
+ZZ.smooth = 1
 
 from fcc_ee_higgs.components.tools import load
 load(comps)
@@ -28,7 +31,7 @@ cut_missmass = '(missing_energy_0_m>80)'
 cut_misse = '(missing_energy_0_e>80)'
 cut_theta = '(abs(missing_energy_0_theta*180/3.14) < 65)'
 cut_mwstar = '(wstar_0_m>10)'
-cut_jete = '(jets4_3_e)>15'
+cut_jete = '(jets4_2_e)>15'
 
 def get_cut_hbb(eff, fake, jets, n, operator=' && '):
     strings = []
@@ -61,7 +64,7 @@ def get_cut_notau():
 
 cuts = Cuts([
     ('cut_missmass', cut_missmass),
-    ('cut_misse', cut_misse),
+    # ('cut_misse', cut_misse),
     ('cut_theta', cut_theta),
     ('cut_mwstar', cut_mwstar),
     ('cut_jete', cut_jete),
