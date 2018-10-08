@@ -26,13 +26,15 @@ ZZ.name =  'ZZ'
 WW.name = 'WW'
 ll.name = 'll'
 
+ZZ.smooth = True
+
 from fcc_ee_higgs.components.tools import load
 load(comps)
 
 from fcc_ee_higgs.plot.cuts import Cuts
 
-cut_lepiso = '((sel_zeds_1_iso_e/sel_zeds_1_e<0.4) && (sel_zeds_2_iso_e/sel_zeds_2_e<0.4) && sel_zeds_1_e>0 && sel_zeds_2_e>0)'
-cut_z_mass =  '(abs(sel_zeds_m-91)<15)'  # try opening this 
+cut_lepiso = '((sel_zeds_1_iso_e/sel_zeds_1_e<0.6) && (sel_zeds_2_iso_e/sel_zeds_2_e<0.6) && sel_zeds_1_e>0 && sel_zeds_2_e>0)'
+cut_z_mass =  '(abs(sel_zeds_m-91)<30)'  # try opening this 
 # cut_z_kine = '(sel_zeds_pt>10 && sel_zeds_pz<50 && sel_zeds_acol>100 && sel_zeds_cross>10)'
 cut_z_kine = 'sel_zeds_acol>110'
 cut_z_flavour = '(sel_zeds_1_pdgid==-sel_zeds_2_pdgid)'
@@ -42,7 +44,7 @@ cut_z_flavour = '(sel_zeds_1_pdgid==-sel_zeds_2_pdgid)'
 ##cut_rm4l = '!((second_zeds_1_pdgid==-second_zeds_2_pdgid) && (abs(second_zeds_1_pdgid)==13 || abs(second_zeds_1_pdgid)==11))'
 cut_hbb = get_cut_hbb(b_wp[0], b_wp[1], ' || ')
 
-emin = 5
+emin = 0
 
 cut_nophoton = '((jets_1_e<{emin} || jets_1_22_e/jets_1_e<0.95) && \
 (jets_2_e<{emin} || jets_2_22_e/jets_2_e<0.95) && \

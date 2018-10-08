@@ -17,6 +17,8 @@ WWH.name = 'WWH'
 ZZ.name =  'ZZ'
 ffbar.name =  'ffbar'
 WW.name = 'WW'
+ffbar.smooth = 1
+WW.smooth = 1
 from fcc_ee_higgs.components.tools import load
 load(comps)
 

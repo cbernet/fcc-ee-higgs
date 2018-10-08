@@ -3,7 +3,7 @@ from fcc_datasets.fcc_component import FCCComponent
 
 # For ZH, ZZ, WW, there is a cut E>10 on reconstructed leptons!
 
-beam_smearing = True
+beam_smearing = False
 
 ZH = FCCComponent(
     'heppy/ee_to_ZH_Z_to_lltautau/CLD/Mar26/ee_to_ZH_Oct30', 

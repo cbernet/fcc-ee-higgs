@@ -6,7 +6,7 @@ import shutil
 
 import heppy.framework.context as context
 
-from analysis_test_beamsmearer import config
+from analysis_test_fsr import config
 from heppy.framework.looper import Looper
 from ROOT import TFile
 

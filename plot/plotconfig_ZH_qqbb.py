@@ -14,6 +14,8 @@ ZH.name =  'ZH'
 ZZ.name =  'ZZ'
 ffbar.name =  'ffbar'
 WW.name = 'WW'
+ffbar.smooth = 1
+ZZ.smooth = 1
 load(comps)
 
 from fcc_ee_higgs.plot.cuts import Cuts

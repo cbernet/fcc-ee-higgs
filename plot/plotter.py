@@ -30,7 +30,11 @@ class Plotter(object):
     def _prepare_plot(self, var, cut, bins):
         plot = DataMCPlot('var', histPref)
         for comp in self.comps:
-            hist = self._project(comp, var, cut, *bins)    
+            hist = self._project(comp, var, cut, *bins)
+            if hasattr(comp, 'smooth') and comp.smooth:    
+                hist.Smooth(comp.smooth)
+            if hasattr(comp, 'preprocess'):
+                hist = comp.preprocess(hist)
             plot.AddHistogram(comp.name, hist)
             plot.histosDict[comp.name].SetWeight(comp.getWeight(self.lumi).GetWeight())
             plot.histosDict[comp.name].uncertainty = comp.uncertainty
@@ -54,7 +58,7 @@ class Plotter(object):
         the_file = open(fname, 'w')
         the_file.write(str(self.plot))
         the_file.close()
-    
+       
     def print_info(self, detector, xmin=None, ymin=None):
         lumitext = ''
         lumi = self.lumi

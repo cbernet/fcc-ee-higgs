@@ -8,7 +8,7 @@ channel = 'ww'
 detector = 'CLD'
 lumi = 5000e12
 
-bins = 14, 80, 150
+bins = 20, 50, 150
 
 from fcc_ee_higgs.components.ZH_qqwwll_CLD_Jun7 import ZH, ZZ, ll, WW
 comps = [ZZ, ZH, ll, WW]
@@ -16,6 +16,8 @@ ZH.name =  'ZH'
 ZZ.name =  'ZZ'
 WW.name = 'WW'
 ll.name = 'll'
+WW.smooth = 1
+# ZZ.smooth = 1
 
 from fcc_ee_higgs.components.tools import load
 load(comps)

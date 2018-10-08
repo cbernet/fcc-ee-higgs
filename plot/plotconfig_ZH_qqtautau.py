@@ -19,6 +19,9 @@ comps = [ZZ, ZH, WW]
 ZH.name =  'ZH'
 ZZ.name =  'ZZ'
 WW.name = 'WW'
+from template import flatten
+WW.preprocess = flatten
+# WW.smooth = 1
 ##ll.name = 'll'
 # ffbar.name = 'ffbar'
 ##
