@@ -16,7 +16,7 @@ ZH.name =  'ZH'
 ZZ.name =  'ZZ'
 WW.name = 'WW'
 ll.name = 'll'
-WW.smooth = 1
+# WW.smooth = 1
 # ZZ.smooth = 1
 
 from fcc_ee_higgs.components.tools import load

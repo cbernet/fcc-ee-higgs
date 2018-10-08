@@ -2,8 +2,8 @@ var = 'recoil_m'
 # var = 'zeds_m'
 xtitle = 'm_{H} (GeV)'
 
-channel = 'inclusive'
-# channel = 'bb' 
+# channel = 'inclusive'
+channel = 'bb' 
 
 detector = 'CLD'
 lumi = 5000e12

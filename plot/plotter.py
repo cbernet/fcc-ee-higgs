@@ -24,7 +24,7 @@ class Plotter(object):
         hist = TH1F(hist_name, '', *bins)
         if comp.tree != None:
             comp.tree.Project(hist.GetName(), var, cut)
-        print hist_name
+        print hist_name, comp.rootfile
         return hist
 
     def _prepare_plot(self, var, cut, bins):
