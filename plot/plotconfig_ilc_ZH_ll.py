@@ -30,26 +30,30 @@ ll.name = 'll'
 from fcc_ee_higgs.components.tools import load
 load(comps)
 
+for comp in comps:
+    comp.tree.SetAlias('missing_energy_costheta', 'cos(3.14116/2.-missing_energy_theta)')
+    comp.tree.SetAlias('zeds_costheta', 'cos(3.14116/2.-zeds_theta)')
+
 from fcc_ee_higgs.plot.cuts import Cuts
 
 cut_lepiso = '((zeds_1_iso_e/zeds_1_e<0.2) && (zeds_2_iso_e/zeds_2_e<0.2) && zeds_1_e>0 && zeds_2_e>0)'
 cut_z_mass =  '(zeds_m>73 && zeds_m<120)'  # try opening this 
 cut_z_kine = '(zeds_pt>10 && zeds_pt<75)'
-cut_met_angle = '(abs(cos(3.14116/2.-missing_energy_theta))<0.98)'
+cut_met_angle = '(abs(missing_energy_costheta)<0.98)'
 cut_z_flavour = '(zeds_1_pdgid==-zeds_2_pdgid)'
 cut_rad = '(((jets_1_e<0 || jets_1_22_e/jets_1_e<0.8) && \
 (jets_2_e<0 || jets_2_22_e/jets_2_e<0.8)))'
 cut_rad2 = '(jets_1_e>0 || (jets_1_e<0 && n_particles_not_zed==0))'
-cut_htautau = '(((jets_1_211_num+jets_1_11_num+jets_1_13_num)==1 || (jets_1_211_num+jets_1_11_num+jets_1_13_num)==3) && \
- ((jets_2_211_num+jets_2_11_num+jets_2_13_num)==1 || (jets_2_211_num+jets_2_11_num+jets_2_13_num)==3))'
-cut_htautau_or = '(((jets_1_211_num+jets_1_11_num+jets_1_13_num)==1 || (jets_1_211_num+jets_1_11_num+jets_1_13_num)==3) || \
- ((jets_2_211_num+jets_2_11_num+jets_2_13_num)==1 || (jets_2_211_num+jets_2_11_num+jets_2_13_num)==3))'
-cut_htautau_1 = '((jets_1_211_num+jets_1_11_num+jets_1_13_num)==1 || (jets_1_211_num+jets_1_11_num+jets_1_13_num)==3)'
-cut_missm = 'missing_energy_m/recoil_m<0.8'
+##cut_htautau = '(((jets_1_211_num+jets_1_11_num+jets_1_13_num)==1 || (jets_1_211_num+jets_1_11_num+jets_1_13_num)==3) && \
+## ((jets_2_211_num+jets_2_11_num+jets_2_13_num)==1 || (jets_2_211_num+jets_2_11_num+jets_2_13_num)==3))'
+##cut_htautau_or = '(((jets_1_211_num+jets_1_11_num+jets_1_13_num)==1 || (jets_1_211_num+jets_1_11_num+jets_1_13_num)==3) || \
+## ((jets_2_211_num+jets_2_11_num+jets_2_13_num)==1 || (jets_2_211_num+jets_2_11_num+jets_2_13_num)==3))'
+##cut_htautau_1 = '((jets_1_211_num+jets_1_11_num+jets_1_13_num)==1 || (jets_1_211_num+jets_1_11_num+jets_1_13_num)==3)'
+##cut_missm = 'missing_energy_m/recoil_m<0.8'
 cut_rm4l = '!((second_zeds_1_pdgid==-second_zeds_2_pdgid) && (abs(second_zeds_1_pdgid)==13 || abs(second_zeds_1_pdgid)==11))'
-cut_leppt = '(zeds_1_pt>10 && zeds_2_pt>10)'
+##cut_leppt = '(zeds_1_pt>10 && zeds_2_pt>10)'
 cut_hbb = get_cut_hbb(b_wp[0], b_wp[1], ' || ')
-cut_w_misse = '(missing_energy_e<70)'
+##cut_w_misse = '(missing_energy_e<70)'
 
 cuts = Cuts([
     ('cut_lepiso', cut_lepiso),
@@ -59,11 +63,8 @@ cuts = Cuts([
     ('cut_z_flavour', cut_z_flavour), 
     ('cut_rad2', cut_rad2), 
     ('cut_rad', cut_rad),
-    # ('cut_htautau', cut_htautau), 
-    # ('cut_htautau_or', cut_htautau_or),  
     # gain in precision! to investigate: try an or- nice but contamination is large of course...
     ('cut_rm4l', cut_rm4l),
-    # ('cut_w_misse', cut_w_misse)
 ])
 
 if var == 'zeds_m':
