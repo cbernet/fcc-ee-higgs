@@ -33,7 +33,7 @@ factory = ROOT.TMVA.Factory("TMVAClassification", fout,
 dataloader = ROOT.TMVA.DataLoader("dataset")
 
 variables = ['zeds_m',
-             'cos(3.14116/2.-zeds_theta)',
+             'zeds_theta',
              'zeds_1_theta', 'zeds_2_theta',
              'zeds_acol', 'zeds_cross', 'zeds_pz']
 for variable in variables:
