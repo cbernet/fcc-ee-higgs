@@ -6,7 +6,7 @@ import shutil
 
 import heppy.framework.context as context
 
-from analysis_bs import config
+from analysis_test_fsr import config
 from heppy.framework.looper import Looper
 from ROOT import TFile
 
@@ -33,10 +33,11 @@ class TestAnalysis(unittest.TestCase):
         '''
         config.components = config.components[:1]
         config.components[0].files = config.components[0].files[:1]
+        nevts = 100 
         self.looper = Looper( self.outdir,
                               config,
-                              nEvents=10,
-                              nPrint=3)
+                              nEvents=nevts,
+                              nPrint=0)
         self.looper.loop()
         self.looper.write()
 

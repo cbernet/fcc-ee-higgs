@@ -67,7 +67,7 @@ detector = clic
 from fcc_datasets.fcc_component import FCCComponent
 
 zh = FCCComponent( 
-    'pythia/ee_to_ZH_Oct30',
+    'pythia/ee_to_ZH_Z_to_mumu_Oct30',
     splitFactor=4
 )
 
@@ -151,10 +151,25 @@ zed_counter = cfg.Analyzer(
     veto = False
 )
 
+from fcc_ee_higgs.analyzers.FSRRecovery import FSRRecovery
+fsr_recovery = cfg.Analyzer(
+    FSRRecovery,
+    output='fsr_zeds', 
+    zeds='sel_zeds',
+    particles='gen_particles_stable',
+    area=EtaPhiCircle(0.4)
+)
+
+
 from heppy.analyzers.ResonanceLegExtractor import ResonanceLegExtractor
 leg_extractor = cfg.Analyzer(
     ResonanceLegExtractor,
     resonances = 'sel_zeds'
+)
+
+fsr_leg_extractor = cfg.Analyzer(
+    ResonanceLegExtractor,
+    resonances = 'fsr_zeds'
 )
 
 # Computing the recoil p4 (here, p_initial - p_zed)
@@ -164,19 +179,29 @@ sqrts = Collider.SQRTS
 from heppy.analyzers.RecoilBuilder import RecoilBuilder
 recoil = cfg.Analyzer(
     RecoilBuilder,
-    instance_label = 'recoil',
     output = 'recoil',
     sqrts = sqrts,
     to_remove = 'sel_zeds_legs'
 )
 
+fsr_recoil = cfg.Analyzer(
+    RecoilBuilder,
+    output = 'fsr_recoil',
+    sqrts = sqrts,
+    to_remove = 'fsr_zeds_legs'
+)
+
+
 from fcc_ee_higgs.analyzers.ZHTreeProducer2 import ZHTreeProducer2
 tree = cfg.Analyzer(
     ZHTreeProducer2,
-    particles=[('recoil', 1)],
+    particles=[('recoil', 1),
+               ('fsr_recoil', 1)],
     iso_particles=[('sel_iso_leptons', 2)], 
     jets=[],
-    resonances=[('sel_zeds', 1)], 
+    resonances=[('sel_zeds', 1),
+                ('fsr_zeds', 1)
+                ], 
 )
 
 # definition of a sequence of analyzers,
@@ -190,8 +215,11 @@ sequence = cfg.Sequence(
     zeds,
     zed_selector, 
     zed_counter,
-    leg_extractor, 
+    fsr_recovery, 
+    leg_extractor,
+    fsr_leg_extractor, 
     recoil,
+    fsr_recoil, 
     tree
 )   
 
