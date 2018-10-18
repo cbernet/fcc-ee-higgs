@@ -1,10 +1,15 @@
 
 import ROOT
 
-from fcc_ee_higgs.plot.plotconfig_ilc_ZH_ll import ZH, WW, cut
+from fcc_ee_higgs.plot.plotconfig_ilc_ZH_ll import ZH, WW, ZZ, cuts
 
 ntuple_sig = ZH.tree
-ntuple_bgd = WW.tree
+ntuple_bgd = ZZ.tree
+
+if 'cut_mvaww' in cuts:
+    del cuts['cut_mvaww']   
+cuts['massrange'] = 'recoil_m>110'
+cut = str(cuts)
 
 # keeps objects otherwise removed by garbage collected in a list
 gcSaver = []
@@ -35,7 +40,7 @@ dataloader = ROOT.TMVA.DataLoader("dataset")
 variables = ['zeds_m',
              'zeds_theta',
              'zeds_1_theta', 'zeds_2_theta',
-             'zeds_acol', 'zeds_cross', 'zeds_pz']
+             'zeds_acol']
 for variable in variables:
     dataloader.AddVariable(variable, 'F')
 
