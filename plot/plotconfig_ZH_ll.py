@@ -46,6 +46,7 @@ cut_rm4l = '!((second_zeds_1_pdgid==-second_zeds_2_pdgid) && (abs(second_zeds_1_
 cut_leppt = '(zeds_1_pt>10 && zeds_2_pt>10)'
 cut_hbb = get_cut_hbb(b_wp[0], b_wp[1], ' || ')
 cut_w_misse = '(missing_energy_e<70)'
+cut_vise = '(jets_1_e>0 && jets_2_e>0 && jets_1_e + jets_2_e>10)'
 
 cuts = Cuts([
     ('cut_lepiso', cut_lepiso),
@@ -59,6 +60,7 @@ cuts = Cuts([
     # gain in precision! to investigate: try an or- nice but contamination is large of course...
     ('cut_rm4l', cut_rm4l),
     # ('cut_w_misse', cut_w_misse)
+    # ('cut_vise', cut_vise),    
 ])
 
 if var == 'zeds_m':
